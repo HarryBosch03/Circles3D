@@ -1,48 +1,13 @@
 fileFormatVersion: 2
-guid: de79fed499c798e44ab2f2e5caeb9e26
+guid: 12dd01889fd2e2c42a182a806936b9ff
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Gun Metal
-    second: {fileID: 2100000, guid: 9c25907f11c158842b18bb16682e6872, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Gun_Body
-    second: {fileID: 2100000, guid: 26efef283c3dbc14ca22f5ed6c9173f3, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Gun_Slide
-    second: {fileID: 2100000, guid: a317cb4754ae1c642b6ac06dc9aa9b30, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Metal
-    second: {fileID: 2100000, guid: f57efd7ba35472240b6cdae66141404d, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Paint
-    second: {fileID: 2100000, guid: 4b37b355d4e9eab498a08834bdecf937, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Rubber
-    second: {fileID: 2100000, guid: de2d5d602adb18f4a8e3b9ba064db427, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Sight
-    second: {fileID: 2100000, guid: 3f734666e3c0dbb429bcef538eb4f405, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
-    materialName: 1
-    materialSearch: 2
+    materialName: 0
+    materialSearch: 1
     materialLocation: 1
   animations:
     legacyGenerateAnimations: 4
@@ -87,7 +52,7 @@ ModelImporter:
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
-    bakeAxisConversion: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
     skinWeightsMode: 0
     maxBonesPerVertex: 4
