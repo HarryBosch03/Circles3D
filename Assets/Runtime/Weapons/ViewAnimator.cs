@@ -8,6 +8,7 @@ namespace Runtime.Weapons
         public float translationSway;
         public float rotationSway;
         public float smoothing;
+        public float clamp;
 
         [Space]
         public Vector2 moveAmplitude;
@@ -55,7 +56,8 @@ namespace Runtime.Weapons
             };
 
             position = Vector2.Lerp(position, delta, Time.deltaTime / Mathf.Max(Time.deltaTime, smoothing));
-
+            position = Vector2.ClampMagnitude(position, clamp);
+            
             transform.localPosition = new Vector3(position.x, position.y, 0f) * translationSway;
             transform.localRotation = Quaternion.Euler(new Vector3(-position.y, position.x) * rotationSway);
         

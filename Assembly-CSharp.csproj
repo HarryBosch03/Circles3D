@@ -47,20 +47,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Runtime\Mods\GunMods\Mod.cs" />
+    <Compile Include="Assets\Runtime\Networking\SidedObject.cs" />
     <Compile Include="Assets\Runtime\Util\CenterOfMass.cs" />
     <Compile Include="Assets\Runtime\Damage\IHealthController.cs" />
     <Compile Include="Assets\Runtime\Weapons\Projectile.cs" />
     <Compile Include="Assets\Runtime\Damage\Damageable.cs" />
     <Compile Include="Assets\Runtime\Weapons\GunAnimator.cs" />
-    <Compile Include="Assets\Runtime\Stats\GunStatBoard.cs" />
+    <Compile Include="Assets\Runtime\Util\Extension.cs" />
     <Compile Include="Assets\Runtime\Weapons\ViewAnimator.cs" />
+    <Compile Include="Assets\Runtime\Animation\FabrIKRoot.cs" />
     <Compile Include="Assets\Runtime\Weapons\Gun.cs" />
     <Compile Include="Assets\Runtime\Mods\GunMods\Combine.cs" />
     <Compile Include="Assets\Runtime\Weapons\SlideAnimator.cs" />
-    <Compile Include="Assets\Runtime\Stats\PlayerStatBoard.cs" />
     <Compile Include="Assets\Runtime\Util\NetworkTestUI.cs" />
+    <Compile Include="Assets\Runtime\Animation\FabrIKNode.cs" />
     <Compile Include="Assets\Runtime\Damage\DamageArgs.cs" />
     <Compile Include="Assets\Runtime\Damage\HealthBar.cs" />
+    <Compile Include="Assets\Runtime\Mods\GunMods\Homing.cs" />
     <Compile Include="Assets\Runtime\Stats\Stat.cs" />
     <Compile Include="Assets\Runtime\Stats\StatModification.cs" />
     <Compile Include="Assets\Runtime\Stats\StatBoard.cs" />

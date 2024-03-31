@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using FishNet.Object;
 using Runtime.Damage;
 using Runtime.Player;
 using Runtime.Stats;
+using Runtime.Util;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,9 +15,11 @@ namespace Runtime.Weapons
 {
     [SelectionBase]
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(GunStatBoard))]
     public class Gun : NetworkBehaviour
     {
+        public const int DefaultModelLayer = 0;
+        public const int ViewportModelLayer = 7;
+        
         public Projectile projectile;
         public float aimSpeed = 40f;
 
@@ -39,28 +43,50 @@ namespace Runtime.Weapons
         public Image reloadProgress;
         public Image attackSpeedProgress;
 
-        private GunStatBoard stats;
+        private StatBoard stats;
         private float shootTimer;
+        
+        private GameObject model;
+        private Canvas overlay;
+        
+        private Transform leftHandHold;
+        private Transform rightHandHold;
 
         public PlayerAvatar player { get; private set; }
         public RecoilData recoilData { get; private set; }
         public float reloadTimer { get; private set; }
         public float aimPercent { get; private set; }
         public float lastShootTime { get; private set; } = float.MinValue;
+        public List<Projectile> projectiles = new();
 
         public Action<float> spawnProjectileEvent;
 
         private void Awake()
         {
             player = GetComponentInParent<PlayerAvatar>();
-            
-            stats = GetComponent<GunStatBoard>();
+            stats = GetComponentInParent<StatBoard>();
+            model = gameObject.Find("Model");
+            overlay = transform.Find<Canvas>("Overlay");
+            leftHandHold = model.transform.Search("HandHold.L");
+            rightHandHold = model.transform.Search("HandHold.R");
         }
 
         private void Start()
         {
             reloadTimer = stats.reloadTime;
             currentMagazine = stats.magazineSize.AsIntMax(1);
+        }
+
+        public override void OnStartNetwork()
+        {
+            var isOwner = Owner.IsLocalClient;
+            overlay.gameObject.SetActive(isOwner);
+
+            var modelLayer = isOwner ? ViewportModelLayer : DefaultModelLayer;
+            foreach (var child in model.GetComponentsInChildren<Transform>())
+            {
+                child.gameObject.layer = modelLayer;
+            }
         }
 
         private void LateUpdate()
@@ -76,6 +102,8 @@ namespace Runtime.Weapons
 
         private void FixedUpdate()
         {
+            projectiles.RemoveAll(e => !e);
+            
             if (IsOwner)
             {
                 if (Mouse.current.leftButton.isPressed && currentMagazine > 0) shootTimer += Time.deltaTime;
@@ -150,6 +178,8 @@ namespace Runtime.Weapons
             args.damage = damage;
             args.speed = stats.projectileSpeed;
             args.sprayAngle = stats.spray;
+            args.bounces = (int)stats.bounces;
+            args.homing = stats.homing;
             
             return args;
         }
@@ -162,6 +192,8 @@ namespace Runtime.Weapons
 
             var view = player.view;
             var instance = Projectile.Spawn(projectile, view.position, view.forward, GetProjectileSpawnArgs());
+            instance.velocity += player.body.velocity;
+            projectiles.Add(instance);
 
             currentMagazine--;
             reloadTimer = 0f;
