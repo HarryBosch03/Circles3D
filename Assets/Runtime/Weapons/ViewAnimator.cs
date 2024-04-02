@@ -18,7 +18,8 @@ namespace Runtime.Weapons
         private Vector2 position;
 
         private float distance;
-
+        private float groundedBlend;
+        
         private PlayerAvatar player;
 
         private void Awake()
@@ -28,13 +29,15 @@ namespace Runtime.Weapons
 
         private void FixedUpdate()
         {
+            groundedBlend = Mathf.MoveTowards(groundedBlend, player.onGround ? 1f : 0f, Time.deltaTime * 10f);
+            
             ApplySmoothing();
             ApplyMovement();
         }
 
         private void ApplyMovement()
         {
-            var velocity = player.onGround ? player.body.velocity : Vector3.zero;
+            var velocity = Vector3.Lerp(Vector3.zero, player.body.velocity, groundedBlend);
             var speed = new Vector2(velocity.x, velocity.z).magnitude;
         
             distance += speed * moveFrequency * Time.deltaTime;

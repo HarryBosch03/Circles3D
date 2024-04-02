@@ -53,6 +53,7 @@
     <Compile Include="Assets\Runtime\Weapons\Projectile.cs" />
     <Compile Include="Assets\Runtime\Damage\Damageable.cs" />
     <Compile Include="Assets\Runtime\Weapons\GunAnimator.cs" />
+    <Compile Include="Assets\Runtime\UI\UIBar.cs" />
     <Compile Include="Assets\Runtime\Util\Extension.cs" />
     <Compile Include="Assets\Runtime\Weapons\ViewAnimator.cs" />
     <Compile Include="Assets\Runtime\Animation\FabrIKRoot.cs" />
@@ -63,12 +64,15 @@
     <Compile Include="Assets\Runtime\Animation\FabrIKNode.cs" />
     <Compile Include="Assets\Runtime\Damage\DamageArgs.cs" />
     <Compile Include="Assets\Runtime\Damage\HealthBar.cs" />
+    <Compile Include="Assets\Runtime\Player\PlayerUI.cs" />
     <Compile Include="Assets\Runtime\Mods\GunMods\Homing.cs" />
     <Compile Include="Assets\Runtime\Stats\Stat.cs" />
+    <Compile Include="Assets\Runtime\Util\Utility.cs" />
     <Compile Include="Assets\Runtime\Stats\StatModification.cs" />
     <Compile Include="Assets\Runtime\Stats\StatBoard.cs" />
     <Compile Include="Assets\Runtime\Damage\HealthController.cs" />
     <Compile Include="Assets\Runtime\Player\PlayerAvatar.cs" />
+    <None Include="Assets\Shaders\Skybox-Procedural.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
@@ -89,6 +93,7 @@
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
+    <None Include="Assets\Shaders\Skybox.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />

@@ -2,9 +2,11 @@ namespace Runtime.Damage
 {
     public interface IHealthController : IDamageable
     {
-        public int GetCurrentHealth();
-        public int GetMaxHealth();
-        public int GetCurrentBuffer();
-        public int GetMaxBuffer();
+        public int currentHealth { get; }
+        public int currentBuffer { get; }
+        public int maxHealth { get; }
+        public int maxBuffer { get; }
+
+        public float GetHealthFactor();
     }
 }

@@ -69,6 +69,8 @@ namespace Runtime.Weapons
             transform.position += velocity * Time.deltaTime;
             velocity += Physics.gravity * Time.deltaTime;
 
+            if (age > args.lifetime / Time.fixedDeltaTime) DestroyWithStyle();
+
             age++;
         }
 
@@ -188,6 +190,7 @@ namespace Runtime.Weapons
             public float sprayAngle;
             public int bounces;
             public float homing;
+            public float lifetime;
         }
     }
 }

@@ -1,5 +1,7 @@
+using System;
 using FishNet;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Runtime.Util
 {
@@ -13,14 +15,32 @@ namespace Runtime.Util
             {
                 if (GUILayout.Button("Start Host"))
                 {
-                    InstanceFinder.ServerManager.StartConnection();
-                    InstanceFinder.ClientManager.StartConnection();
+                    StartHost();
                 }
                 if (GUILayout.Button("Start Client"))
                 {
-                    InstanceFinder.ClientManager.StartConnection();
+                    StartClient();
                 }
             }
+        }
+
+        private void Update()
+        {
+            if (!InstanceFinder.NetworkManager.IsOffline) return;
+
+            if (Keyboard.current.hKey.wasPressedThisFrame) StartHost();
+            if (Keyboard.current.cKey.wasPressedThisFrame) StartClient();
+        }
+
+        private void StartHost()
+        {
+            InstanceFinder.ServerManager.StartConnection();
+            StartClient();
+        }
+
+        private void StartClient()
+        {
+            InstanceFinder.ClientManager.StartConnection();
         }
     }
 }

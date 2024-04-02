@@ -1,4 +1,3 @@
-using FishNet.Connection;
 using FishNet.Object;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -18,6 +17,7 @@ namespace Runtime.Player
 
         [Space]
         public float cameraHeight = 1.8f;
+        public float maxWalkableSlope = 40f;
 
         [Space]
         public float mouseSensitivity = 0.3f;
@@ -41,7 +41,7 @@ namespace Runtime.Player
 
             view = transform.Find("View");
         }
-
+        
         private void FixedUpdate()
         {
             body.constraints = RigidbodyConstraints.FreezeRotation;
@@ -118,7 +118,7 @@ namespace Runtime.Player
                 orientation += Mouse.current.delta.ReadValue() * mouseSensitivity;
                 orientation.x %= 360f;
                 orientation.y = Mathf.Clamp(orientation.y, -90f, 90f);
-                
+
                 camera.transform.position = view.position;
                 camera.transform.rotation = view.rotation;
             }
@@ -126,22 +126,30 @@ namespace Runtime.Player
 
         private void CheckForGround()
         {
+            var skinWidth = onGround ? 0.35f : 0f;
             var distance = cameraHeight * 0.5f;
+            
+            onGround = false;
+            
             var ray = new Ray(transform.position + Vector3.up * distance, Vector3.down);
-            if (Physics.Raycast(ray, out groundHit, distance))
+            if (body.velocity.y < 1f && Physics.Raycast(ray, out groundHit, distance + skinWidth))
             {
-                onGround = true;
+                var dot = Vector3.Dot(groundHit.normal, Vector3.up);
                 body.position = new Vector3(body.position.x, groundHit.point.y, body.position.z);
-                body.velocity = new Vector3(body.velocity.x, Mathf.Max(0f, body.velocity.y), body.velocity.z);
-
-                if (groundHit.rigidbody)
+                
+                if (Mathf.Acos(dot) < maxWalkableSlope * Mathf.Deg2Rad)
                 {
-                    groundHit.rigidbody.AddForceAtPosition(gravity * body.mass, groundHit.point);
+                    onGround = true;
+                    body.velocity += Vector3.up * Mathf.Max(0f, Vector3.Dot(Vector3.up, -body.velocity));
+                    if (groundHit.rigidbody)
+                    {
+                        groundHit.rigidbody.AddForceAtPosition(gravity * body.mass, groundHit.point);
+                    }
                 }
-            }
-            else
-            {
-                onGround = false;
+                else
+                {
+                    body.velocity += groundHit.normal * Mathf.Max(0f, Vector3.Dot(groundHit.normal, -body.velocity));
+                }
             }
         }
 
@@ -149,7 +157,7 @@ namespace Runtime.Player
         {
             if (!IsOwner) return;
 
-            var input = new Vector2()
+            var input = new Vector2
             {
                 x = Keyboard.current.dKey.ReadValue() - Keyboard.current.aKey.ReadValue(),
                 y = Keyboard.current.wKey.ReadValue() - Keyboard.current.sKey.ReadValue(),
@@ -159,7 +167,7 @@ namespace Runtime.Player
             var acceleration = 2f / moveAcceleration;
             if (!onGround) acceleration *= 1f - airMovementPenalty;
 
-            var target = transform.TransformDirection(input.x, 0f, input.y) * moveSpeed;
+            var target = transform.TransformVector(input.x, 0f, input.y) * moveSpeed;
             var force = (target - body.velocity) * acceleration;
             force.y = 0f;
 

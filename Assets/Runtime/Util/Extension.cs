@@ -1,14 +1,33 @@
+using System;
 using GameKit.Utilities;
+using Unity.Burst.Intrinsics;
 using UnityEngine;
 
 namespace Runtime.Util
 {
     public static class Extension
     {
-        public static T Find<T>(this Transform transform, string path)
+        public static T Find<T>(this Transform transform, string path) => transform.Find(path, t => t.GetComponent<T>());
+        public static T Find<T>(this Transform transform, string path, Func<Transform, T> conversionCallback)
         {
             var find = transform.Find(path);
-            return find ? find.GetComponent<T>() : default;
+            return find ? conversionCallback(find) : default;
+        }
+
+        public static void ResetPose(this Transform transform)
+        {
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
+        }
+        
+        public static Transform InstanceChild(this Transform transform)
+        {
+            var child = new GameObject().transform;
+            child.SetParent(transform);
+            child.ResetPose();
+            child.SetAsLastSibling();
+            child.name = $"New Child.{child.GetSiblingIndex()}";
+            return child;
         }
         
         public static GameObject Find(this GameObject gameObject, string path)
@@ -24,6 +43,12 @@ namespace Runtime.Util
                 if (child.name == name) return child;
             }
             return null;
+        }
+        
+        public static T GetOrAddComponent<T>(this GameObject gameObject) where T : Component
+        {
+            var component = gameObject.GetComponent<T>();
+            return component ? component : gameObject.AddComponent<T>();
         }
     }
 }

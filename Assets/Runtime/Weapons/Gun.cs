@@ -133,7 +133,7 @@ namespace Runtime.Weapons
             if (reloadProgress)
             {
                 reloadProgress.fillAmount = reloadTimer / stats.reloadTime;
-                reloadProgress.color = new Color(1f, 1f, 1f, Mathf.Clamp01(1f - 4f * (reloadTimer - stats.reloadTime)) * 0.04f);
+                reloadProgress.color = new Color(1f, 1f, 1f, Mathf.Clamp01(1f - 4f * (reloadTimer - stats.reloadTime)) * 0.1f);
             }
 
             if (attackSpeedProgress)
@@ -141,7 +141,7 @@ namespace Runtime.Weapons
                 var shootTime = stats.attackSpeed;
                 var t = Time.time - lastShootTime;
                 attackSpeedProgress.fillAmount = t / shootTime;
-                attackSpeedProgress.color = new Color(1f, 1f, 1f, Mathf.Clamp01(1f - 4f * (t - shootTime)) * 0.04f);
+                attackSpeedProgress.color = new Color(1f, 1f, 1f, Mathf.Clamp01(1f - 4f * (t - shootTime)) * 0.2f);
             }
         }
 
@@ -180,6 +180,7 @@ namespace Runtime.Weapons
             args.sprayAngle = stats.spray;
             args.bounces = (int)stats.bounces;
             args.homing = stats.homing;
+            args.lifetime = stats.projectileLifetime;
             
             return args;
         }
