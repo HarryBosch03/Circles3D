@@ -62,6 +62,7 @@
     <Compile Include="Assets\Runtime\Util\NetworkTestUI.cs" />
     <Compile Include="Assets\Runtime\Damage\DamageScalar.cs" />
     <Compile Include="Assets\Runtime\Damage\DamageArgs.cs" />
+    <Compile Include="Assets\Runtime\Damage\PlayerHealthController.cs" />
     <Compile Include="Assets\Runtime\Animation\GunModel3rdPerson.cs" />
     <Compile Include="Assets\Runtime\Player\PlayerInstance.cs" />
     <Compile Include="Assets\Runtime\Animation\ArmAnimation.cs" />

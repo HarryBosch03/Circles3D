@@ -30,7 +30,7 @@ namespace Runtime.Weapons
 
         private void Awake() { player = GetComponentInParent<PlayerAvatar>(); }
 
-        private void FixedUpdate()
+        private void LateUpdate()
         {
             groundedBlend = Mathf.MoveTowards(groundedBlend, player.onGround ? 1f : 0f, Time.deltaTime * 10f);
 

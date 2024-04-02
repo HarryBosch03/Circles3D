@@ -81,9 +81,6 @@ namespace Runtime.Player
         private void UpdateCamera()
         {
             transform.rotation = Quaternion.Euler(0f, orientation.x, 0f);
-
-            view.position = transform.position + Vector3.up * cameraHeight;
-            view.rotation = Quaternion.Euler(-orientation.y, orientation.x, 0f);
         }
 
         private void PackNetworkData()
@@ -135,6 +132,9 @@ namespace Runtime.Player
                 x = orientation.x % 360f,
                 y = Mathf.Clamp(orientation.y, -90f, 90f),
             };
+            
+            view.position = body.position + Vector3.up * cameraHeight + body.velocity * (Time.time - Time.fixedTime);
+            view.rotation = Quaternion.Euler(-orientation.y, orientation.x, 0f);
 
             if (IsOwner)
             {
@@ -151,7 +151,7 @@ namespace Runtime.Player
 
             var zoom = gun ? gun.zoom : 1f;
             var tangent = Mathf.Tan(fieldOfView * Mathf.Deg2Rad * 0.5f);
-            fieldOfView = Mathf.Atan(tangent * zoom) * Mathf.Rad2Deg * 2f;
+            fieldOfView = Mathf.Atan(tangent / zoom) * Mathf.Rad2Deg * 2f;
 
             return fieldOfView;
         }

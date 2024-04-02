@@ -219,7 +219,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 427869120341289331}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9cd27219820be76458da2374b27610fe, type: 3}
+  m_Script: {fileID: 11500000, guid: 9184c70cc6d94b7583affec251df046d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _componentIndexCache: 1
@@ -233,6 +233,7 @@ MonoBehaviour:
   regenDelay: 5
   regenHealthPerSecond: 25
   regenHealthToBufferExchangeRate: 40
+  ragdollPrefab: {fileID: 93094525352849318, guid: 5980ff6bdc8dc8d44a8af6466181eb3d, type: 3}
 --- !u!114 &5118894930514851959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -336,8 +337,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a46802d387f84e34c939ecd613376536, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chainLength: 2
+  torsoTwist: -35
   head: {fileID: 8530645282653239459}
+  torso: {fileID: 1441762121783969257}
+  root: {fileID: 3073587850651950955}
 --- !u!1 &1077053682744939814
 GameObject:
   m_ObjectHideFlags: 0
@@ -503,7 +506,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 44.5
+  m_fontSize: 37.1
   m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -839,7 +842,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 44.5
+  m_fontSize: 37.1
   m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1388,7 +1391,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24.7
+  m_fontSize: 21
   m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1577,7 +1580,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24.7
+  m_fontSize: 21
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1741,6 +1744,11 @@ CapsuleCollider:
   m_Height: 0.5727537
   m_Direction: 1
   m_Center: {x: 0, y: 0.24198815, z: 0.00000004327085}
+--- !u!4 &1441762121783969257 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1095862665151968821, guid: 195334f26902c4c4983c1bd469c7c15b, type: 3}
+  m_PrefabInstance: {fileID: 1961144238640133084}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2071052429168710711 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 195334f26902c4c4983c1bd469c7c15b, type: 3}
@@ -1774,6 +1782,11 @@ CapsuleCollider:
   m_Height: 0.53542686
   m_Direction: 1
   m_Center: {x: 0.0000007684244, y: 0.23228672, z: -0.0000000012502919}
+--- !u!4 &3073587850651950955 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -5651751901618623305, guid: 195334f26902c4c4983c1bd469c7c15b, type: 3}
+  m_PrefabInstance: {fileID: 1961144238640133084}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5736165202675505415 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6101693149478709979, guid: 195334f26902c4c4983c1bd469c7c15b, type: 3}
@@ -1931,7 +1944,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chirality: 1
-  hintOrientation: {x: -90, y: 0, z: 0}
+  hintOrientation: {x: 180, y: 0, z: 15}
   correctiveRotation: {x: -90, y: 90, z: 90}
 --- !u!1 &6937772629913480851 stripped
 GameObject:
@@ -1974,7 +1987,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chirality: 0
-  hintOrientation: {x: -90, y: 0, z: 0}
+  hintOrientation: {x: 180, y: 0, z: -15}
   correctiveRotation: {x: -90, y: 90, z: 90}
 --- !u!4 &8530645282653239459 stripped
 Transform:

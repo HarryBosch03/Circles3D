@@ -12,6 +12,13 @@ namespace Runtime.Player
         [Space]
         public PlayerAvatar avatar;
 
+        public Camera mainCam;
+
+        private void Awake()
+        {
+            mainCam = Camera.main;
+        }
+
         protected override void OnValidate()
         {
             base.OnValidate();
@@ -39,7 +46,8 @@ namespace Runtime.Player
                     input.movement.x = kb.dKey.ReadValue() - kb.aKey.ReadValue();
                     input.movement.y = kb.wKey.ReadValue() - kb.sKey.ReadValue();
 
-                    input.lookDelta = m.delta.ReadValue() * mouseSensitivity;
+                    var tangent = Mathf.Tan(mainCam.fieldOfView * Mathf.Deg2Rad * 0.5f);
+                    input.lookDelta = m.delta.ReadValue() * mouseSensitivity * tangent;
 
                     input.run = kb.leftShiftKey.isPressed;
                     input.jump = kb.spaceKey.isPressed;

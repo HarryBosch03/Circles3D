@@ -35,8 +35,8 @@ namespace Runtime.Damage
         public int currentBuffer => Mathf.FloorToInt(currentPartialBuffer);
         public int maxHealth => maxHealth_Internal;
         public int maxBuffer => maxBuffer_Internal;
-        
-        private void Awake()
+
+        protected virtual void Awake()
         {
             body = GetComponentInParent<Rigidbody>();
             stats = GetComponentInParent<StatBoard>();
@@ -131,7 +131,7 @@ namespace Runtime.Damage
             currentPartialBuffer = Mathf.Min(currentPartialBuffer, maxBuffer);
         }
 
-        private void Kill(DamageArgs args, Vector3 point, Vector3 velocity)
+        protected virtual void Kill(DamageArgs args, Vector3 point, Vector3 velocity)
         {
             if (invulnerable) return;
             gameObject.SetActive(false);

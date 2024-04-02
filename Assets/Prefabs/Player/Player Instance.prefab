@@ -51,6 +51,7 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 2010295987501595801}
   mouseSensitivity: 0.3
   avatar: {fileID: 536672012587992150}
+  mainCam: {fileID: 0}
 --- !u!114 &2010295987501595801
 MonoBehaviour:
   m_ObjectHideFlags: 0
