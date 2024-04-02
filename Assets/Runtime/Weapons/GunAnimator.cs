@@ -8,30 +8,47 @@ namespace Runtime.Weapons
     public class GunAnimator : MonoBehaviour
     {
         [Space]
-        public Vector3 viewPosition = new Vector3(0.09f,-0.04f,0.28f);
-        public Vector3 aimPosition = new Vector3(0,0,0.23f);
+        public Vector3 fpViewPosition = new Vector3(0.09f,-0.03f,0.35f);
+        public Vector3 fpAimPosition = new Vector3(0,0,0.24f);
+        public Vector3 tpViewPosition;
+        public Vector3 tpAimPosition;
+
+        [Space]
+        public Transform thirdPersonParent;
 
         private Gun gun;
+        private Transform model;
+        private Camera mainCam;
     
         private Vector2 lastCameraRotation;
         private Vector2 weaponSwaySmoothedPosition;
 
-        public PlayerAvatar player => gun.player;
-    
         private void Awake()
         {
+            mainCam = Camera.main;
             gun = GetComponent<Gun>();
+            model = transform.Find("Model");
+            if (!model) model = transform;
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
             var recoil = gun.recoilData;
-        
-            transform.localPosition = Vector3.Lerp(viewPosition, aimPosition, gun.aimPercent);
-            transform.localRotation = Quaternion.identity;
-     
-            transform.localPosition += recoil.position;
-            transform.localRotation *= Quaternion.Euler(recoil.rotation);
+
+            var isFirstPerson = (mainCam.transform.position - transform.position).magnitude < 0.04f;
+            var viewPosition = isFirstPerson ? fpViewPosition : tpViewPosition;
+            var aimPosition = isFirstPerson ? fpAimPosition : tpAimPosition;
+
+            var parent = isFirstPerson ? model.transform.parent : thirdPersonParent;
+
+            var localPosition = Vector3.Lerp(viewPosition, aimPosition, gun.aimPercent);
+            var localRotation = Quaternion.identity;
+            
+            localPosition += recoil.position;
+            localRotation *= Quaternion.Euler(recoil.rotation);
+            
+            model.position = parent.TransformPoint(localPosition);
+            model.rotation = parent.rotation * localRotation;
         }
     }
 }

@@ -1,7 +1,6 @@
-using FishNet.Connection;
 using FishNet.Object;
+using Runtime.Weapons;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Runtime.Player
 {
@@ -9,7 +8,9 @@ namespace Runtime.Player
     [RequireComponent(typeof(Rigidbody))]
     public class PlayerAvatar : NetworkBehaviour
     {
-        public float moveSpeed = 10f;
+        [Space]
+        public float walkSpeed = 6f;
+        public float runSpeed = 10f;
         public float moveAcceleration = 0.1f;
         public float jumpHeight = 2.5f;
         public float gravityScale = 2.5f;
@@ -18,32 +19,40 @@ namespace Runtime.Player
 
         [Space]
         public float cameraHeight = 1.8f;
+        public float maxWalkableSlope = 40f;
 
         [Space]
-        public float mouseSensitivity = 0.3f;
+        public float feltRecoil = 1.0f;
 
-        public Rigidbody body;
+        [Space]
+        public float baseFieldOfView = 90f;
+        public float aimFieldOfView = 60f;
+
         private new Camera camera;
-        public Transform view;
-
-        private bool jump;
-        public bool onGround;
         private RaycastHit groundHit;
 
-        public Vector2 orientation;
+        public InputData input { get; set; }
+        public Vector2 orientation { get; set; }
 
+        public Transform view { get; private set; }
+        public Gun gun { get; private set; }
+        public Rigidbody body { get; private set; }
+        public bool onGround { get; private set; }
         private Vector3 gravity => Physics.gravity * gravityScale;
+        public PlayerInstance owningPlayerInstance { get; set; }
 
         private void Awake()
         {
             camera = Camera.main;
             body = GetComponent<Rigidbody>();
+            gun = GetComponentInChildren<Gun>();
 
             view = transform.Find("View");
         }
 
         private void FixedUpdate()
         {
+            var input = this.input;
             body.constraints = RigidbodyConstraints.FreezeRotation;
 
             CheckForGround();
@@ -51,9 +60,20 @@ namespace Runtime.Player
             Jump();
             UpdateCamera();
 
+            if (gun)
+            {
+                if (input.shoot) gun.Shoot();
+                gun.aiming = input.aim;
+                gun.projectileSpawnPoint = view;
+
+                var recoil = gun.recoilData.angularVelocity;
+                orientation += new Vector2(-recoil.y, recoil.x) * feltRecoil * Time.deltaTime;
+            }
+
             body.AddForce(gravity - Physics.gravity, ForceMode.Acceleration);
 
-            jump = false;
+            input.jump = false;
+            this.input = input;
 
             PackNetworkData();
         }
@@ -74,6 +94,7 @@ namespace Runtime.Player
             data.position = body.position;
             data.velocity = body.velocity;
             data.orientation = orientation;
+            data.input = input;
 
             SendDataToServer(data);
         }
@@ -99,8 +120,7 @@ namespace Runtime.Player
 
         private void Jump()
         {
-            if (!IsOwner) return;
-            if (!jump) return;
+            if (!input.jump) return;
             if (!onGround) return;
 
             var force = Vector3.up * Mathf.Sqrt(2f * jumpHeight * -gravity.y);
@@ -109,61 +129,75 @@ namespace Runtime.Player
 
         private void Update()
         {
+            orientation += input.lookDelta;
+            orientation = new Vector2
+            {
+                x = orientation.x % 360f,
+                y = Mathf.Clamp(orientation.y, -90f, 90f),
+            };
+
             if (IsOwner)
             {
-                Cursor.lockState = CursorLockMode.Locked;
-
-                if (Keyboard.current.spaceKey.wasPressedThisFrame) jump = true;
-
-                orientation += Mouse.current.delta.ReadValue() * mouseSensitivity;
-                orientation.x %= 360f;
-                orientation.y = Mathf.Clamp(orientation.y, -90f, 90f);
-                
                 camera.transform.position = view.position;
                 camera.transform.rotation = view.rotation;
+                camera.fieldOfView = CalculateFieldOfView();
             }
+        }
+
+        private float CalculateFieldOfView()
+        {
+            var aim = gun ? gun.aimPercent : 0f;
+            var fieldOfView = Mathf.Lerp(baseFieldOfView, aimFieldOfView, aim);
+
+            var zoom = gun ? gun.zoom : 1f;
+            var tangent = Mathf.Tan(fieldOfView * Mathf.Deg2Rad * 0.5f);
+            fieldOfView = Mathf.Atan(tangent * zoom) * Mathf.Rad2Deg * 2f;
+
+            return fieldOfView;
         }
 
         private void CheckForGround()
         {
+            var skinWidth = onGround ? 0.35f : 0f;
             var distance = cameraHeight * 0.5f;
-            var ray = new Ray(transform.position + Vector3.up * distance, Vector3.down);
-            if (Physics.Raycast(ray, out groundHit, distance))
-            {
-                onGround = true;
-                body.position = new Vector3(body.position.x, groundHit.point.y, body.position.z);
-                body.velocity = new Vector3(body.velocity.x, Mathf.Max(0f, body.velocity.y), body.velocity.z);
 
-                if (groundHit.rigidbody)
-                {
-                    groundHit.rigidbody.AddForceAtPosition(gravity * body.mass, groundHit.point);
-                }
-            }
-            else
+            onGround = false;
+
+            var ray = new Ray(transform.position + Vector3.up * distance, Vector3.down);
+            if (body.velocity.y < 1f && Physics.Raycast(ray, out groundHit, distance + skinWidth))
             {
-                onGround = false;
+                var dot = Vector3.Dot(groundHit.normal, Vector3.up);
+                body.position = new Vector3(body.position.x, groundHit.point.y, body.position.z);
+
+                if (Mathf.Acos(dot) < maxWalkableSlope * Mathf.Deg2Rad)
+                {
+                    onGround = true;
+                    body.velocity += Vector3.up * Mathf.Max(0f, Vector3.Dot(Vector3.up, -body.velocity));
+                    if (groundHit.rigidbody)
+                    {
+                        groundHit.rigidbody.AddForceAtPosition(gravity * body.mass, groundHit.point);
+                    }
+                }
+                else
+                {
+                    body.velocity += groundHit.normal * Mathf.Max(0f, Vector3.Dot(groundHit.normal, -body.velocity));
+                }
             }
         }
 
         private void Move()
         {
-            if (!IsOwner) return;
-
-            var input = new Vector2()
-            {
-                x = Keyboard.current.dKey.ReadValue() - Keyboard.current.aKey.ReadValue(),
-                y = Keyboard.current.wKey.ReadValue() - Keyboard.current.sKey.ReadValue(),
-            };
-            input = Vector2.ClampMagnitude(input, 1f);
+            var moveInput = Vector2.ClampMagnitude(input.movement, 1f);
 
             var acceleration = 2f / moveAcceleration;
             if (!onGround) acceleration *= 1f - airMovementPenalty;
 
-            var target = transform.TransformDirection(input.x, 0f, input.y) * moveSpeed;
+            var moveSpeed = input.run ? runSpeed : walkSpeed;
+            var target = transform.TransformVector(moveInput.x, 0f, moveInput.y) * moveSpeed;
             var force = (target - body.velocity) * acceleration;
             force.y = 0f;
 
-            if (!onGround) force *= input.magnitude;
+            if (!onGround) force *= moveInput.magnitude;
 
             body.AddForce(force, ForceMode.Acceleration);
         }
@@ -173,6 +207,17 @@ namespace Runtime.Player
             public Vector3 position;
             public Vector3 velocity;
             public Vector2 orientation;
+            public InputData input;
+        }
+
+        public struct InputData
+        {
+            public Vector2 movement;
+            public Vector2 lookDelta;
+            public bool run;
+            public bool jump;
+            public bool shoot;
+            public bool aim;
         }
     }
 }

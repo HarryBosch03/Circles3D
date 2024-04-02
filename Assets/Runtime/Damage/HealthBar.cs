@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,7 +17,7 @@ namespace Runtime.Damage
 
         private void Update()
         {
-            fill.fillAmount = Mathf.Clamp01((float)target.GetCurrentHealth() / target.GetMaxHealth());
+            fill.fillAmount = Mathf.Clamp01((float)target.currentHealth / target.maxHealth);
         }
     }
 }

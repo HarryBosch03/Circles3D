@@ -135,11 +135,11 @@ MonoBehaviour:
     m_PointSize: 61
     m_Scale: 1
     m_UnitsPerEM: 1000
-    m_LineHeight: 74.359
-    m_AscentLine: 59.048
+    m_LineHeight: 47.1
+    m_AscentLine: 34
     m_CapLine: 43
     m_MeanLine: 34
-    m_Baseline: 0
+    m_Baseline: -11.5
     m_DescentLine: -15.311001
     m_SuperscriptOffset: 59.048
     m_SuperscriptSize: 0.5
