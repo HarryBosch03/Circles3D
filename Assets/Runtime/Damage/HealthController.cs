@@ -83,7 +83,6 @@ namespace Runtime.Damage
 
         public void Damage(DamageArgs args, Vector3 point, Vector3 velocity)
         {
-            args.damage = Mathf.Max(1, args.damage);
             lastDamageTime = Time.time;
 
             if (body) body.AddForceAtPosition(velocity.normalized * args.GetKnockback(velocity.magnitude), point, ForceMode.Impulse);
@@ -100,7 +99,7 @@ namespace Runtime.Damage
                 }
             }
 
-            if (currentPartialHealth < 0 && currentPartialBuffer < 0)
+            if (currentPartialHealth <= 0 && currentPartialBuffer <= 0)
             {
                 Kill(args, point, velocity);
             }

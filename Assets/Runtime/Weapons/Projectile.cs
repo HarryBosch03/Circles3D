@@ -10,9 +10,12 @@ namespace Runtime.Weapons
 {
     public class Projectile : MonoBehaviour
     {
+        private const int IgnoreDamageLayer = 8;
+
         private const float HomingSpeed = 8f;
 
         public GameObject hitFX;
+        public float baseSize = 0.1f;
 
         private TrailRenderer trail;
         private LineRenderer sensorLines;
@@ -24,6 +27,7 @@ namespace Runtime.Weapons
         private int age;
 
         private PlayerAvatar homingTarget;
+        private PlayerAvatar shooter;
 
         private void Awake()
         {
@@ -43,7 +47,7 @@ namespace Runtime.Weapons
             lockLines.enabled = false;
         }
 
-        public static Projectile Spawn(Projectile prefab, Vector3 position, Vector3 direction, SpawnArgs args)
+        public static Projectile Spawn(Projectile prefab, PlayerAvatar shooter, Vector3 position, Vector3 direction, SpawnArgs args)
         {
             direction.Normalize();
             var orientation = Quaternion.LookRotation(direction);
@@ -57,6 +61,7 @@ namespace Runtime.Weapons
             var instance = Instantiate(prefab, position, Quaternion.LookRotation(direction));
             instance.args = args;
             instance.velocity = direction * args.speed;
+            instance.shooter = shooter;
             return instance;
         }
 
@@ -137,7 +142,8 @@ namespace Runtime.Weapons
             var ray = new Ray(transform.position, velocity);
             var step = velocity.magnitude * Time.deltaTime * 1.01f;
 
-            var collisions = Physics.RaycastAll(ray, step).OrderBy(e => e.distance);
+            var mask = ~(1 << IgnoreDamageLayer);
+            var collisions = Physics.SphereCastAll(ray, baseSize, step, mask).OrderBy(e => e.distance);
 
             foreach (var hit in collisions)
             {
@@ -148,12 +154,14 @@ namespace Runtime.Weapons
 
         private void ProcessHit(RaycastHit hit)
         {
+            if (age < 2 && shooter && hit.collider.transform.IsChildOf(shooter.transform)) return;
+            
             dead = true;
-
+            
             var damageable = hit.collider.GetComponentInParent<IDamageable>();
             if (damageable != null)
             {
-                if (age > 0) damageable.Damage(args.damage, hit.point, velocity);
+                damageable.Damage(args.damage, hit.point, velocity);
             }
             else if (args.bounces > 0)
             {

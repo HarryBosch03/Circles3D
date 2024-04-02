@@ -15,21 +15,32 @@ namespace Runtime.Player
         private PlayerAvatar player;
         private HealthController health;
 
+        private Canvas canvas;
         private UIBar healthBar;
         private UIBar bufferBar;
         private float healthBufferBlend;
+
+        public bool isOwner => player.owningPlayerInstance;
 
         private void Awake()
         {
             player = GetComponent<PlayerAvatar>();
             health = GetComponent<HealthController>();
 
-            healthBar = transform.Find<UIBar>("Overlay/Vitality/Health");
-            bufferBar = transform.Find<UIBar>("Overlay/Vitality/Buffer");
+            canvas = transform.Find<Canvas>("Overlay");
+            healthBar = canvas.transform.Find<UIBar>("Vitality/Health");
+            bufferBar = canvas.transform.Find<UIBar>("Vitality/Buffer");
         }
 
         private void Update()
         {
+            if (!isOwner)
+            {
+                canvas.gameObject.SetActive(false);
+                return;
+            }
+            
+            canvas.gameObject.SetActive(true);
             healthBufferBlend = Mathf.MoveTowards(healthBufferBlend, health.currentBuffer > 0 && health.maxBuffer > 0 ? 1f : 0f, animationSpeed * Time.deltaTime);
             
             var t = animation.Evaluate(healthBufferBlend);

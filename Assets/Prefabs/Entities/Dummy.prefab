@@ -78,14 +78,14 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 3046374273342400761}
   _networkObjectCache: {fileID: 3046374273342400761}
-  currentHealth: 0
-  currentBuffer: 0
-  maxHealth: 100
-  maxBuffer: 0
+  currentPartialHealth: 0
+  currentPartialBuffer: 0
+  maxHealth_Internal: 100
+  maxBuffer_Internal: 0
   invulnerable: 1
-  regenDelay: 5
-  regenRate: 4
-  regenAmount: 10
+  regenDelay: 3
+  regenHealthPerSecond: 200
+  regenHealthToBufferExchangeRate: 40
 --- !u!114 &3046374273342400761
 MonoBehaviour:
   m_ObjectHideFlags: 0

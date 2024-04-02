@@ -19,9 +19,10 @@ namespace Runtime.Weapons
     {
         public const int DefaultModelLayer = 0;
         public const int ViewportModelLayer = 7;
-        
+
         public Projectile projectile;
         public float aimSpeed = 40f;
+        public float aimZoom = 1f;
 
         [Space]
         public int currentMagazine = 3;
@@ -33,7 +34,6 @@ namespace Runtime.Weapons
         [Space]
         public float recoilSpring = 300f;
         public float recoilDamping = 20f;
-        public float recoilFollowThrough = 125f;
 
         [Space]
         public ParticleSystem flash;
@@ -42,33 +42,51 @@ namespace Runtime.Weapons
         public TMP_Text ammoText;
         public Image reloadProgress;
         public Image attackSpeedProgress;
+        public CanvasGroup dot;
 
+        private PlayerAvatar owner;
+        private Rigidbody body;
         private StatBoard stats;
-        private float shootTimer;
-        
+
         private GameObject model;
         private Canvas overlay;
-        
-        private Transform leftHandHold;
-        private Transform rightHandHold;
 
-        public PlayerAvatar player { get; private set; }
+        private Transform muzzle;
+
+        public bool aiming { get; set; }
+        public Transform projectileSpawnPoint { get; set; }
         public RecoilData recoilData { get; private set; }
         public float reloadTimer { get; private set; }
         public float aimPercent { get; private set; }
+        public Transform leftHandHold { get; private set; }
+        public Transform rightHandHold { get; private set; }
+        public float zoom => Mathf.Lerp(1f, aimZoom, aimPercent);
         public float lastShootTime { get; private set; } = float.MinValue;
         public List<Projectile> projectiles = new();
 
-        public Action<float> spawnProjectileEvent;
+        public Action spawnProjectileEvent;
+        
+        public void Shoot()
+        {
+            if (currentMagazine > 0 && Time.time - lastShootTime > 1f / stats.attackSpeed)
+            {
+                SpawnProjectile();
+                SpawnProjectileOnServer();
+            }
+        }
 
         private void Awake()
         {
-            player = GetComponentInParent<PlayerAvatar>();
+            owner = GetComponentInParent<PlayerAvatar>();
+            body = GetComponentInParent<Rigidbody>();
             stats = GetComponentInParent<StatBoard>();
             model = gameObject.Find("Model");
             overlay = transform.Find<Canvas>("Overlay");
             leftHandHold = model.transform.Search("HandHold.L");
             rightHandHold = model.transform.Search("HandHold.R");
+            muzzle = model.transform.Search("Muzzle");
+
+            if (!stats) stats = gameObject.AddComponent<StatBoard>();
         }
 
         private void Start()
@@ -96,34 +114,15 @@ namespace Runtime.Weapons
                 aimPercent += ((Mouse.current.rightButton.isPressed ? 1f : 0f) - aimPercent) * aimSpeed * Time.deltaTime;
                 aimPercent = Mathf.Clamp01(aimPercent);
             }
-
-            player.orientation += new Vector2(recoilData.velocity.x, recoilData.velocity.z) * Time.deltaTime * recoilFollowThrough;
         }
 
         private void FixedUpdate()
         {
             projectiles.RemoveAll(e => !e);
-            
-            if (IsOwner)
-            {
-                if (Mouse.current.leftButton.isPressed && currentMagazine > 0) shootTimer += Time.deltaTime;
-                else shootTimer = 0f;
-            }
-
-            var i = 0;
-            while (shootTimer > 0f)
-            {
-                SpawnProjectile(shootTimer);
-                SpawnProjectileOnServer(shootTimer);
-                shootTimer -= stats.attackSpeed;
-                if (i++ > 50) break;
-            }
 
             UpdateRecoil();
             Reload();
-
             UpdateUI();
-
             PackNetworkData();
         }
 
@@ -138,11 +137,13 @@ namespace Runtime.Weapons
 
             if (attackSpeedProgress)
             {
-                var shootTime = stats.attackSpeed;
+                var attackTime = 1f / stats.attackSpeed;
                 var t = Time.time - lastShootTime;
-                attackSpeedProgress.fillAmount = t / shootTime;
-                attackSpeedProgress.color = new Color(1f, 1f, 1f, Mathf.Clamp01(1f - 4f * (t - shootTime)) * 0.2f);
+                attackSpeedProgress.fillAmount = t / attackTime;
+                attackSpeedProgress.color = new Color(1f, 1f, 1f, Mathf.Clamp01(1f - 4f * (t - attackTime)) * 0.2f);
             }
+
+            dot.alpha = 1f - aimPercent;
         }
 
         private void Reload()
@@ -170,10 +171,8 @@ namespace Runtime.Weapons
         private Projectile.SpawnArgs GetProjectileSpawnArgs()
         {
             Projectile.SpawnArgs args;
-            
-            DamageArgs damage;
-            damage.damage = stats.damage.AsInt();
-            damage.baseKnockback = stats.knockback;
+
+            var damage = new DamageArgs(stats.damage.AsInt(), stats.knockback);
 
             args.damage = damage;
             args.speed = stats.projectileSpeed;
@@ -181,26 +180,26 @@ namespace Runtime.Weapons
             args.bounces = (int)stats.bounces;
             args.homing = stats.homing;
             args.lifetime = stats.projectileLifetime;
-            
+
             return args;
         }
-        
-        private void SpawnProjectile(float subTime)
+
+        private void SpawnProjectile()
         {
-            spawnProjectileEvent?.Invoke(subTime);
+            spawnProjectileEvent?.Invoke();
 
-            lastShootTime = Time.time - subTime;
+            lastShootTime = Time.time;
 
-            var view = player.view;
-            var instance = Projectile.Spawn(projectile, view.position, view.forward, GetProjectileSpawnArgs());
-            instance.velocity += player.body.velocity;
+            var view = projectileSpawnPoint ? projectileSpawnPoint : muzzle;
+            var instance = Projectile.Spawn(projectile, owner, view.position, view.forward, GetProjectileSpawnArgs());
+            instance.velocity += body ? body.velocity : Vector3.zero;
             projectiles.Add(instance);
 
             currentMagazine--;
             reloadTimer = 0f;
 
             ApplyRecoilForceToPlayer(instance);
-            
+
             var recoilData = this.recoilData;
             recoilData.position += new Vector3
             {
@@ -223,20 +222,20 @@ namespace Runtime.Weapons
         {
             var args = GetProjectileSpawnArgs();
             var force = args.damage.GetKnockback(args.speed) * 0.5f;
-            player.body.AddForce(-projectile.transform.forward * force, ForceMode.Impulse);
+            if (body) body.AddForce(-projectile.transform.forward * force, ForceMode.Impulse);
         }
 
         [ServerRpc]
-        private void SpawnProjectileOnServer(float subTime)
+        private void SpawnProjectileOnServer()
         {
-            SpawnProjectileOnClients(subTime);
-            if (!IsOwner) SpawnProjectile(subTime);
+            SpawnProjectileOnClients();
+            if (!IsOwner) SpawnProjectile();
         }
 
         [ObserversRpc(ExcludeServer = true)]
-        private void SpawnProjectileOnClients(float subTime)
+        private void SpawnProjectileOnClients()
         {
-            if (!IsOwner) SpawnProjectile(subTime);
+            if (!IsOwner) SpawnProjectile();
         }
 
         private void PackNetworkData()

@@ -6,7 +6,7 @@ using UnityEngine;
 [InitializeOnLoad]
 public class Shortcuts : MonoBehaviour
 {
-    private const string PlayerPrefabPath = "Assets/Prefabs/Player/Player.prefab";
+    private const string PlayerPrefabPath = "Assets/Prefabs/Player/Player Avatar.prefab";
 
     private static List<GameObject> tempPrefabInstances = new();
 
@@ -32,6 +32,16 @@ public class Shortcuts : MonoBehaviour
         
         PrefabStageUtility.OpenPrefab(PlayerPrefabPath, instance, PrefabStage.Mode.InContext);
     }
+    
+    [MenuItem(Goto.PlayerPrefab.Select)]
+    public static void SelectPlayer()
+    {
+        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PlayerPrefabPath);
+        EditorGUIUtility.PingObject(prefab);
+        
+        Selection.objects = new Object[] { prefab };
+        Selection.activeObject = prefab;
+    }
 
     private static void OnPrefabStageClosing(PrefabStage stage)
     {
@@ -52,6 +62,7 @@ public class Shortcuts : MonoBehaviour
 
             public const string InIsolation = Goto.path + path + "In Isolation";
             public const string InContext = Goto.path + path + "In Context";
+            public const string Select = Goto.path + path + "Select";
         }
     }
 }

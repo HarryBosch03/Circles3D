@@ -14,11 +14,11 @@ namespace Runtime.Stats
         
         [Space]
         [Header("Weapon Stats")]
-        public Stat damage = 5f;
+        public Stat damage = 45f;
         public Stat knockback = 0f;
         public Stat projectileSpeed = 120f;
         public Stat spray = 0.5f;
-        public Stat attackSpeed = 60f / 300f;
+        public Stat attackSpeed = 5f;
         public Stat magazineSize = 3f;
         public Stat reloadTime = 1.5f;
         public Stat recoil = 1f;
@@ -37,10 +37,15 @@ namespace Runtime.Stats
                 stats.Add((Stat)field.GetValue(this));
             }
 
-            float max0(float v) => Mathf.Max(0, v);
+            UpdateStats();
         }
 
         protected virtual void FixedUpdate()
+        {
+            UpdateStats();
+        }
+
+        private void UpdateStats()
         {
             foreach (var stat in stats) stat.Reset();
             foreach (var mod in mods) mod.Apply(this);
