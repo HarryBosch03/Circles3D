@@ -825,6 +825,17 @@ MonoBehaviour:
   _scenePathHash: 584410112
   <SceneId>k__BackingField: 2510022322527624641
   <AssetPathHash>k__BackingField: 0
+--- !u!114 &652558277 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8375215080905330289, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+  m_PrefabInstance: {fileID: 678092812}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &678092812
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -889,6 +900,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -16.146
       objectReference: {fileID: 0}
+    - target: {fileID: 5539289144701406668, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+      propertyPath: _networkObjectCache
+      value: 
+      objectReference: {fileID: 652558277}
+    - target: {fileID: 5539289144701406668, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+      propertyPath: _componentIndexCache
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5902166749569077980, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
       propertyPath: m_Name
       value: Barrel (4)
@@ -901,6 +920,14 @@ PrefabInstance:
       propertyPath: <SceneId>k__BackingField
       value: 2510022321618399419
       objectReference: {fileID: 0}
+    - target: {fileID: 8375215080905330289, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+      propertyPath: _networkBehaviours.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8375215080905330289, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+      propertyPath: _networkBehaviours.Array.data[0]
+      value: 
+      objectReference: {fileID: 678092813}
     - target: {fileID: 9002650549497568209, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
       propertyPath: _networkObjectCache
       value: 
@@ -914,6 +941,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+--- !u!114 &678092813 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5539289144701406668, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+  m_PrefabInstance: {fileID: 678092812}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27555960b1084ae4a7ad6967f89a6505, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &686002361
 GameObject:
   m_ObjectHideFlags: 0
@@ -1291,6 +1329,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5539289144701406668, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+      propertyPath: _networkObjectCache
+      value: 
+      objectReference: {fileID: 1976467206}
+    - target: {fileID: 5539289144701406668, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+      propertyPath: _componentIndexCache
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5902166749569077980, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
       propertyPath: m_Name
       value: Barrel (2)
@@ -1303,6 +1349,14 @@ PrefabInstance:
       propertyPath: <SceneId>k__BackingField
       value: 2510022319024771643
       objectReference: {fileID: 0}
+    - target: {fileID: 8375215080905330289, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+      propertyPath: _networkBehaviours.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8375215080905330289, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+      propertyPath: _networkBehaviours.Array.data[0]
+      value: 
+      objectReference: {fileID: 748192985}
     - target: {fileID: 9002650549497568209, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
       propertyPath: _networkObjectCache
       value: 
@@ -1316,6 +1370,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+--- !u!114 &748192985 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5539289144701406668, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+  m_PrefabInstance: {fileID: 748192984}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27555960b1084ae4a7ad6967f89a6505, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &785675057 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3285592848278885714, guid: a24f308978bb0fe45aa105ca253aad05, type: 3}
@@ -1467,6 +1532,17 @@ Transform:
   - {fileID: 554529990}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &832824885 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8375215080905330289, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+  m_PrefabInstance: {fileID: 881003162}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &840903283 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 406766d9dfcdfa64eb59f5698ec93555, type: 3}
@@ -1542,6 +1618,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5539289144701406668, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+      propertyPath: _networkObjectCache
+      value: 
+      objectReference: {fileID: 832824885}
+    - target: {fileID: 5539289144701406668, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+      propertyPath: _componentIndexCache
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5902166749569077980, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
       propertyPath: m_Name
       value: Barrel (1)
@@ -1554,6 +1638,14 @@ PrefabInstance:
       propertyPath: <SceneId>k__BackingField
       value: 2510022320460319760
       objectReference: {fileID: 0}
+    - target: {fileID: 8375215080905330289, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+      propertyPath: _networkBehaviours.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8375215080905330289, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+      propertyPath: _networkBehaviours.Array.data[0]
+      value: 
+      objectReference: {fileID: 881003163}
     - target: {fileID: 9002650549497568209, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
       propertyPath: _networkObjectCache
       value: 
@@ -1567,6 +1659,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+--- !u!114 &881003163 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5539289144701406668, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+  m_PrefabInstance: {fileID: 881003162}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27555960b1084ae4a7ad6967f89a6505, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1811,6 +1914,28 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1209799414}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1392067159 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3046374273342400761, guid: e5b52fd5f6b4dea42a4bc60869330c9c, type: 3}
+  m_PrefabInstance: {fileID: 3954070743564616972}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1392067163 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 480625873472826400, guid: e5b52fd5f6b4dea42a4bc60869330c9c, type: 3}
+  m_PrefabInstance: {fileID: 3954070743564616972}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27555960b1084ae4a7ad6967f89a6505, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1505795728
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1859,6 +1984,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5539289144701406668, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+      propertyPath: _networkObjectCache
+      value: 
+      objectReference: {fileID: 1539137451}
+    - target: {fileID: 5539289144701406668, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+      propertyPath: _componentIndexCache
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5902166749569077980, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
       propertyPath: m_Name
       value: Barrel (3)
@@ -1871,6 +2004,14 @@ PrefabInstance:
       propertyPath: <SceneId>k__BackingField
       value: 2510022322272523746
       objectReference: {fileID: 0}
+    - target: {fileID: 8375215080905330289, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+      propertyPath: _networkBehaviours.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8375215080905330289, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+      propertyPath: _networkBehaviours.Array.data[0]
+      value: 
+      objectReference: {fileID: 1505795729}
     - target: {fileID: 9002650549497568209, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
       propertyPath: _networkObjectCache
       value: 
@@ -1884,10 +2025,43 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+--- !u!114 &1505795729 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5539289144701406668, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+  m_PrefabInstance: {fileID: 1505795728}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27555960b1084ae4a7ad6967f89a6505, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1539137451 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8375215080905330289, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+  m_PrefabInstance: {fileID: 1505795728}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1591781355 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5770584444536181835, guid: a24f308978bb0fe45aa105ca253aad05, type: 3}
   m_PrefabInstance: {fileID: 524503173}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1593155675 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8375215080905330289, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+  m_PrefabInstance: {fileID: 5621474731006702698}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -2293,6 +2467,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1976467206 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8375215080905330289, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+  m_PrefabInstance: {fileID: 748192984}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1981390088
 GameObject:
   m_ObjectHideFlags: 0
@@ -2410,6 +2595,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dummy
       objectReference: {fileID: 0}
+    - target: {fileID: 480625873472826400, guid: e5b52fd5f6b4dea42a4bc60869330c9c, type: 3}
+      propertyPath: _networkObjectCache
+      value: 
+      objectReference: {fileID: 1392067159}
+    - target: {fileID: 480625873472826400, guid: e5b52fd5f6b4dea42a4bc60869330c9c, type: 3}
+      propertyPath: _componentIndexCache
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3046374273342400761, guid: e5b52fd5f6b4dea42a4bc60869330c9c, type: 3}
       propertyPath: _scenePathHash
       value: 584410112
@@ -2418,6 +2611,14 @@ PrefabInstance:
       propertyPath: <SceneId>k__BackingField
       value: 2510022319966843984
       objectReference: {fileID: 0}
+    - target: {fileID: 3046374273342400761, guid: e5b52fd5f6b4dea42a4bc60869330c9c, type: 3}
+      propertyPath: _networkBehaviours.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3046374273342400761, guid: e5b52fd5f6b4dea42a4bc60869330c9c, type: 3}
+      propertyPath: _networkBehaviours.Array.data[1]
+      value: 
+      objectReference: {fileID: 1392067163}
     - target: {fileID: 6090590017111959456, guid: e5b52fd5f6b4dea42a4bc60869330c9c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.9
@@ -2515,6 +2716,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5539289144701406668, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+      propertyPath: _networkObjectCache
+      value: 
+      objectReference: {fileID: 1593155675}
+    - target: {fileID: 5539289144701406668, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+      propertyPath: _componentIndexCache
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5902166749569077980, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
       propertyPath: m_Name
       value: Barrel
@@ -2527,6 +2736,14 @@ PrefabInstance:
       propertyPath: <SceneId>k__BackingField
       value: 2510022322022836150
       objectReference: {fileID: 0}
+    - target: {fileID: 8375215080905330289, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+      propertyPath: _networkBehaviours.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8375215080905330289, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+      propertyPath: _networkBehaviours.Array.data[0]
+      value: 
+      objectReference: {fileID: 5621474731006702699}
     - target: {fileID: 9002650549497568209, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
       propertyPath: _networkObjectCache
       value: 
@@ -2540,6 +2757,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+--- !u!114 &5621474731006702699 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5539289144701406668, guid: aa6260e70ae44ff4eb9354974ebd6d3f, type: 3}
+  m_PrefabInstance: {fileID: 5621474731006702698}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27555960b1084ae4a7ad6967f89a6505, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

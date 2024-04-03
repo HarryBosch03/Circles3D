@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1482413421558378427}
   - component: {fileID: 5621008575658372449}
   - component: {fileID: 8375215080905330289}
-  - component: {fileID: 8411406937375132638}
+  - component: {fileID: 5539289144701406668}
   m_Layer: 0
   m_Name: Barrel
   m_TagString: Untagged
@@ -82,7 +82,7 @@ MonoBehaviour:
   <ParentNetworkObject>k__BackingField: {fileID: 0}
   <ChildNetworkObjects>k__BackingField: []
   SerializedTransformProperties:
-    Position: {x: -11.62, y: 0, z: 2.769}
+    Position: {x: -11.512, y: 0.893, z: 2.907}
     Rotation: {x: 0, y: 0, z: 0, w: 1}
     LocalScale: {x: 1, y: 1, z: 1}
   _isNetworked: 1
@@ -95,7 +95,7 @@ MonoBehaviour:
   _scenePathHash: 0
   <SceneId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 18239325517910710460
---- !u!114 &8411406937375132638
+--- !u!114 &5539289144701406668
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -104,42 +104,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 5902166749569077980}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
+  m_Script: {fileID: 11500000, guid: 27555960b1084ae4a7ad6967f89a6505, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 8375215080905330289}
   _networkObjectCache: {fileID: 0}
-  _componentConfiguration: 2
-  _synchronizeParent: 0
-  _packing:
-    Position: 1
-    Rotation: 1
-    Scale: 0
-  _interpolation: 2
-  _extrapolation: 2
-  _enableTeleport: 1
-  _teleportThreshold: 1
-  _scaleThreshold: 1
-  _clientAuthoritative: 0
-  _sendToOwner: 1
-  _enableNetworkLod: 1
-  _interval: 1
-  _synchronizePosition: 1
-  _positionSnapping:
-    X: 0
-    Y: 0
-    Z: 0
-  _synchronizeRotation: 1
-  _rotationSnapping:
-    X: 0
-    Y: 0
-    Z: 0
-  _synchronizeScale: 1
-  _scaleSnapping:
-    X: 0
-    Y: 0
-    Z: 0
+  positionThreshold: 1
+  rotationThreshold: 1
+  velocityThreshold: 1
+  angularVelocityThreshold: 1
 --- !u!1001 &4837191457170108891
 PrefabInstance:
   m_ObjectHideFlags: 0

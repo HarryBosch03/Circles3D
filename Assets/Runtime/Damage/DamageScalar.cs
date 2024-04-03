@@ -27,10 +27,10 @@ namespace Runtime.Damage
             }
         }
 
-        public void Damage(DamageArgs args, Vector3 point, Vector3 velocity, out IDamageable.DamageReport report)
+        public void Damage(NetworkObject invoker, DamageArgs args, Vector3 point, Vector3 velocity, out IDamageable.DamageReport report)
         {
             args.damageScale *= damageScale;
-            parent.Damage(args, point, velocity, out report);
+            parent.Damage(invoker, args, point, velocity, out report);
         }
     }
 }

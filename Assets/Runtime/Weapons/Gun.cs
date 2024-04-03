@@ -251,6 +251,7 @@ namespace Runtime.Weapons
         private void PackNetworkData()
         {
             if (!IsOwner) return;
+            if (!IsSpawned) return;
 
             NetworkData data;
             data.aimPercent = aimPercent;

@@ -1,3 +1,5 @@
+using FishNet.Object;
+using Runtime.Player;
 using UnityEngine;
 
 namespace Runtime.Damage
@@ -8,26 +10,37 @@ namespace Runtime.Damage
 
         private Transform model;
         
+        public string reasonForDeath { get; private set; }
+        
         protected override void Awake()
         {
             base.Awake();
             model = transform.Find("Model");
         }
 
-        protected override void Kill(DamageArgs args, Vector3 point, Vector3 velocity)
+        protected override void Kill(NetworkObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
         {
-            base.Kill(args, point, velocity);
+            var killerAvatar = invoker ? invoker.GetComponent<PlayerAvatar>() : null;
+            var killer = killerAvatar ? killerAvatar.owningPlayerInstance : null;
+            reasonForDeath = killer ? $"Killed by {killer.displayName}" : null;
+            
+            if (IsServer) SpawnRagdoll(velocity * args.damage * 0.0006f, point);
+            
+            base.Kill(invoker, args, point, velocity);
+        }
+        
+        [ObserversRpc(RunLocally = true)]
+        private void SpawnRagdoll(Vector3 force, Vector3 point)
+        {
+            if (!ragdollPrefab) return;
+            
+            var ragdoll = Instantiate(ragdollPrefab, transform.position, transform.rotation);
+            LineupRagdoll(model, ragdoll.transform.Find("Model"));
 
-            if (ragdollPrefab)
+            foreach (var other in ragdoll.GetComponentsInChildren<Rigidbody>())
             {
-                var ragdoll = Instantiate(ragdollPrefab, transform.position, transform.rotation);
-                LineupRagdoll(model, ragdoll.transform.Find("Model"));
-
-                foreach (var other in ragdoll.GetComponentsInChildren<Rigidbody>())
-                {
-                    other.AddForce(body.velocity, ForceMode.VelocityChange);
-                    other.AddForceAtPosition(velocity * args.damage * 0.0006f, point, ForceMode.Impulse);
-                }
+                other.AddForce(body.velocity, ForceMode.VelocityChange);
+                other.AddForceAtPosition(force, point, ForceMode.Impulse);
             }
         }
 

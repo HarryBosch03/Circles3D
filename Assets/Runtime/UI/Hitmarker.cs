@@ -23,11 +23,11 @@ namespace Runtime.UI
         private CanvasGroup group;
         private Image[] components;
 
-        private PlayerInstance player;
+        private PlayerAvatar player;
         
         private void Awake()
         {
-            player = GetComponentInParent<PlayerInstance>();
+            player = GetComponentInParent<PlayerAvatar>();
             group = GetComponent<CanvasGroup>();
             components = GetComponentsInChildren<Image>();
         }
@@ -45,7 +45,8 @@ namespace Runtime.UI
 
         private void OnPlayerDealtDamage(PlayerInstance player, IDamageable.DamageReport report)
         {
-            if (player != this.player) return;
+            if (!this.player) return;
+            if (player != this.player.owningPlayerInstance) return;
             if (!player.IsOwner) return;
 
             if (report.lethal) Show(Flavour.Lethal);

@@ -92,6 +92,7 @@ namespace Runtime.Player
         private void PackNetworkData()
         {
             if (!IsOwner) return;
+            if (!IsSpawned) return;
 
             NetworkData data;
             data.position = body.position;
@@ -119,6 +120,7 @@ namespace Runtime.Player
             body.position = data.position;
             body.velocity = data.velocity;
             orientation = data.orientation;
+            input = data.input;
         }
 
         private void Jump()

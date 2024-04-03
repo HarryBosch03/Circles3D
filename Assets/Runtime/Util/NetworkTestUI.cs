@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using FishNet;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -20,6 +21,10 @@ namespace Runtime.Util
                 {
                     StartClient();
                 }
+                if (GUILayout.Button("Ninja"))
+                {
+                    StartNinja();
+                }
             }
         }
 
@@ -29,6 +34,7 @@ namespace Runtime.Util
 
             if (Keyboard.current.hKey.wasPressedThisFrame) StartHost();
             if (Keyboard.current.cKey.wasPressedThisFrame) StartClient();
+            if (Keyboard.current.nKey.wasPressedThisFrame) StartNinja();
         }
 
         private void StartHost()
@@ -40,6 +46,11 @@ namespace Runtime.Util
         private void StartClient()
         {
             InstanceFinder.ClientManager.StartConnection();
+        }
+        
+        private void StartNinja()
+        {
+            Process.Start("https://www.twitch.tv/ninja");
         }
     }
 }
