@@ -11,13 +11,9 @@ namespace Runtime.Damage
     {
         const float BufferToHealth = 40f;
 
-        [SyncVar(WritePermissions = WritePermission.ClientUnsynchronized)]
         public float currentPartialHealth;
-        [SyncVar(WritePermissions = WritePermission.ClientUnsynchronized)]
         public float currentPartialBuffer;
-        [SyncVar(WritePermissions = WritePermission.ClientUnsynchronized)]
         public int maxHealth_Internal = 100;
-        [SyncVar(WritePermissions = WritePermission.ClientUnsynchronized)]
         public int maxBuffer_Internal = 0;
         public bool invulnerable;
 

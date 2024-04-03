@@ -26,7 +26,6 @@ namespace Runtime.Weapons
         public float aimZoom = 1f;
 
         [Space]
-        [SyncVar(WritePermissions = WritePermission.ClientUnsynchronized)]
         public int currentMagazine = 3;
 
         [Space]
