@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Gun_Slide
-  m_Shader: {fileID: -6465566751694194690, guid: 26ad7c951f6d2d04490f8c622ed5a82a, type: 3}
+  m_Shader: {fileID: 4800000, guid: b8829b075e6bdc84fb5717ff5088f6c8, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -37,7 +37,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _Albedo:
-        m_Texture: {fileID: 2800000, guid: d6e0a431507562847a2494dd876e1529, type: 3}
+        m_Texture: {fileID: 2800000, guid: 87971e0f4dc097e4d9ca5fdae51c1653, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
@@ -110,6 +110,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Alpha: 1
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _Blend: 0
@@ -152,6 +153,6 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _Tint_Color: {r: 0.85882354, g: 0.5094091, b: 0.32156864, a: 0}
+    - _Tint_Color: {r: 0.84400004, g: 0.5010046, b: 0.31601828, a: 1}
     - _idkhowtomakeemissionslider: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []

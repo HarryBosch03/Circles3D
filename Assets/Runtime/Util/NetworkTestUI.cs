@@ -1,4 +1,3 @@
-using System;
 using FishNet;
 using UnityEngine;
 using UnityEngine.InputSystem;

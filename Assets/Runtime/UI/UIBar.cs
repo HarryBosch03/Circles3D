@@ -45,7 +45,7 @@ namespace Runtime.UI
 
         public RectTransform rectTransform => transform as RectTransform;
 
-        private void OnValidate()
+        private void Awake()
         {
             Find(ref background, "Background");
             Find(ref deltaFill, "Delta Fill");

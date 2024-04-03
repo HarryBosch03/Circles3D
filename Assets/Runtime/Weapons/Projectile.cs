@@ -27,7 +27,10 @@ namespace Runtime.Weapons
         private int age;
 
         private PlayerAvatar homingTarget;
-        private PlayerAvatar shooter;
+
+        public PlayerAvatar shooter { get; private set; }
+
+        public static event Action<Projectile, RaycastHit, IDamageable.DamageReport> projectileDealtDamageEvent;
 
         private void Awake()
         {
@@ -158,7 +161,11 @@ namespace Runtime.Weapons
 
             dead = true;
 
-            if (!IDamageable.Damage(hit, args.damage, velocity))
+            if (IDamageable.Damage(hit, args.damage, velocity, out var report))
+            {
+                projectileDealtDamageEvent?.Invoke(this, hit, report);
+            }
+            else
             {
                 if (args.bounces > 0)
                 {

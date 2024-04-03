@@ -1,3 +1,4 @@
+using FishNet.Object;
 using UnityEngine;
 
 namespace Runtime.Damage
@@ -26,10 +27,10 @@ namespace Runtime.Damage
             }
         }
 
-        public void Damage(DamageArgs args, Vector3 point, Vector3 velocity)
+        public void Damage(DamageArgs args, Vector3 point, Vector3 velocity, out IDamageable.DamageReport report)
         {
             args.damageScale *= damageScale;
-            parent.Damage(args, point, velocity);
+            parent.Damage(args, point, velocity, out report);
         }
     }
 }

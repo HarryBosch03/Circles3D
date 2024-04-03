@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
 using Runtime.Damage;
 using Runtime.Player;
 using Runtime.Stats;
@@ -25,6 +26,7 @@ namespace Runtime.Weapons
         public float aimZoom = 1f;
 
         [Space]
+        [SyncVar(WritePermissions = WritePermission.ClientUnsynchronized)]
         public int currentMagazine = 3;
 
         [Space]
@@ -70,8 +72,16 @@ namespace Runtime.Weapons
         {
             if (currentMagazine > 0 && Time.time - lastShootTime > 1f / stats.attackSpeed)
             {
-                SpawnProjectile();
-                SpawnProjectileOnServer();
+                if (IsOwner)
+                {
+                    SpawnProjectile();
+                    SpawnProjectileOnServer(); 
+                }
+                else if (IsServer)
+                {
+                    SpawnProjectile();
+                    SpawnProjectileOnClients();
+                }
             }
         }
 
@@ -261,7 +271,6 @@ namespace Runtime.Weapons
         private void UnpackNetworkData(NetworkData data)
         {
             if (IsOwner) return;
-
             aimPercent = data.aimPercent;
         }
 

@@ -32,6 +32,7 @@ namespace Runtime.Player
         private RaycastHit groundHit;
         private Vector3 bodyInterpolatePosition0;
         private Vector3 bodyInterpolatePosition1;
+        public bool isAlive => gameObject.activeSelf;
 
         public InputData input { get; set; }
         public Vector2 orientation { get; set; }
@@ -114,7 +115,7 @@ namespace Runtime.Player
         public void UnpackNetworkData(NetworkData data)
         {
             if (IsOwner) return;
-
+            
             body.position = data.position;
             body.velocity = data.velocity;
             orientation = data.orientation;
@@ -223,6 +224,14 @@ namespace Runtime.Player
             public bool jump;
             public bool shoot;
             public bool aim;
+        }
+
+        public void Respawn(Vector3 position, Quaternion rotation)
+        {
+            gameObject.SetActive(true);
+            transform.position = position;
+            transform.rotation = rotation;
+            body.velocity = Vector3.zero;
         }
     }
 }

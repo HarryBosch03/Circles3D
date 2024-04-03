@@ -10,13 +10,13 @@ namespace Runtime.Damage
     {
         const float BufferToHealth = 40f;
 
-        [SyncVar]
+        [SyncVar(WritePermissions = WritePermission.ClientUnsynchronized)]
         public float currentPartialHealth;
-        [SyncVar]
+        [SyncVar(WritePermissions = WritePermission.ClientUnsynchronized)]
         public float currentPartialBuffer;
-        [SyncVar]
+        [SyncVar(WritePermissions = WritePermission.ClientUnsynchronized)]
         public int maxHealth_Internal = 100;
-        [SyncVar]
+        [SyncVar(WritePermissions = WritePermission.ClientUnsynchronized)]
         public int maxBuffer_Internal = 0;
         public bool invulnerable;
 
@@ -81,9 +81,13 @@ namespace Runtime.Damage
             }
         }
 
-        public void Damage(DamageArgs args, Vector3 point, Vector3 velocity)
+        public void Damage(DamageArgs args, Vector3 point, Vector3 velocity, out IDamageable.DamageReport report)
         {
             lastDamageTime = Time.time;
+
+            report.victim = NetworkObject;
+            report.finalDamage = args;
+            report.lethal = false;
             
             if (IsServer)
             {
@@ -99,6 +103,7 @@ namespace Runtime.Damage
 
             if (currentPartialHealth <= 0 && currentPartialBuffer <= 0)
             {
+                report.lethal = true;
                 Kill(args, point, velocity);
             }
         }

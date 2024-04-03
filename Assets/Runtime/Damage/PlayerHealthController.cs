@@ -7,7 +7,7 @@ namespace Runtime.Damage
         public GameObject ragdollPrefab;
 
         private Transform model;
-
+        
         protected override void Awake()
         {
             base.Awake();
