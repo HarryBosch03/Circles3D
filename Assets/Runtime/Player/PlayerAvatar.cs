@@ -78,53 +78,19 @@ namespace Runtime.Player
             input.jump = false;
             this.input = input;
 
-            PackNetworkData();
-
             bodyInterpolatePosition1 = bodyInterpolatePosition0;
             bodyInterpolatePosition0 = body.position;
         }
 
         private void UpdateCamera()
         {
-            transform.rotation = Quaternion.Euler(0f, orientation.x, 0f);
-        }
-
-        private void PackNetworkData()
-        {
             if (!IsOwner) return;
-            if (!IsSpawned) return;
-
-            NetworkData data;
-            data.position = body.position;
-            data.velocity = body.velocity;
-            data.orientation = orientation;
-            data.input = input;
-
-            SendDataToServer(data);
-        }
-
-        [ServerRpc]
-        private void SendDataToServer(NetworkData data)
-        {
-            UnpackNetworkData(data);
-            SendDataToClient(data);
-        }
-
-        [ObserversRpc]
-        private void SendDataToClient(NetworkData data) => UnpackNetworkData(data);
-
-        public void UnpackNetworkData(NetworkData data)
-        {
-            if (IsOwner) return;
-            
-            body.position = data.position;
-            body.velocity = data.velocity;
-            orientation = data.orientation;
-            input = data.input;
+            transform.rotation = Quaternion.Euler(0f, orientation.x, 0f);
         }
 
         private void Jump()
         {
+            if (!IsOwner) return;
             if (!input.jump) return;
             if (!onGround) return;
 
@@ -134,22 +100,21 @@ namespace Runtime.Player
 
         private void Update()
         {
+            if (!IsOwner) return;
+
             orientation += input.lookDelta;
             orientation = new Vector2
             {
                 x = orientation.x % 360f,
                 y = Mathf.Clamp(orientation.y, -90f, 90f),
             };
-            
+
             view.position = Vector3.Lerp(bodyInterpolatePosition1, bodyInterpolatePosition0, (Time.time - Time.fixedTime) / Time.fixedDeltaTime) + Vector3.up * cameraHeight;
             view.rotation = Quaternion.Euler(-orientation.y, orientation.x, 0f);
-
-            if (IsOwner)
-            {
-                camera.transform.position = view.position;
-                camera.transform.rotation = view.rotation;
-                camera.fieldOfView = CalculateFieldOfView();
-            }
+            
+            camera.transform.position = view.position;
+            camera.transform.rotation = view.rotation;
+            camera.fieldOfView = CalculateFieldOfView();
         }
 
         private float CalculateFieldOfView()
@@ -166,6 +131,8 @@ namespace Runtime.Player
 
         private void CheckForGround()
         {
+            if (!IsOwner) return;
+
             var skinWidth = onGround ? 0.35f : 0f;
             var distance = cameraHeight * 0.5f;
 
@@ -195,6 +162,8 @@ namespace Runtime.Player
 
         private void Move()
         {
+            if (!IsOwner) return;
+
             var moveInput = Vector2.ClampMagnitude(input.movement, 1f);
 
             var acceleration = 2f / moveAcceleration;
@@ -210,12 +179,12 @@ namespace Runtime.Player
             body.AddForce(force, ForceMode.Acceleration);
         }
 
-        public struct NetworkData
+        public void Respawn(Vector3 position, Quaternion rotation)
         {
-            public Vector3 position;
-            public Vector3 velocity;
-            public Vector2 orientation;
-            public InputData input;
+            gameObject.SetActive(true);
+            transform.position = position;
+            transform.rotation = rotation;
+            body.velocity = Vector3.zero;
         }
 
         public struct InputData
@@ -226,14 +195,6 @@ namespace Runtime.Player
             public bool jump;
             public bool shoot;
             public bool aim;
-        }
-
-        public void Respawn(Vector3 position, Quaternion rotation)
-        {
-            gameObject.SetActive(true);
-            transform.position = position;
-            transform.rotation = rotation;
-            body.velocity = Vector3.zero;
         }
     }
 }

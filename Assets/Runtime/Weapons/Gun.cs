@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using FishNet.Object;
-using FishNet.Object.Synchronizing;
 using Runtime.Damage;
 using Runtime.Player;
 using Runtime.Stats;

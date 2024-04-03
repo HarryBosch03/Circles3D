@@ -11,8 +11,7 @@ public class BodyAnimator : MonoBehaviour
     public Transform root;
 
     private PlayerAvatar player;
-
-
+    
     private void Awake()
     {
         player = GetComponentInParent<PlayerAvatar>();
@@ -23,9 +22,12 @@ public class BodyAnimator : MonoBehaviour
         var twist = Quaternion.Euler(90f + torsoTwist, 90f, 90f);
         root.localRotation = twist;
         
-        var view = player.orientation;
+        var view = player.view;
 
-        torso.localRotation = Quaternion.Euler(-view.y * 0.5f, 0f, 0f);
-        head.rotation = Quaternion.Euler(-view.y, view.x, 0f);
+        var start = Quaternion.Euler(0f, view.eulerAngles.y, 0f);
+        var end = view.rotation;
+        
+        torso.rotation = Quaternion.Slerp(start, end, 0.5f);
+        head.rotation = end;
     }
 }

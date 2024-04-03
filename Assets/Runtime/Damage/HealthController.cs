@@ -1,9 +1,7 @@
 using System;
 using FishNet.Object;
-using FishNet.Object.Synchronizing;
 using Runtime.Stats;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Runtime.Damage
 {
