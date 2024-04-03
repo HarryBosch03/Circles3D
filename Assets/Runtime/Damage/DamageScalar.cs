@@ -19,17 +19,17 @@ namespace Runtime.Damage
         private void Awake()
         {
             parent = transform.parent.GetComponentInParent<IHealthController>();
+            if (parent == null)
+            {
+                Destroy(this);
+                throw new System.Exception($"DamageScalar \"{name}\" component is missing parent");
+            }
         }
 
-        private void OnValidate()
-        {
-            Awake();
-        }
-
-        public void Damage(DamageArgs args, Vector3 point, Vector3 direction)
+        public void Damage(DamageArgs args, Vector3 point, Vector3 velocity)
         {
             args.damageScale *= damageScale;
-            parent.Damage(args, point, direction);
+            parent.Damage(args, point, velocity);
         }
     }
 }

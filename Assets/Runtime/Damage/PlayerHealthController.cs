@@ -6,13 +6,11 @@ namespace Runtime.Damage
     {
         public GameObject ragdollPrefab;
 
-        private Rigidbody body;
         private Transform model;
 
         protected override void Awake()
         {
             base.Awake();
-            body = GetComponent<Rigidbody>();
             model = transform.Find("Model");
         }
 

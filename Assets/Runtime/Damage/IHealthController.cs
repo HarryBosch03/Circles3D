@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Runtime.Damage
 {
     public interface IHealthController : IDamageable

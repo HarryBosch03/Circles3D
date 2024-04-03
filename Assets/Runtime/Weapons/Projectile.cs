@@ -155,25 +155,22 @@ namespace Runtime.Weapons
         private void ProcessHit(RaycastHit hit)
         {
             if (age < 2 && shooter && hit.collider.transform.IsChildOf(shooter.transform)) return;
-            
-            dead = true;
-            
-            var damageable = hit.collider.GetComponentInParent<IDamageable>();
-            if (damageable != null)
-            {
-                damageable.Damage(args.damage, hit.point, velocity);
-            }
-            else if (args.bounces > 0)
-            {
-                args.bounces--;
-                dead = false;
 
-                velocity = Vector3.Reflect(velocity, hit.normal);
-                transform.position = hit.point;
+            dead = true;
+
+            if (!IDamageable.Damage(hit, args.damage, velocity))
+            {
+                if (args.bounces > 0)
+                {
+                    args.bounces--;
+                    dead = false;
+
+                    velocity = Vector3.Reflect(velocity, hit.normal);
+                    transform.position = hit.point;
+                }
             }
 
             if (hitFX) Instantiate(hitFX, hit.point, Quaternion.LookRotation(hit.normal));
-
             if (!dead) return;
 
             DestroyWithStyle();

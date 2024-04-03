@@ -30,6 +30,8 @@ namespace Runtime.Player
 
         private new Camera camera;
         private RaycastHit groundHit;
+        private Vector3 bodyInterpolatePosition0;
+        private Vector3 bodyInterpolatePosition1;
 
         public InputData input { get; set; }
         public Vector2 orientation { get; set; }
@@ -76,6 +78,9 @@ namespace Runtime.Player
             this.input = input;
 
             PackNetworkData();
+
+            bodyInterpolatePosition1 = bodyInterpolatePosition0;
+            bodyInterpolatePosition0 = body.position;
         }
 
         private void UpdateCamera()
@@ -133,7 +138,7 @@ namespace Runtime.Player
                 y = Mathf.Clamp(orientation.y, -90f, 90f),
             };
             
-            view.position = body.position + Vector3.up * cameraHeight + body.velocity * (Time.time - Time.fixedTime);
+            view.position = Vector3.Lerp(bodyInterpolatePosition1, bodyInterpolatePosition0, (Time.time - Time.fixedTime) / Time.fixedDeltaTime) + Vector3.up * cameraHeight;
             view.rotation = Quaternion.Euler(-orientation.y, orientation.x, 0f);
 
             if (IsOwner)

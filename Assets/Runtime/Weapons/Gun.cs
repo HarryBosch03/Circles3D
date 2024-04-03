@@ -220,9 +220,9 @@ namespace Runtime.Weapons
 
         private void ApplyRecoilForceToPlayer(Projectile projectile)
         {
-            var args = GetProjectileSpawnArgs();
-            var force = args.damage.GetKnockback(args.speed) * 0.5f;
-            if (body) body.AddForce(-projectile.transform.forward * force, ForceMode.Impulse);
+            //var args = GetProjectileSpawnArgs();
+            //var force = args.speed * args.damage.knockback * 0.5f;
+            //if (body) body.AddForce(-projectile.transform.forward * force, ForceMode.Impulse);
         }
 
         [ServerRpc]

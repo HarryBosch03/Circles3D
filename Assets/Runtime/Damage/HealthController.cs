@@ -25,12 +25,12 @@ namespace Runtime.Damage
         public float regenHealthPerSecond = 10.0f;
         public float regenHealthToBufferExchangeRate = 40.0f;
 
-        private Rigidbody body;
         private StatBoard stats;
 
         private float lastDamageTime;
         private float regenTimer;
         
+        public Rigidbody body { get; private set; }
         public int currentHealth => Mathf.FloorToInt(currentPartialHealth);
         public int currentBuffer => Mathf.FloorToInt(currentPartialBuffer);
         public int maxHealth => maxHealth_Internal;
@@ -84,9 +84,7 @@ namespace Runtime.Damage
         public void Damage(DamageArgs args, Vector3 point, Vector3 velocity)
         {
             lastDamageTime = Time.time;
-
-            if (body) body.AddForceAtPosition(velocity.normalized * args.GetKnockback(velocity.magnitude), point, ForceMode.Impulse);
-
+            
             if (IsServer)
             {
                 if (currentPartialBuffer > 0)
