@@ -45,6 +45,7 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.16f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Runtime\Networking\NetDebugOverlay.cs" />
     <Compile Include="Assets\Runtime\Mods\GunMods\Mod.cs" />
     <Compile Include="Assets\Runtime\Util\CenterOfMass.cs" />
     <Compile Include="Assets\Runtime\Damage\IHealthController.cs" />
@@ -68,11 +69,13 @@
     <Compile Include="Assets\Runtime\UI\Hitmarker.cs" />
     <Compile Include="Assets\Runtime\Player\PlayerRagdoll.cs" />
     <Compile Include="Assets\Runtime\Player\PlayerInstance.cs" />
+    <Compile Include="Assets\Runtime\Networking\InputManager.cs" />
     <Compile Include="Assets\Runtime\Animation\ArmAnimation.cs" />
     <Compile Include="Assets\Runtime\Damage\HealthBar.cs" />
     <Compile Include="Assets\Runtime\Level\GunTrigger.cs" />
     <Compile Include="Assets\Runtime\Player\PlayerUI.cs" />
     <Compile Include="Assets\Runtime\Mods\GunMods\Homing.cs" />
+    <Compile Include="Assets\Runtime\Networking\NetInput.cs" />
     <Compile Include="Assets\Runtime\Stats\Stat.cs" />
     <Compile Include="Assets\Runtime\Util\Utility.cs" />
     <Compile Include="Assets\Photon\PhotonLibs\WebSocket\SocketWebTcp.cs" />
@@ -85,12 +88,14 @@
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
     <None Include="Assets\Photon\PhotonLibs\netstandard2.0\Photon3Unity3D.xml" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
+    <None Include="Assets\Photon\FusionAddons\SimpleKCC\simple_kcc_build_info.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
     <None Include="Assets\Photon\Fusion\package.json" />
     <None Include="Assets\Shaders\UberCommon.hlsl" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
     <None Include="Assets\Photon\Fusion\Assemblies\Fusion.Runtime.xml" />
+    <None Include="Assets\Photon\FusionAddons\SimpleKCC\release_history.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\Photon\Fusion\Assemblies\Fusion.Sockets.xml" />
     <None Include="Assets\Shaders\UberLitPass.hlsl" />
@@ -342,6 +347,12 @@
     </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Library\PackageCache\com.unity.nuget.mono-cecil@1.10.2\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Fusion.Addons.SimpleKCC">
+      <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\FusionAddons\SimpleKCC\Fusion.Addons.SimpleKCC.dll</HintPath>
+    </Reference>
+    <Reference Include="Fusion.Addons.SimpleKCC.Editor">
+      <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\FusionAddons\SimpleKCC\Fusion.Addons.SimpleKCC.Editor.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.16f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>

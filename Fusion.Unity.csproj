@@ -297,6 +297,12 @@
     <Reference Include="Mono.Cecil">
       <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Library\PackageCache\com.unity.nuget.mono-cecil@1.10.2\Mono.Cecil.dll</HintPath>
     </Reference>
+    <Reference Include="Fusion.Addons.SimpleKCC">
+      <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\FusionAddons\SimpleKCC\Fusion.Addons.SimpleKCC.dll</HintPath>
+    </Reference>
+    <Reference Include="Fusion.Addons.SimpleKCC.Editor">
+      <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\FusionAddons\SimpleKCC\Fusion.Addons.SimpleKCC.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.16f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>
     </Reference>

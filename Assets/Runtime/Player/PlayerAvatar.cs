@@ -1,3 +1,7 @@
+using System;
+using Fusion;
+using Fusion.Addons.SimpleKCC;
+using Runtime.Networking;
 using Runtime.Weapons;
 using UnityEngine;
 
@@ -5,8 +9,11 @@ namespace Runtime.Player
 {
     [SelectionBase]
     [RequireComponent(typeof(Rigidbody))]
-    public class PlayerAvatar : MonoBehaviour
+    public class PlayerAvatar : NetworkBehaviour
     {
+        [Space]
+        public float mouseSensitivity = 0.3f;
+
         [Space]
         public float walkSpeed = 6f;
         public float runSpeed = 10f;
@@ -27,13 +34,14 @@ namespace Runtime.Player
         public float baseFieldOfView = 90f;
         public float aimFieldOfView = 60f;
 
+        private bool jumpFlag;
         private new Camera camera;
         private RaycastHit groundHit;
         private Vector3 bodyInterpolatePosition0;
         private Vector3 bodyInterpolatePosition1;
         public bool isAlive => gameObject.activeSelf;
 
-        public InputData input { get; set; }
+        public NetInput input { get; set; }
         public Vector2 orientation { get; set; }
 
         public Transform view { get; private set; }
@@ -54,9 +62,24 @@ namespace Runtime.Player
             view = transform.Find("View");
         }
 
-        private void FixedUpdate()
+        private void OnEnable()
         {
-            var input = this.input;
+            if (HasInputAuthority)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (HasInputAuthority)
+            {
+                Cursor.lockState = CursorLockMode.None;
+            }
+        }
+
+        public override void FixedUpdateNetwork()
+        {
             body.constraints = RigidbodyConstraints.FreezeRotation;
 
             CheckForGround();
@@ -67,9 +90,9 @@ namespace Runtime.Player
             if (gun)
             {
                 gun.SetFirstPerson(isOwner);
-                
-                if (input.shoot) gun.Shoot();
-                gun.aiming = input.aim;
+
+                if (input.buttons.IsSet(InputButton.Shoot)) gun.Shoot();
+                gun.aiming = input.buttons.IsSet(InputButton.Aim);
                 gun.projectileSpawnPoint = view;
 
                 var recoil = gun.recoilData.angularVelocity;
@@ -77,37 +100,40 @@ namespace Runtime.Player
             }
 
             body.AddForce(gravity - Physics.gravity, ForceMode.Acceleration);
+        }
 
-            input.jump = false;
-            this.input = input;
-
+        private void FixedUpdate()
+        {
             bodyInterpolatePosition1 = bodyInterpolatePosition0;
             bodyInterpolatePosition0 = body.position;
         }
 
-        private void UpdateCamera()
-        {
-            transform.rotation = Quaternion.Euler(0f, orientation.x, 0f);
-        }
+        private void UpdateCamera() { transform.rotation = Quaternion.Euler(0f, orientation.x, 0f); }
 
         private void Jump()
         {
-            if (!input.jump) return;
-            if (!onGround) return;
+            var jump = input.buttons.IsSet(InputButton.Jump);
+            if (jump && !jumpFlag)
+            {
+                if (!onGround) return;
 
-            var force = Vector3.up * Mathf.Sqrt(2f * jumpHeight * -gravity.y);
-            body.AddForce(force, ForceMode.VelocityChange);
+                var force = Vector3.up * Mathf.Sqrt(2f * jumpHeight * -gravity.y);
+                body.AddForce(force, ForceMode.VelocityChange);
+            }
+            jumpFlag = jump;
         }
 
         private void Update()
         {
-            orientation += input.lookDelta;
+            var tangent = Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad * 0.5f);
+
+            orientation += input.mouseDelta * tangent * mouseSensitivity;
             orientation = new Vector2
             {
                 x = orientation.x % 360f,
                 y = Mathf.Clamp(orientation.y, -90f, 90f),
             };
-            
+
             view.position = Vector3.Lerp(bodyInterpolatePosition1, bodyInterpolatePosition0, (Time.time - Time.fixedTime) / Time.fixedDeltaTime) + Vector3.up * cameraHeight;
             view.rotation = Quaternion.Euler(-orientation.y, orientation.x, 0f);
 
@@ -167,7 +193,7 @@ namespace Runtime.Player
             var acceleration = 2f / moveAcceleration;
             if (!onGround) acceleration *= 1f - airMovementPenalty;
 
-            var moveSpeed = input.run ? runSpeed : walkSpeed;
+            var moveSpeed = input.buttons.IsSet(InputButton.Run) ? runSpeed : walkSpeed;
             var target = transform.TransformVector(moveInput.x, 0f, moveInput.y) * moveSpeed;
             var force = (target - body.velocity) * acceleration;
             force.y = 0f;

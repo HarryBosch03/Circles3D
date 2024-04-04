@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 5118894930514851959}
   - component: {fileID: 1105511911418350397}
   - component: {fileID: 3666495030575313215}
+  - component: {fileID: 1232590823546260688}
   m_Layer: 0
   m_Name: Player Avatar
   m_TagString: Untagged
@@ -159,12 +160,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94bd9f52357fe094f82061568f88ab29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 6
-  runSpeed: 12
-  moveAcceleration: 0.1
-  jumpHeight: 2.5
+  mouseSensitivity: 0.1
+  walkSpeed: 5
+  runSpeed: 10
+  moveAcceleration: 0.2
+  jumpHeight: 2
   gravityScale: 2.5
-  airMovementPenalty: 0.6
+  airMovementPenalty: 0.8
   cameraHeight: 1.7
   maxWalkableSlope: 40
   feltRecoil: 0.5
@@ -299,6 +301,24 @@ MonoBehaviour:
   torso: {fileID: 1441762121783969257}
   root: {fileID: 3073587850651950955}
   renderer: {fileID: 2902096627210816311}
+--- !u!114 &1232590823546260688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 427869120341289331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 1689550846
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 8279216054243042064}
 --- !u!1 &1077053682744939814
 GameObject:
   m_ObjectHideFlags: 0

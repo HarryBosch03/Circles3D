@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 768323864055536418}
   - component: {fileID: 1933036499400116766}
+  - component: {fileID: 4088925716092235708}
   m_Layer: 0
   m_Name: Player Instance
   m_TagString: Untagged
@@ -52,6 +53,25 @@ MonoBehaviour:
   deathUI: {fileID: 7183236746331052971}
   respawnButton: {fileID: 7815942472178863830}
   deathReasonText: {fileID: 7785376569717382914}
+--- !u!114 &4088925716092235708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 277697352859765105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 2635689294
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects:
+  - {fileID: 379630937484899375}
+  NetworkedBehaviours:
+  - {fileID: 1933036499400116766}
 --- !u!1 &842020537858044881
 GameObject:
   m_ObjectHideFlags: 0
@@ -940,6 +960,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1232590823546260688, guid: a24f308978bb0fe45aa105ca253aad05, type: 3}
+      propertyPath: SortKey
+      value: 101208196
+      objectReference: {fileID: 0}
     - target: {fileID: 4319102993605034606, guid: a24f308978bb0fe45aa105ca253aad05, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -977,6 +1001,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a24f308978bb0fe45aa105ca253aad05, type: 3}
+--- !u!114 &379630937484899375 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1232590823546260688, guid: a24f308978bb0fe45aa105ca253aad05, type: 3}
+  m_PrefabInstance: {fileID: 1468088271881419007}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1301765264558872705 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 454720751053955198, guid: a24f308978bb0fe45aa105ca253aad05, type: 3}
