@@ -52,7 +52,7 @@ namespace Runtime.Animation
             var end = target.position;
 
             var length2 = (end - start).magnitude;
-            var a0 = Mathf.Acos((sqr(length0) + sqr(length2) - sqr(length1)) / (2 * length0 * length2)) * Mathf.Rad2Deg;
+            var a0 = Mathf.Acos(Mathf.Clamp((sqr(length0) + sqr(length2) - sqr(length1)) / (2 * length0 * length2), -1f, 1f)) * Mathf.Rad2Deg;
 
             var correctiveRotation = Quaternion.Euler(this.correctiveRotation);
             

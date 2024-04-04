@@ -1,4 +1,4 @@
-using System;
+using System.Diagnostics;
 using FishNet;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -7,6 +7,9 @@ namespace Runtime.Util
 {
     public class NetworkTestUI : MonoBehaviour
     {
+        public string address = "localhost";
+        public ushort targetPort = 8888;
+        
         private void OnGUI()
         {
             if (!InstanceFinder.NetworkManager.IsOffline) return;
@@ -19,7 +22,11 @@ namespace Runtime.Util
                 }
                 if (GUILayout.Button("Start Client"))
                 {
-                    StartClient();
+                    StartClient(address);
+                }
+                if (GUILayout.Button("Ninja"))
+                {
+                    StartNinja();
                 }
             }
         }
@@ -29,18 +36,24 @@ namespace Runtime.Util
             if (!InstanceFinder.NetworkManager.IsOffline) return;
 
             if (Keyboard.current.hKey.wasPressedThisFrame) StartHost();
-            if (Keyboard.current.cKey.wasPressedThisFrame) StartClient();
+            if (Keyboard.current.cKey.wasPressedThisFrame) StartClient(address);
+            if (Keyboard.current.nKey.wasPressedThisFrame) StartNinja();
         }
 
         private void StartHost()
         {
-            InstanceFinder.ServerManager.StartConnection();
-            StartClient();
+            InstanceFinder.ServerManager.StartConnection(targetPort);
+            StartClient("localhost");
         }
 
-        private void StartClient()
+        private void StartClient(string address)
         {
-            InstanceFinder.ClientManager.StartConnection();
+            InstanceFinder.ClientManager.StartConnection(address, targetPort);
+        }
+        
+        private void StartNinja()
+        {
+            Process.Start("https://www.twitch.tv/ninja");
         }
     }
 }

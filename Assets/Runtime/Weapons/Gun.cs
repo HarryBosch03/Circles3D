@@ -70,8 +70,16 @@ namespace Runtime.Weapons
         {
             if (currentMagazine > 0 && Time.time - lastShootTime > 1f / stats.attackSpeed)
             {
-                SpawnProjectile();
-                SpawnProjectileOnServer();
+                if (IsOwner)
+                {
+                    SpawnProjectile();
+                    SpawnProjectileOnServer(); 
+                }
+                else if (IsServer)
+                {
+                    SpawnProjectile();
+                    SpawnProjectileOnClients();
+                }
             }
         }
 
@@ -220,9 +228,9 @@ namespace Runtime.Weapons
 
         private void ApplyRecoilForceToPlayer(Projectile projectile)
         {
-            var args = GetProjectileSpawnArgs();
-            var force = args.damage.GetKnockback(args.speed) * 0.5f;
-            if (body) body.AddForce(-projectile.transform.forward * force, ForceMode.Impulse);
+            //var args = GetProjectileSpawnArgs();
+            //var force = args.speed * args.damage.knockback * 0.5f;
+            //if (body) body.AddForce(-projectile.transform.forward * force, ForceMode.Impulse);
         }
 
         [ServerRpc]
@@ -241,6 +249,7 @@ namespace Runtime.Weapons
         private void PackNetworkData()
         {
             if (!IsOwner) return;
+            if (!IsSpawned) return;
 
             NetworkData data;
             data.aimPercent = aimPercent;
@@ -261,7 +270,6 @@ namespace Runtime.Weapons
         private void UnpackNetworkData(NetworkData data)
         {
             if (IsOwner) return;
-
             aimPercent = data.aimPercent;
         }
 

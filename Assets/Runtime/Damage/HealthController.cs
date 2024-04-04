@@ -1,8 +1,7 @@
+using System;
 using FishNet.Object;
-using FishNet.Object.Synchronizing;
 using Runtime.Stats;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Runtime.Damage
 {
@@ -10,13 +9,9 @@ namespace Runtime.Damage
     {
         const float BufferToHealth = 40f;
 
-        [SyncVar]
         public float currentPartialHealth;
-        [SyncVar]
         public float currentPartialBuffer;
-        [SyncVar]
         public int maxHealth_Internal = 100;
-        [SyncVar]
         public int maxBuffer_Internal = 0;
         public bool invulnerable;
 
@@ -25,18 +20,20 @@ namespace Runtime.Damage
         public float regenHealthPerSecond = 10.0f;
         public float regenHealthToBufferExchangeRate = 40.0f;
 
-        private Rigidbody body;
         private StatBoard stats;
 
         private float lastDamageTime;
         private float regenTimer;
         
+        public Rigidbody body { get; private set; }
         public int currentHealth => Mathf.FloorToInt(currentPartialHealth);
         public int currentBuffer => Mathf.FloorToInt(currentPartialBuffer);
         public int maxHealth => maxHealth_Internal;
         public int maxBuffer => maxBuffer_Internal;
         
-        private void Awake()
+        public static event Action<HealthController, NetworkObject, DamageArgs, Vector3, Vector3> DiedEvent;
+
+        protected virtual void Awake()
         {
             body = GetComponentInParent<Rigidbody>();
             stats = GetComponentInParent<StatBoard>();
@@ -81,12 +78,14 @@ namespace Runtime.Damage
             }
         }
 
-        public void Damage(DamageArgs args, Vector3 point, Vector3 velocity)
+        public void Damage(NetworkObject invoker, DamageArgs args, Vector3 point, Vector3 velocity, out IDamageable.DamageReport report)
         {
             lastDamageTime = Time.time;
 
-            if (body) body.AddForceAtPosition(velocity.normalized * args.GetKnockback(velocity.magnitude), point, ForceMode.Impulse);
-
+            report.victim = NetworkObject;
+            report.finalDamage = args;
+            report.lethal = false;
+            
             if (IsServer)
             {
                 if (currentPartialBuffer > 0)
@@ -101,7 +100,8 @@ namespace Runtime.Damage
 
             if (currentPartialHealth <= 0 && currentPartialBuffer <= 0)
             {
-                Kill(args, point, velocity);
+                report.lethal = true;
+                Kill(invoker, args, point, velocity);
             }
         }
 
@@ -131,10 +131,13 @@ namespace Runtime.Damage
             currentPartialBuffer = Mathf.Min(currentPartialBuffer, maxBuffer);
         }
 
-        private void Kill(DamageArgs args, Vector3 point, Vector3 velocity)
+        protected virtual void Kill(NetworkObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
         {
+            if (!IsServer) return;
             if (invulnerable) return;
-            gameObject.SetActive(false);
+         
+            DiedEvent?.Invoke(this, invoker, args, point, velocity);
+            NetworkObject.Despawn();
         }
         
         public float GetHealthFactor()
