@@ -31,8 +31,9 @@ namespace Runtime.Networking
             runner = gameObject.AddComponent<NetworkRunner>();
             runner.ProvideInput = true;
 
-            gameObject.AddComponent<RunnerSimulatePhysics3D>();
-
+            var physicsRunner = gameObject.AddComponent<RunnerSimulatePhysics3D>();
+            physicsRunner.ClientPhysicsSimulation = ClientPhysicsSimulation.SimulateAlways;
+            
             var scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);
             var sceneInfo = new NetworkSceneInfo();
             if (scene.IsValid) {

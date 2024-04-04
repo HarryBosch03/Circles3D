@@ -334,14 +334,14 @@
     <Reference Include="Fusion.Sockets">
       <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\Fusion\Assemblies\Fusion.Sockets.dll</HintPath>
     </Reference>
-    <Reference Include="Fusion.Common">
-      <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\Fusion\Assemblies\Fusion.Common.dll</HintPath>
-    </Reference>
     <Reference Include="Fusion.Realtime">
       <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\Fusion\Assemblies\Fusion.Realtime.dll</HintPath>
     </Reference>
     <Reference Include="Fusion.Runtime">
       <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\Fusion\Assemblies\Fusion.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Fusion.Common">
+      <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\Fusion\Assemblies\Fusion.Common.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.16f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>

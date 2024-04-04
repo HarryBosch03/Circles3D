@@ -986,6 +986,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab:
     RawGuidValue: 79dca5ae9bb0a4940adc905443a49733
+  sessionName: NewGame
 --- !u!1001 &748192984
 PrefabInstance:
   m_ObjectHideFlags: 0

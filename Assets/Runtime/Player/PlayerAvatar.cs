@@ -32,7 +32,7 @@ namespace Runtime.Player
 
         [Networked]
         public NetworkState netState { get; set; }
-        
+
         private new Camera camera;
         private bool jumpFlag;
         private RaycastHit groundHit;
@@ -41,6 +41,8 @@ namespace Runtime.Player
         public bool isAlive => gameObject.activeSelf;
 
         public NetworkInputData input { get; set; }
+
+        [Networked]
         public Vector2 orientation { get; set; }
 
         public Transform view { get; private set; }
@@ -64,8 +66,9 @@ namespace Runtime.Player
             if (GetInput(out NetworkInputData input))
             {
                 this.input = input;
+                body.isKinematic = false;
                 body.constraints = RigidbodyConstraints.FreezeRotation;
-                
+
                 CheckForGround();
                 Move();
                 Jump();
@@ -85,22 +88,6 @@ namespace Runtime.Player
 
                 input.jump = false;
                 this.input = input;
-
-                if (HasStateAuthority)
-                {
-                    netState = new NetworkState
-                    {
-                        position = body.position,
-                        orientation = orientation,
-                        velocity = body.velocity,
-                    };
-                }
-                else
-                {
-                    body.position = netState.position;
-                    orientation = netState.orientation;
-                    body.velocity = netState.velocity;
-                }
             }
         }
 
@@ -220,7 +207,6 @@ namespace Runtime.Player
         public struct NetworkState : INetworkStruct
         {
             public Vector3 position;
-            public Vector2 orientation;
             public Vector3 velocity;
         }
     }
