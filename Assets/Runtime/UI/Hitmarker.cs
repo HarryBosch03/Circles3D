@@ -47,7 +47,6 @@ namespace Runtime.UI
         {
             if (!this.player) return;
             if (player != this.player.owningPlayerInstance) return;
-            if (!player.IsOwner) return;
 
             if (report.lethal) Show(Flavour.Lethal);
             else if (report.finalDamage.damageScale > 1f) Show(Flavour.Critical);

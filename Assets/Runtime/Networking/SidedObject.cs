@@ -1,16 +1,19 @@
-using FishNet.Object;
+using System;
+using Fusion;
+using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Runtime.Networking
 {
     public class SidedObject : NetworkBehaviour
     {
-        public Condition withOwnership;
+        [FormerlySerializedAs("withOwnership")] public Condition withInputAuthority;
 
-        public override void OnStartNetwork()
+        public override void Spawned()
         {
-            if (withOwnership != Condition.DontCare)
+            if (withInputAuthority != Condition.DontCare)
             {
-                gameObject.SetActive(withOwnership == Condition.Active == Owner.IsLocalClient);
+                gameObject.SetActive(HasInputAuthority == (withInputAuthority == Condition.Active));
             }
         }
 

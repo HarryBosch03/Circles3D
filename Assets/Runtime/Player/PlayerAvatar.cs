@@ -1,6 +1,8 @@
-using FishNet.Object;
+using System;
+using Fusion;
 using Runtime.Weapons;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Runtime.Player
 {
@@ -28,13 +30,17 @@ namespace Runtime.Player
         public float baseFieldOfView = 90f;
         public float aimFieldOfView = 60f;
 
+        [Networked]
+        public NetworkState netState { get; set; }
+        
         private new Camera camera;
+        private bool jumpFlag;
         private RaycastHit groundHit;
         private Vector3 bodyInterpolatePosition0;
         private Vector3 bodyInterpolatePosition1;
         public bool isAlive => gameObject.activeSelf;
 
-        public InputData input { get; set; }
+        public NetworkInputData input { get; set; }
         public Vector2 orientation { get; set; }
 
         public Transform view { get; private set; }
@@ -53,56 +59,81 @@ namespace Runtime.Player
             view = transform.Find("View");
         }
 
+        public override void FixedUpdateNetwork()
+        {
+            if (GetInput(out NetworkInputData input))
+            {
+                this.input = input;
+                body.constraints = RigidbodyConstraints.FreezeRotation;
+                
+                CheckForGround();
+                Move();
+                Jump();
+                UpdateCamera();
+
+                if (gun)
+                {
+                    if (input.shoot) gun.Shoot();
+                    gun.aiming = input.aim;
+                    gun.projectileSpawnPoint = view;
+
+                    var recoil = gun.recoilData.angularVelocity;
+                    orientation += new Vector2(-recoil.y, recoil.x) * feltRecoil * Time.deltaTime;
+                }
+
+                body.AddForce(gravity - Physics.gravity, ForceMode.Acceleration);
+
+                input.jump = false;
+                this.input = input;
+
+                if (HasStateAuthority)
+                {
+                    netState = new NetworkState
+                    {
+                        position = body.position,
+                        orientation = orientation,
+                        velocity = body.velocity,
+                    };
+                }
+                else
+                {
+                    body.position = netState.position;
+                    orientation = netState.orientation;
+                    body.velocity = netState.velocity;
+                }
+            }
+        }
+
         private void FixedUpdate()
         {
-            var input = this.input;
-            body.constraints = RigidbodyConstraints.FreezeRotation;
-
-            CheckForGround();
-            Move();
-            Jump();
-            UpdateCamera();
-
-            if (gun)
-            {
-                if (input.shoot) gun.Shoot();
-                gun.aiming = input.aim;
-                gun.projectileSpawnPoint = view;
-
-                var recoil = gun.recoilData.angularVelocity;
-                orientation += new Vector2(-recoil.y, recoil.x) * feltRecoil * Time.deltaTime;
-            }
-
-            body.AddForce(gravity - Physics.gravity, ForceMode.Acceleration);
-
-            input.jump = false;
-            this.input = input;
-
             bodyInterpolatePosition1 = bodyInterpolatePosition0;
             bodyInterpolatePosition0 = body.position;
         }
 
-        private void UpdateCamera()
-        {
-            if (!IsOwner) return;
-            transform.rotation = Quaternion.Euler(0f, orientation.x, 0f);
-        }
+        private void UpdateCamera() { transform.rotation = Quaternion.Euler(0f, orientation.x, 0f); }
 
         private void Jump()
         {
-            if (!IsOwner) return;
-            if (!input.jump) return;
-            if (!onGround) return;
+            if (input.jump && !jumpFlag)
+            {
+                if (onGround)
+                {
+                    var force = Vector3.up * Mathf.Sqrt(2f * jumpHeight * -gravity.y);
+                    body.AddForce(force, ForceMode.VelocityChange);
+                }
+            }
 
-            var force = Vector3.up * Mathf.Sqrt(2f * jumpHeight * -gravity.y);
-            body.AddForce(force, ForceMode.VelocityChange);
+            jumpFlag = input.jump;
         }
 
         private void Update()
         {
-            if (!IsOwner) return;
+            if (HasInputAuthority)
+            {
+                var tangent = Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad * 0.5f);
+                orientation += Mouse.current.delta.ReadValue() * tangent * 0.3f;
+            }
 
-            orientation += input.lookDelta;
             orientation = new Vector2
             {
                 x = orientation.x % 360f,
@@ -111,10 +142,13 @@ namespace Runtime.Player
 
             view.position = Vector3.Lerp(bodyInterpolatePosition1, bodyInterpolatePosition0, (Time.time - Time.fixedTime) / Time.fixedDeltaTime) + Vector3.up * cameraHeight;
             view.rotation = Quaternion.Euler(-orientation.y, orientation.x, 0f);
-            
-            camera.transform.position = view.position;
-            camera.transform.rotation = view.rotation;
-            camera.fieldOfView = CalculateFieldOfView();
+
+            if (HasInputAuthority)
+            {
+                camera.transform.position = view.position;
+                camera.transform.rotation = view.rotation;
+                camera.fieldOfView = CalculateFieldOfView();
+            }
         }
 
         private float CalculateFieldOfView()
@@ -131,8 +165,6 @@ namespace Runtime.Player
 
         private void CheckForGround()
         {
-            if (!IsOwner) return;
-
             var skinWidth = onGround ? 0.35f : 0f;
             var distance = cameraHeight * 0.5f;
 
@@ -162,8 +194,6 @@ namespace Runtime.Player
 
         private void Move()
         {
-            if (!IsOwner) return;
-
             var moveInput = Vector2.ClampMagnitude(input.movement, 1f);
 
             var acceleration = 2f / moveAcceleration;
@@ -187,14 +217,11 @@ namespace Runtime.Player
             body.velocity = Vector3.zero;
         }
 
-        public struct InputData
+        public struct NetworkState : INetworkStruct
         {
-            public Vector2 movement;
-            public Vector2 lookDelta;
-            public bool run;
-            public bool jump;
-            public bool shoot;
-            public bool aim;
+            public Vector3 position;
+            public Vector2 orientation;
+            public Vector3 velocity;
         }
     }
 }

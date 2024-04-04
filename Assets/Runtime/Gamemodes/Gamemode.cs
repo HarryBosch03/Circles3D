@@ -1,10 +1,14 @@
-using FishNet.Object;
+using System;
+using System.Collections.Generic;
+using Fusion;
+using Fusion.Sockets;
 using Runtime.Player;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Runtime.Gamemodes
 {
-    public abstract class Gamemode : NetworkBehaviour
+    public abstract class Gamemode : MonoBehaviour
     {
         public Transform spawnpointParent;
         
@@ -21,23 +25,8 @@ namespace Runtime.Gamemodes
         }
 
         public abstract bool CanRespawn(PlayerInstance player);
-        
-        public void RespawnPlayer(PlayerInstance player)
-        {
-            if (!player.IsOwner) return;
-            RespawnPlayerServer(player);
-        }
 
-        [ServerRpc(RequireOwnership = false)]
-        private void RespawnPlayerServer(PlayerInstance player)
-        {
-            if (!CanRespawn(player)) return;
-
-            var spawnpoint = GetSpawnpoint(player);
-            player.Respawn(spawnpoint.position, spawnpoint.rotation);
-        }
-
-        private Transform GetSpawnpoint(PlayerInstance player)
+        public Transform GetSpawnpoint(PlayerInstance player)
         {
             if (!spawnpointParent) return transform;
             if (spawnpointParent.childCount == 0) return spawnpointParent;
@@ -45,5 +34,6 @@ namespace Runtime.Gamemodes
             var child = spawnpointParent.GetChild(Random.Range(0, spawnpointParent.childCount));
             return child;
         }
+
     }
 }

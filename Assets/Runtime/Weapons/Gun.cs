@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using FishNet.Object;
+using Fusion;
 using Runtime.Damage;
 using Runtime.Player;
 using Runtime.Stats;
@@ -65,21 +65,12 @@ namespace Runtime.Weapons
         public List<Projectile> projectiles = new();
 
         public Action spawnProjectileEvent;
-        
+
         public void Shoot()
         {
             if (currentMagazine > 0 && Time.time - lastShootTime > 1f / stats.attackSpeed)
             {
-                if (IsOwner)
-                {
-                    SpawnProjectile();
-                    SpawnProjectileOnServer(); 
-                }
-                else if (IsServer)
-                {
-                    SpawnProjectile();
-                    SpawnProjectileOnClients();
-                }
+                SpawnProjectile();
             }
         }
 
@@ -101,27 +92,19 @@ namespace Runtime.Weapons
         {
             reloadTimer = stats.reloadTime;
             currentMagazine = stats.magazineSize.AsIntMax(1);
-        }
 
-        public override void OnStartNetwork()
-        {
-            var isOwner = Owner.IsLocalClient;
-            overlay.gameObject.SetActive(isOwner);
-
-            var modelLayer = isOwner ? ViewportModelLayer : DefaultModelLayer;
+            overlay.gameObject.SetActive(HasInputAuthority);
+            var layer = HasInputAuthority ? ViewportModelLayer : DefaultModelLayer;
             foreach (var child in model.GetComponentsInChildren<Transform>())
             {
-                child.gameObject.layer = modelLayer;
+                child.gameObject.layer = layer;
             }
         }
 
         private void LateUpdate()
         {
-            if (IsOwner)
-            {
-                aimPercent += ((Mouse.current.rightButton.isPressed ? 1f : 0f) - aimPercent) * aimSpeed * Time.deltaTime;
-                aimPercent = Mathf.Clamp01(aimPercent);
-            }
+            aimPercent += ((Mouse.current.rightButton.isPressed ? 1f : 0f) - aimPercent) * aimSpeed * Time.deltaTime;
+            aimPercent = Mathf.Clamp01(aimPercent);
         }
 
         private void FixedUpdate()
@@ -131,7 +114,6 @@ namespace Runtime.Weapons
             UpdateRecoil();
             Reload();
             UpdateUI();
-            PackNetworkData();
         }
 
         private void UpdateUI()
@@ -206,8 +188,6 @@ namespace Runtime.Weapons
             currentMagazine--;
             reloadTimer = 0f;
 
-            ApplyRecoilForceToPlayer(instance);
-
             var recoilData = this.recoilData;
             recoilData.position += new Vector3
             {
@@ -224,58 +204,6 @@ namespace Runtime.Weapons
             this.recoilData = recoilData;
 
             if (flash) flash.Play();
-        }
-
-        private void ApplyRecoilForceToPlayer(Projectile projectile)
-        {
-            //var args = GetProjectileSpawnArgs();
-            //var force = args.speed * args.damage.knockback * 0.5f;
-            //if (body) body.AddForce(-projectile.transform.forward * force, ForceMode.Impulse);
-        }
-
-        [ServerRpc]
-        private void SpawnProjectileOnServer()
-        {
-            SpawnProjectileOnClients();
-            if (!IsOwner) SpawnProjectile();
-        }
-
-        [ObserversRpc(ExcludeServer = true)]
-        private void SpawnProjectileOnClients()
-        {
-            if (!IsOwner) SpawnProjectile();
-        }
-
-        private void PackNetworkData()
-        {
-            if (!IsOwner) return;
-            if (!IsSpawned) return;
-
-            NetworkData data;
-            data.aimPercent = aimPercent;
-
-            SendDataToServer(data);
-        }
-
-        [ServerRpc]
-        private void SendDataToServer(NetworkData data)
-        {
-            UnpackNetworkData(data);
-            SendDataToClient(data);
-        }
-
-        [ObserversRpc]
-        private void SendDataToClient(NetworkData data) { UnpackNetworkData(data); }
-
-        private void UnpackNetworkData(NetworkData data)
-        {
-            if (IsOwner) return;
-            aimPercent = data.aimPercent;
-        }
-
-        public struct NetworkData
-        {
-            public float aimPercent;
         }
 
         public struct RecoilData

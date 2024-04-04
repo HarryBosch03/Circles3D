@@ -1,11 +1,10 @@
 using System;
-using FishNet.Object;
 using Runtime.Stats;
 using UnityEngine;
 
 namespace Runtime.Damage
 {
-    public class HealthController : NetworkBehaviour, IHealthController
+    public class HealthController : MonoBehaviour, IHealthController
     {
         const float BufferToHealth = 40f;
 
@@ -24,14 +23,14 @@ namespace Runtime.Damage
 
         private float lastDamageTime;
         private float regenTimer;
-        
+
         public Rigidbody body { get; private set; }
         public int currentHealth => Mathf.FloorToInt(currentPartialHealth);
         public int currentBuffer => Mathf.FloorToInt(currentPartialBuffer);
         public int maxHealth => maxHealth_Internal;
         public int maxBuffer => maxBuffer_Internal;
-        
-        public static event Action<HealthController, NetworkObject, DamageArgs, Vector3, Vector3> DiedEvent;
+
+        public static event Action<HealthController, GameObject, DamageArgs, Vector3, Vector3> DiedEvent;
 
         protected virtual void Awake()
         {
@@ -78,24 +77,21 @@ namespace Runtime.Damage
             }
         }
 
-        public void Damage(NetworkObject invoker, DamageArgs args, Vector3 point, Vector3 velocity, out IDamageable.DamageReport report)
+        public void Damage(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity, out IDamageable.DamageReport report)
         {
             lastDamageTime = Time.time;
 
-            report.victim = NetworkObject;
+            report.victim = gameObject;
             report.finalDamage = args;
             report.lethal = false;
             
-            if (IsServer)
+            if (currentPartialBuffer > 0)
             {
-                if (currentPartialBuffer > 0)
-                {
-                    ChangeBuffer(-1);
-                }
-                else
-                {
-                    ChangeHealth(-args.damage);
-                }
+                ChangeBuffer(-1);
+            }
+            else
+            {
+                ChangeHealth(-args.damage);
             }
 
             if (currentPartialHealth <= 0 && currentPartialBuffer <= 0)
@@ -109,8 +105,6 @@ namespace Runtime.Damage
 
         public void SetHealth(float health)
         {
-            if (!IsServer) return;
-
             currentPartialHealth = health;
             HealthChanged();
         }
@@ -119,8 +113,6 @@ namespace Runtime.Damage
 
         public void SetBuffer(float buffer)
         {
-            if (!IsServer) return;
-
             currentPartialBuffer = buffer;
             HealthChanged();
         }
@@ -131,15 +123,14 @@ namespace Runtime.Damage
             currentPartialBuffer = Mathf.Min(currentPartialBuffer, maxBuffer);
         }
 
-        protected virtual void Kill(NetworkObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
+        protected virtual void Kill(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
         {
-            if (!IsServer) return;
             if (invulnerable) return;
-         
+
             DiedEvent?.Invoke(this, invoker, args, point, velocity);
-            NetworkObject.Despawn();
+            gameObject.SetActive(false);
         }
-        
+
         public float GetHealthFactor()
         {
             var current = currentPartialHealth + currentPartialBuffer * BufferToHealth;

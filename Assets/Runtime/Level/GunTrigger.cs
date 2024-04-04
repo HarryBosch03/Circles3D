@@ -1,8 +1,7 @@
-using FishNet.Object;
 using Runtime.Weapons;
 using UnityEngine;
 
-public class GunTrigger : NetworkBehaviour
+public class GunTrigger : MonoBehaviour
 {
     public float shootDelay;
 
