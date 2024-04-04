@@ -1,13 +1,12 @@
-using FishNet.Object;
 using UnityEngine;
 
 namespace Runtime.Damage
 {
     public interface IDamageable
     {
-        public void Damage(NetworkObject invoker, DamageArgs args, Vector3 point, Vector3 velocity, out DamageReport report);
+        public void Damage(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity, out DamageReport report);
         
-        public static bool Damage(NetworkObject invoker, RaycastHit hit, DamageArgs args, Vector3 velocity, out DamageReport report)
+        public static bool Damage(GameObject invoker, RaycastHit hit, DamageArgs args, Vector3 velocity, out DamageReport report)
         {
             report = new DamageReport();
             
@@ -28,7 +27,7 @@ namespace Runtime.Damage
 
         public struct DamageReport
         {
-            public NetworkObject victim;
+            public GameObject victim;
             public DamageArgs finalDamage;
             public bool lethal;
         }

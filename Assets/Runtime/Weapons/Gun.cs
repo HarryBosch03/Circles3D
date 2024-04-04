@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using FishNet.Object;
-using FishNet.Object.Synchronizing;
 using Runtime.Damage;
 using Runtime.Player;
 using Runtime.Stats;
@@ -16,7 +14,7 @@ namespace Runtime.Weapons
 {
     [SelectionBase]
     [DisallowMultipleComponent]
-    public class Gun : NetworkBehaviour
+    public class Gun : MonoBehaviour
     {
         public const int DefaultModelLayer = 0;
         public const int ViewportModelLayer = 7;
@@ -54,6 +52,7 @@ namespace Runtime.Weapons
 
         private Transform muzzle;
 
+        public bool IsFirstPerson { get; private set; }
         public bool aiming { get; set; }
         public Transform projectileSpawnPoint { get; set; }
         public RecoilData recoilData { get; private set; }
@@ -66,21 +65,27 @@ namespace Runtime.Weapons
         public List<Projectile> projectiles = new();
 
         public Action spawnProjectileEvent;
-        
+
         public void Shoot()
         {
             if (currentMagazine > 0 && Time.time - lastShootTime > 1f / stats.attackSpeed)
             {
-                if (IsOwner)
-                {
-                    SpawnProjectile();
-                    SpawnProjectileOnServer(); 
-                }
-                else if (IsServer)
-                {
-                    SpawnProjectile();
-                    SpawnProjectileOnClients();
-                }
+                SpawnProjectile();
+            }
+        }
+
+        public void SetFirstPerson(bool isFirstPerson)
+        {
+            if (IsFirstPerson == isFirstPerson) return;
+            
+            IsFirstPerson = isFirstPerson;
+
+            overlay.gameObject.SetActive(isFirstPerson);
+
+            var modelLayer = isFirstPerson ? ViewportModelLayer : DefaultModelLayer;
+            foreach (var child in model.GetComponentsInChildren<Transform>())
+            {
+                child.gameObject.layer = modelLayer;
             }
         }
 
@@ -96,6 +101,9 @@ namespace Runtime.Weapons
             muzzle = model.transform.Search("Muzzle");
 
             if (!stats) stats = gameObject.AddComponent<StatBoard>();
+
+            IsFirstPerson = true;
+            SetFirstPerson(false);
         }
 
         private void Start()
@@ -104,25 +112,10 @@ namespace Runtime.Weapons
             currentMagazine = stats.magazineSize.AsIntMax(1);
         }
 
-        public override void OnStartNetwork()
-        {
-            var isOwner = Owner.IsLocalClient;
-            overlay.gameObject.SetActive(isOwner);
-
-            var modelLayer = isOwner ? ViewportModelLayer : DefaultModelLayer;
-            foreach (var child in model.GetComponentsInChildren<Transform>())
-            {
-                child.gameObject.layer = modelLayer;
-            }
-        }
-
         private void LateUpdate()
         {
-            if (IsOwner)
-            {
-                aimPercent += ((Mouse.current.rightButton.isPressed ? 1f : 0f) - aimPercent) * aimSpeed * Time.deltaTime;
-                aimPercent = Mathf.Clamp01(aimPercent);
-            }
+            aimPercent += ((Mouse.current.rightButton.isPressed ? 1f : 0f) - aimPercent) * aimSpeed * Time.deltaTime;
+            aimPercent = Mathf.Clamp01(aimPercent);
         }
 
         private void FixedUpdate()
@@ -132,7 +125,6 @@ namespace Runtime.Weapons
             UpdateRecoil();
             Reload();
             UpdateUI();
-            PackNetworkData();
         }
 
         private void UpdateUI()
@@ -207,8 +199,6 @@ namespace Runtime.Weapons
             currentMagazine--;
             reloadTimer = 0f;
 
-            ApplyRecoilForceToPlayer(instance);
-
             var recoilData = this.recoilData;
             recoilData.position += new Vector3
             {
@@ -225,58 +215,6 @@ namespace Runtime.Weapons
             this.recoilData = recoilData;
 
             if (flash) flash.Play();
-        }
-
-        private void ApplyRecoilForceToPlayer(Projectile projectile)
-        {
-            //var args = GetProjectileSpawnArgs();
-            //var force = args.speed * args.damage.knockback * 0.5f;
-            //if (body) body.AddForce(-projectile.transform.forward * force, ForceMode.Impulse);
-        }
-
-        [ServerRpc]
-        private void SpawnProjectileOnServer()
-        {
-            SpawnProjectileOnClients();
-            if (!IsOwner) SpawnProjectile();
-        }
-
-        [ObserversRpc(ExcludeServer = true)]
-        private void SpawnProjectileOnClients()
-        {
-            if (!IsOwner) SpawnProjectile();
-        }
-
-        private void PackNetworkData()
-        {
-            if (!IsOwner) return;
-            if (!IsSpawned) return;
-
-            NetworkData data;
-            data.aimPercent = aimPercent;
-
-            SendDataToServer(data);
-        }
-
-        [ServerRpc]
-        private void SendDataToServer(NetworkData data)
-        {
-            UnpackNetworkData(data);
-            SendDataToClient(data);
-        }
-
-        [ObserversRpc]
-        private void SendDataToClient(NetworkData data) { UnpackNetworkData(data); }
-
-        private void UnpackNetworkData(NetworkData data)
-        {
-            if (IsOwner) return;
-            aimPercent = data.aimPercent;
-        }
-
-        public struct NetworkData
-        {
-            public float aimPercent;
         }
 
         public struct RecoilData

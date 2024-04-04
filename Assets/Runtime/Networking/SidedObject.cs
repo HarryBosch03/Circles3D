@@ -1,16 +1,16 @@
-using FishNet.Object;
+using UnityEngine;
 
 namespace Runtime.Networking
 {
-    public class SidedObject : NetworkBehaviour
+    public class SidedObject : MonoBehaviour
     {
         public Condition withOwnership;
 
-        public override void OnStartNetwork()
+        public void Start()
         {
             if (withOwnership != Condition.DontCare)
             {
-                gameObject.SetActive(withOwnership == Condition.Active == Owner.IsLocalClient);
+                gameObject.SetActive(withOwnership == Condition.Active);
             }
         }
 

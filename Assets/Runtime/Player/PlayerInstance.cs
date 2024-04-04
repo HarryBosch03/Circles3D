@@ -1,6 +1,4 @@
 using System;
-using FishNet;
-using FishNet.Object;
 using Runtime.Damage;
 using Runtime.Gamemodes;
 using Runtime.Weapons;
@@ -11,13 +9,12 @@ using UnityEngine.UI;
 
 namespace Runtime.Player
 {
-    public class PlayerInstance : NetworkBehaviour
+    public class PlayerInstance : MonoBehaviour
     {
         public float mouseSensitivity = 0.3f;
 
         [Space]
-        public PlayerAvatar avatarPrefab;
-        public PlayerAvatar currentAvatar;
+        public PlayerAvatar avatar;
         public Canvas deathCanvas;
         public CanvasGroup deathUI;
         public Button respawnButton;
@@ -28,30 +25,30 @@ namespace Runtime.Player
 
         public static event Action<PlayerInstance, IDamageable.DamageReport> PlayerDealtDamageEvent;
 
-        private void Awake() { mainCam = Camera.main; }
+        public bool isOwner => true;
 
-        private void Start() { respawnButton.onClick.AddListener(RequestRespawn); }
+        private void Awake()
+        {
+            mainCam = Camera.main;
+            avatar = GetComponentInChildren<PlayerAvatar>();
+        }
+
+        private void Start()
+        {
+            respawnButton.onClick.AddListener(RequestRespawn);
+            avatar.gameObject.SetActive(false);
+        }
 
         private void RequestRespawn() { Gamemode.current.RespawnPlayer(this); }
 
-        [ObserversRpc(ExcludeServer = false, ExcludeOwner = false, RunLocally = true)]
-        public void Respawn(Vector3 position, Quaternion rotation)
+        public void SpawnAt(Vector3 position, Quaternion rotation)
         {
             SetDeathReason(null);
-            if (IsServer)
-            {
-                currentAvatar = Instantiate(avatarPrefab, position, rotation);
-                InstanceFinder.ServerManager.Spawn(currentAvatar.NetworkObject, Owner);
-                SetAvatar(currentAvatar.NetworkObject);
-                currentAvatar.owningPlayerInstance = this;
-            }
-        }
 
-        [ObserversRpc(RunLocally = false, ExcludeServer = true)]
-        private void SetAvatar(NetworkObject avatarNetObject)
-        {
-            currentAvatar = avatarNetObject.GetComponent<PlayerAvatar>();
-            currentAvatar.owningPlayerInstance = this;
+            avatar.gameObject.SetActive(true);
+            avatar.transform.position = position;
+            avatar.transform.rotation = rotation;
+            avatar.owningPlayerInstance = this;
         }
 
         private void OnEnable()
@@ -67,12 +64,11 @@ namespace Runtime.Player
             HealthController.DiedEvent -= OnDied;
         }
 
-        private void OnDied(HealthController victim, NetworkObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
+        private void OnDied(HealthController victim, GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
         {
             if (!victim) return;
-            if (!currentAvatar) return;
-            if (victim.gameObject != currentAvatar.gameObject) return;
-            
+            if (victim.gameObject != avatar.gameObject) return;
+
             SetDeathReason(((PlayerHealthController)victim).reasonForDeath);
         }
 
@@ -86,24 +82,19 @@ namespace Runtime.Player
 
         private void OnProjectileDealtDamage(Projectile projectile, RaycastHit hit, IDamageable.DamageReport report)
         {
-            if (!IsServer) return;
-            if (projectile.shooter != currentAvatar) return;
+            if (projectile.shooter != avatar) return;
 
             PlayerDealtDamageObserverRPC(report);
         }
 
-        [ObserversRpc(RunLocally = true)]
-        private void PlayerDealtDamageObserverRPC(IDamageable.DamageReport report)
-        {
-            PlayerDealtDamageEvent?.Invoke(this, report);
-        }
+        private void PlayerDealtDamageObserverRPC(IDamageable.DamageReport report) { PlayerDealtDamageEvent?.Invoke(this, report); }
 
         private void Update()
         {
-            if (IsOwner)
+            if (isOwner)
             {
                 var cursorLockMode = CursorLockMode.None;
-                if (currentAvatar)
+                if (avatar.gameObject.activeSelf)
                 {
                     cursorLockMode = CursorLockMode.Locked;
 
@@ -123,7 +114,7 @@ namespace Runtime.Player
                     input.shoot = m.leftButton.isPressed;
                     input.aim = m.rightButton.isPressed;
 
-                    currentAvatar.input = input;
+                    avatar.input = input;
 
                     deathCanvas.gameObject.SetActive(false);
                     deathUI.alpha = 0f;
@@ -143,7 +134,6 @@ namespace Runtime.Player
             }
         }
 
-        [ObserversRpc(RunLocally = true)]
         private void SetDeathReason(string text) => deathReasonText.text = (text ?? "Killed by Dying").ToUpper();
     }
 }

@@ -1,4 +1,3 @@
-using FishNet.Object;
 using UnityEngine;
 
 namespace Runtime.Damage
@@ -27,7 +26,7 @@ namespace Runtime.Damage
             }
         }
 
-        public void Damage(NetworkObject invoker, DamageArgs args, Vector3 point, Vector3 velocity, out IDamageable.DamageReport report)
+        public void Damage(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity, out IDamageable.DamageReport report)
         {
             args.damageScale *= damageScale;
             parent.Damage(invoker, args, point, velocity, out report);

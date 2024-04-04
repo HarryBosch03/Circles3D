@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "com.firstgeargames.fishnet": "https://github.com/FirstGearGames/FishNet.git?path=Assets/FishNet",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.feature.development": "1.0.1",
     "com.unity.inputsystem": "1.7.0",

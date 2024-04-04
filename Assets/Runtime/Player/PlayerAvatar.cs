@@ -1,4 +1,3 @@
-using FishNet.Object;
 using Runtime.Weapons;
 using UnityEngine;
 
@@ -6,7 +5,7 @@ namespace Runtime.Player
 {
     [SelectionBase]
     [RequireComponent(typeof(Rigidbody))]
-    public class PlayerAvatar : NetworkBehaviour
+    public class PlayerAvatar : MonoBehaviour
     {
         [Space]
         public float walkSpeed = 6f;
@@ -44,6 +43,8 @@ namespace Runtime.Player
         private Vector3 gravity => Physics.gravity * gravityScale;
         public PlayerInstance owningPlayerInstance { get; set; }
 
+        public bool isOwner => owningPlayerInstance && owningPlayerInstance.isOwner;
+
         private void Awake()
         {
             camera = Camera.main;
@@ -65,6 +66,8 @@ namespace Runtime.Player
 
             if (gun)
             {
+                gun.SetFirstPerson(isOwner);
+                
                 if (input.shoot) gun.Shoot();
                 gun.aiming = input.aim;
                 gun.projectileSpawnPoint = view;
@@ -78,8 +81,6 @@ namespace Runtime.Player
             input.jump = false;
             this.input = input;
 
-            PackNetworkData();
-
             bodyInterpolatePosition1 = bodyInterpolatePosition0;
             bodyInterpolatePosition0 = body.position;
         }
@@ -87,40 +88,6 @@ namespace Runtime.Player
         private void UpdateCamera()
         {
             transform.rotation = Quaternion.Euler(0f, orientation.x, 0f);
-        }
-
-        private void PackNetworkData()
-        {
-            if (!IsOwner) return;
-            if (!IsSpawned) return;
-
-            NetworkData data;
-            data.position = body.position;
-            data.velocity = body.velocity;
-            data.orientation = orientation;
-            data.input = input;
-
-            SendDataToServer(data);
-        }
-
-        [ServerRpc]
-        private void SendDataToServer(NetworkData data)
-        {
-            UnpackNetworkData(data);
-            SendDataToClient(data);
-        }
-
-        [ObserversRpc]
-        private void SendDataToClient(NetworkData data) => UnpackNetworkData(data);
-
-        public void UnpackNetworkData(NetworkData data)
-        {
-            if (IsOwner) return;
-            
-            body.position = data.position;
-            body.velocity = data.velocity;
-            orientation = data.orientation;
-            input = data.input;
         }
 
         private void Jump()
@@ -144,7 +111,7 @@ namespace Runtime.Player
             view.position = Vector3.Lerp(bodyInterpolatePosition1, bodyInterpolatePosition0, (Time.time - Time.fixedTime) / Time.fixedDeltaTime) + Vector3.up * cameraHeight;
             view.rotation = Quaternion.Euler(-orientation.y, orientation.x, 0f);
 
-            if (IsOwner)
+            if (isOwner)
             {
                 camera.transform.position = view.position;
                 camera.transform.rotation = view.rotation;

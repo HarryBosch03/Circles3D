@@ -1,14 +1,5 @@
 {
   "dependencies": {
-    "com.firstgeargames.fishnet": {
-      "version": "https://github.com/FirstGearGames/FishNet.git?path=Assets/FishNet",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "3.2.1"
-      },
-      "hash": "4f126df78c450ca44afa2c40372599f00f89a08e"
-    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,

@@ -1,4 +1,3 @@
-using FishNet.Object;
 using Runtime.Player;
 using UnityEngine;
 
@@ -18,18 +17,17 @@ namespace Runtime.Damage
             model = transform.Find("Model");
         }
 
-        protected override void Kill(NetworkObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
+        protected override void Kill(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
         {
             var killerAvatar = invoker ? invoker.GetComponent<PlayerAvatar>() : null;
             var killer = killerAvatar ? killerAvatar.owningPlayerInstance : null;
             reasonForDeath = killer ? $"Killed by {killer.displayName}" : null;
             
-            if (IsServer) SpawnRagdoll(velocity * args.damage * 0.0006f, point);
+            SpawnRagdoll(velocity * args.damage * 0.0006f, point);
             
             base.Kill(invoker, args, point, velocity);
         }
         
-        [ObserversRpc(RunLocally = true)]
         private void SpawnRagdoll(Vector3 force, Vector3 point)
         {
             if (!ragdollPrefab) return;

@@ -161,7 +161,7 @@ namespace Runtime.Weapons
 
             dead = true;
 
-            if (IDamageable.Damage(shooter ? shooter.NetworkObject : null, hit, args.damage, velocity, out var report))
+            if (IDamageable.Damage(shooter ? shooter.gameObject : null, hit, args.damage, velocity, out var report))
             {
                 projectileDealtDamageEvent?.Invoke(this, hit, report);
             }

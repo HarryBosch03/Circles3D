@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 6090590017111959456}
   - component: {fileID: 444159688090365230}
   - component: {fileID: 8409351514746912564}
-  - component: {fileID: 3046374273342400761}
-  - component: {fileID: 480625873472826400}
   m_Layer: 0
   m_Name: Dummy
   m_TagString: Untagged
@@ -77,69 +75,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cd27219820be76458da2374b27610fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 0
-  _addedNetworkObject: {fileID: 3046374273342400761}
-  _networkObjectCache: {fileID: 3046374273342400761}
   currentPartialHealth: 0
   currentPartialBuffer: 0
-  maxHealth_Internal: 100
+  maxHealth_Internal: 1000
   maxBuffer_Internal: 0
   invulnerable: 1
   regenDelay: 3
   regenHealthPerSecond: 200
   regenHealthToBufferExchangeRate: 40
---- !u!114 &3046374273342400761
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 449604551538982479}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <IsNested>k__BackingField: 0
-  <ComponentIndex>k__BackingField: 0
-  <PredictedSpawn>k__BackingField: {fileID: 0}
-  _networkBehaviours:
-  - {fileID: 8409351514746912564}
-  <ParentNetworkObject>k__BackingField: {fileID: 0}
-  <ChildNetworkObjects>k__BackingField: []
-  SerializedTransformProperties:
-    Position: {x: 3.9, y: 0.2, z: 3.47}
-    Rotation: {x: -0, y: -0.9527319, z: -0, w: 0.30381233}
-    LocalScale: {x: 1, y: 1, z: 1}
-  _isNetworked: 1
-  _isGlobal: 0
-  _initializeOrder: 0
-  _defaultDespawnType: 0
-  NetworkObserver: {fileID: 0}
-  <PrefabId>k__BackingField: 2
-  <SpawnableCollectionId>k__BackingField: 0
-  _scenePathHash: 0
-  <SceneId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 14636840307103397033
---- !u!114 &480625873472826400
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 449604551538982479}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 27555960b1084ae4a7ad6967f89a6505, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _componentIndexCache: 255
-  _addedNetworkObject: {fileID: 3046374273342400761}
-  _networkObjectCache: {fileID: 0}
-  positionThreshold: 1
-  rotationThreshold: 1
-  velocityThreshold: 1
-  angularVelocityThreshold: 1
 --- !u!1 &2708387730023299068
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,10 +1,9 @@
-using FishNet.Object;
 using Runtime.Player;
 using UnityEngine;
 
 namespace Runtime.Gamemodes
 {
-    public abstract class Gamemode : NetworkBehaviour
+    public abstract class Gamemode : MonoBehaviour
     {
         public Transform spawnpointParent;
         
@@ -24,17 +23,10 @@ namespace Runtime.Gamemodes
         
         public void RespawnPlayer(PlayerInstance player)
         {
-            if (!player.IsOwner) return;
-            RespawnPlayerServer(player);
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        private void RespawnPlayerServer(PlayerInstance player)
-        {
             if (!CanRespawn(player)) return;
 
             var spawnpoint = GetSpawnpoint(player);
-            player.Respawn(spawnpoint.position, spawnpoint.rotation);
+            player.SpawnAt(spawnpoint.position, spawnpoint.rotation);
         }
 
         private Transform GetSpawnpoint(PlayerInstance player)
