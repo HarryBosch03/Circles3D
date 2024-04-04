@@ -1,3 +1,4 @@
+using System;
 using Runtime.Player;
 using UnityEngine;
 
@@ -9,9 +10,14 @@ public class BodyAnimator : MonoBehaviour
     public Transform head;
     public Transform torso;
     public Transform root;
+    public Renderer renderer;
 
     private PlayerAvatar player;
 
+    private void OnValidate()
+    {
+        if (!renderer) renderer = GetComponentInChildren<Renderer>();
+    }
 
     private void Awake()
     {
@@ -20,6 +26,8 @@ public class BodyAnimator : MonoBehaviour
 
     private void Update()
     {
+        renderer.enabled = !player.isOwner;
+        
         var twist = Quaternion.Euler(90f + torsoTwist, 90f, 90f);
         root.localRotation = twist;
         

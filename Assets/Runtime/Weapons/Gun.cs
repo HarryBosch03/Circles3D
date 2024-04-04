@@ -47,7 +47,8 @@ namespace Runtime.Weapons
         private Rigidbody body;
         private StatBoard stats;
 
-        private GameObject model;
+        private Model modelFirstPerson;
+        private Model modelThirdPerson;
         private Canvas overlay;
 
         private Transform muzzle;
@@ -81,12 +82,8 @@ namespace Runtime.Weapons
             IsFirstPerson = isFirstPerson;
 
             overlay.gameObject.SetActive(isFirstPerson);
-
-            var modelLayer = isFirstPerson ? ViewportModelLayer : DefaultModelLayer;
-            foreach (var child in model.GetComponentsInChildren<Transform>())
-            {
-                child.gameObject.layer = modelLayer;
-            }
+            modelFirstPerson.ShouldRender(IsFirstPerson);
+            modelThirdPerson.ShouldRender(!IsFirstPerson);
         }
 
         private void Awake()
@@ -94,16 +91,30 @@ namespace Runtime.Weapons
             owner = GetComponentInParent<PlayerAvatar>();
             body = GetComponentInParent<Rigidbody>();
             stats = GetComponentInParent<StatBoard>();
-            model = gameObject.Find("Model");
+            
+            modelFirstPerson = new Model(gameObject.Find("Model.FirstPerson"));
+            modelThirdPerson = new Model(gameObject.Find("Model.ThirdPerson"));
+            
             overlay = transform.Find<Canvas>("Overlay");
-            leftHandHold = model.transform.Search("HandHold.L");
-            rightHandHold = model.transform.Search("HandHold.R");
-            muzzle = model.transform.Search("Muzzle");
+            leftHandHold = modelThirdPerson.transform.Search("HandHold.L");
+            rightHandHold = modelThirdPerson.transform.Search("HandHold.R");
+            muzzle = modelThirdPerson.transform.Search("Muzzle");
 
             if (!stats) stats = gameObject.AddComponent<StatBoard>();
 
             IsFirstPerson = true;
             SetFirstPerson(false);
+            
+            SetModelRenderLayer(modelFirstPerson, ViewportModelLayer);
+            SetModelRenderLayer(modelThirdPerson, DefaultModelLayer);
+        }
+
+        private void SetModelRenderLayer(Model model, int layer)
+        {
+            foreach (var child in model.gameObject.GetComponentsInChildren<Transform>())
+            {
+                child.gameObject.layer = layer;
+            }
         }
 
         private void Start()
@@ -223,6 +234,26 @@ namespace Runtime.Weapons
             public Vector3 velocity;
             public Vector3 rotation;
             public Vector3 angularVelocity;
+        }
+
+        public class Model
+        {
+            public readonly GameObject gameObject;
+            public readonly Transform transform;
+            public readonly Renderer[] renderers;
+
+            public void ShouldRender(bool state)
+            {
+                foreach (var r in renderers) r.enabled = state;
+            }
+
+            public Model(GameObject gameObject)
+            {
+                this.gameObject = gameObject;
+
+                transform = gameObject.transform;
+                renderers = gameObject.GetComponentsInChildren<Renderer>();
+            }
         }
     }
 }

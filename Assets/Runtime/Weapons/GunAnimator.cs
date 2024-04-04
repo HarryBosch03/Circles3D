@@ -1,54 +1,57 @@
-using Runtime.Player;
+using System;
+using Runtime.Util;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Runtime.Weapons
 {
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(Gun))]
     public class GunAnimator : MonoBehaviour
     {
-        [Space]
-        public Vector3 fpViewPosition = new Vector3(0.09f,-0.03f,0.35f);
-        public Vector3 fpAimPosition = new Vector3(0,0,0.24f);
-        public Vector3 tpViewPosition;
-        public Vector3 tpAimPosition;
+        public Vector3 viewPosition = new Vector3(0.09f,-0.03f,0.35f);
+        public Vector3 aimPosition = new Vector3(0,0,0.24f);
 
         [Space]
-        public Transform thirdPersonParent;
+        public Vector3 localOriginTranslation;
 
         private Gun gun;
-        private Transform model;
-        private Camera mainCam;
     
         private Vector2 lastCameraRotation;
         private Vector2 weaponSwaySmoothedPosition;
+        
+        public Vector3 originTranslation => Quaternion.Euler(0f, gun.transform.eulerAngles.y, 0f) * localOriginTranslation;
 
         private void Awake()
         {
-            mainCam = Camera.main;
-            gun = GetComponent<Gun>();
-            model = transform.Find("Model");
-            if (!model) model = transform;
+            gun = GetComponentInParent<Gun>();
         }
 
         private void Update()
         {
             var recoil = gun.recoilData;
 
-            var isFirstPerson = (mainCam.transform.position - transform.position).magnitude < 0.04f;
-            var viewPosition = isFirstPerson ? fpViewPosition : tpViewPosition;
-            var aimPosition = isFirstPerson ? fpAimPosition : tpAimPosition;
-
-            var parent = isFirstPerson ? model.transform.parent : thirdPersonParent;
-
+            var parent = gun.transform;
+            var refPosition = parent.position;
+            var refRotation = parent.rotation;
+            refPosition += originTranslation;
+            
             var localPosition = Vector3.Lerp(viewPosition, aimPosition, gun.aimPercent);
             var localRotation = Quaternion.identity;
             
             localPosition += recoil.position;
             localRotation *= Quaternion.Euler(recoil.rotation);
             
-            model.position = parent.TransformPoint(localPosition);
-            model.rotation = parent.rotation * localRotation;
+            transform.position = refRotation * localPosition + refPosition;
+            transform.rotation = refRotation * localRotation;
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            gun = GetComponentInParent<Gun>();
+            if (!gun) return;
+            
+            var parent = gun.transform;
+            MoreGizmos.DrawAxis(parent.position + originTranslation, parent.rotation, 0.04f, 0.2f);
         }
     }
 }

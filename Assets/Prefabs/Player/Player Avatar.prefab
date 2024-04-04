@@ -298,6 +298,7 @@ MonoBehaviour:
   head: {fileID: 8530645282653239459}
   torso: {fileID: 1441762121783969257}
   root: {fileID: 3073587850651950955}
+  renderer: {fileID: 2902096627210816311}
 --- !u!1 &1077053682744939814
 GameObject:
   m_ObjectHideFlags: 0
@@ -2065,9 +2066,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5116903799620247672, guid: 195334f26902c4c4983c1bd469c7c15b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2834424099686896934}
-    - targetCorrespondingSourceObject: {fileID: 5500262997259940720, guid: 195334f26902c4c4983c1bd469c7c15b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3707296548292281319}
   m_SourcePrefab: {fileID: 100100000, guid: 195334f26902c4c4983c1bd469c7c15b, type: 3}
 --- !u!1 &1259895976673151745 stripped
 GameObject:
@@ -2135,6 +2133,11 @@ CapsuleCollider:
   m_Height: 0.53542686
   m_Direction: 1
   m_Center: {x: 0.0000007684244, y: 0.23228672, z: -0.0000000012502919}
+--- !u!137 &2902096627210816311 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -5516571122491950869, guid: 195334f26902c4c4983c1bd469c7c15b, type: 3}
+  m_PrefabInstance: {fileID: 1961144238640133084}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3073587850651950955 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -5651751901618623305, guid: 195334f26902c4c4983c1bd469c7c15b, type: 3}
@@ -2168,24 +2171,6 @@ CapsuleCollider:
   m_Height: 0.43799236
   m_Direction: 0
   m_Center: {x: 4.1883484e-15, y: 0.11789155, z: 0.00000002108065}
---- !u!1 &6297085914192904364 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5500262997259940720, guid: 195334f26902c4c4983c1bd469c7c15b, type: 3}
-  m_PrefabInstance: {fileID: 1961144238640133084}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3707296548292281319
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6297085914192904364}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b9f5abdc17b4a04886bf7aedf3cfe94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  withOwnership: 1
 --- !u!1 &6615507083671808187 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4681600591324273511, guid: 195334f26902c4c4983c1bd469c7c15b, type: 3}

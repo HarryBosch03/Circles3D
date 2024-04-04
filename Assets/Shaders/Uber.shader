@@ -94,7 +94,7 @@ Shader "Unlit/Uber"
             // -------------------------------------
             // Includes
             #include "Packages/com.unity.render-pipelines.universal/Shaders/SimpleLitInput.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/ShadowCasterPass.hlsl"
+            #include "./UberShadowCasterPass.hlsl"
             ENDHLSL
         }
 
