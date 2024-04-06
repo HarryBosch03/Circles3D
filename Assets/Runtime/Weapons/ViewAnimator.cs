@@ -47,7 +47,7 @@ namespace Runtime.Weapons
 
         private void ApplyMovement()
         {
-            var velocity = Vector3.Lerp(Vector3.zero, player.body.velocity, groundedBlend);
+            var velocity = Vector3.Lerp(Vector3.zero, player.movement.center, groundedBlend);
             var speed = new Vector2(velocity.x, velocity.z).magnitude;
 
             distance += speed * moveFrequency * Time.deltaTime;

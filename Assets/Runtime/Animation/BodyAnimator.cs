@@ -26,12 +26,12 @@ public class BodyAnimator : MonoBehaviour
 
     private void Update()
     {
-        renderer.enabled = !player.isOwner;
+        renderer.enabled = !player.HasInputAuthority;
         
         var twist = Quaternion.Euler(90f + torsoTwist, 90f, 90f);
         root.localRotation = twist;
         
-        var view = player.orientation;
+        var view = player.movement.orientation;
 
         torso.localRotation = Quaternion.Euler(-view.y * 0.5f, 0f, 0f);
         head.rotation = Quaternion.Euler(-view.y, view.x, 0f);

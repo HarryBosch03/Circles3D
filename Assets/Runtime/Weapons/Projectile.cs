@@ -132,9 +132,9 @@ namespace Runtime.Weapons
                 lockLines.positionCount = 2;
                 lockLines.useWorldSpace = true;
                 lockLines.SetPosition(0, transform.position);
-                lockLines.SetPosition(1, homingTarget.body.worldCenterOfMass);
+                lockLines.SetPosition(1, homingTarget.movement.center);
 
-                var target = (homingTarget.body.worldCenterOfMass - transform.position).normalized;
+                var target = (homingTarget.movement.center - transform.position).normalized;
                 velocity += (target * args.speed - velocity) * HomingSpeed * args.homing * Time.deltaTime;
                 velocity -= Physics.gravity * Time.deltaTime;
             }

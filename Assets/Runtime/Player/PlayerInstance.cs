@@ -40,7 +40,6 @@ namespace Runtime.Player
         private void Start()
         {
             respawnButton.onClick.AddListener(RpcRequestRespawn);
-            avatar.gameObject.SetActive(false);
         }
 
         [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
@@ -98,6 +97,8 @@ namespace Runtime.Player
 
         public override void FixedUpdateNetwork()
         {
+            avatar.owningPlayerInstance = this;
+            
             if (HasStateAuthority)
             {
                 netState = new NetworkState
