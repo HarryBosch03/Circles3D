@@ -15,6 +15,6 @@ namespace Runtime.Networking
     {
         public NetworkButtons buttons;
         public Vector2 movement;
-        public Vector2 mouseDelta;
+        public Vector2 orientationDelta;
     }
 }

@@ -80,9 +80,23 @@ namespace Runtime.Player
 
         public override void FixedUpdateNetwork()
         {
-            body.constraints = RigidbodyConstraints.FreezeRotation;
-
+            if (GetInput(out NetInput input))
+            {
+                this.input = input;
+            }
+            else
+            {
+                this.input = default;
+            }
+            
             CheckForGround();
+        }
+
+        private void FixedUpdate()
+        {
+            body.constraints = RigidbodyConstraints.FreezeRotation;
+            orientation += input.orientationDelta;
+
             Move();
             Jump();
             UpdateCamera();
@@ -100,15 +114,12 @@ namespace Runtime.Player
             }
 
             body.AddForce(gravity - Physics.gravity, ForceMode.Acceleration);
-        }
 
-        private void FixedUpdate()
-        {
             bodyInterpolatePosition1 = bodyInterpolatePosition0;
             bodyInterpolatePosition0 = body.position;
         }
 
-        private void UpdateCamera() { transform.rotation = Quaternion.Euler(0f, orientation.x, 0f); }
+        private void UpdateCamera() { body.rotation = Quaternion.Euler(0f, orientation.x, 0f); }
 
         private void Jump()
         {
@@ -120,14 +131,12 @@ namespace Runtime.Player
                 var force = Vector3.up * Mathf.Sqrt(2f * jumpHeight * -gravity.y);
                 body.AddForce(force, ForceMode.VelocityChange);
             }
+
             jumpFlag = jump;
         }
 
         private void Update()
         {
-            var tangent = Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad * 0.5f);
-
-            orientation += input.mouseDelta * tangent * mouseSensitivity;
             orientation = new Vector2
             {
                 x = orientation.x % 360f,
@@ -201,24 +210,6 @@ namespace Runtime.Player
             if (!onGround) force *= moveInput.magnitude;
 
             body.AddForce(force, ForceMode.Acceleration);
-        }
-
-        public struct NetworkData
-        {
-            public Vector3 position;
-            public Vector3 velocity;
-            public Vector2 orientation;
-            public InputData input;
-        }
-
-        public struct InputData
-        {
-            public Vector2 movement;
-            public Vector2 lookDelta;
-            public bool run;
-            public bool jump;
-            public bool shoot;
-            public bool aim;
         }
 
         public void Respawn(Vector3 position, Quaternion rotation)

@@ -110,14 +110,6 @@ namespace Runtime.Player
                 avatar.gameObject.SetActive(netState.alive);
             }
 
-            if (avatar.gameObject.activeSelf)
-            {
-                if (GetInput(out NetInput input))
-                {
-                    avatar.input = input;
-                }
-            }
-
             if (!avatar.gameObject.activeSelf && HasInputAuthority)
             {
                 deathCanvas.gameObject.SetActive(true);

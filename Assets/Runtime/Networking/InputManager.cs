@@ -10,8 +10,16 @@ namespace Runtime.Networking
 {
     public class InputManager : SimulationBehaviour, IBeforeUpdate, INetworkRunnerCallbacks
     {
+        public float mouseSensitivity = 0.3f;
+        
         private NetInput input;
         private bool resetInput;
+        private Camera mainCam;
+
+        private void Awake()
+        {
+            mainCam = Camera.main;
+        }
 
         public void BeforeUpdate()
         {
@@ -20,17 +28,20 @@ namespace Runtime.Networking
                 resetInput = false;
                 input = default;
             }
-
+            
             var kb = Keyboard.current;
             var m = Mouse.current;
+
+            Application.targetFrameRate = kb.tabKey.isPressed ? 30 : -1;
             
             var buttons = new NetworkButtons();
             
             input.movement.x = kb.dKey.ReadValue() - kb.aKey.ReadValue();
             input.movement.y = kb.wKey.ReadValue() - kb.sKey.ReadValue();
             input.movement = Vector2.ClampMagnitude(input.movement, 1f);
-
-            input.mouseDelta += m.delta.ReadValue();
+            
+            var tangent = Mathf.Tan(mainCam.fieldOfView * Mathf.Deg2Rad * 0.5f);
+            input.orientationDelta += m.delta.ReadValue() * tangent * mouseSensitivity;
             
             buttons.Set(InputButton.Jump, kb.spaceKey.isPressed);
             buttons.Set(InputButton.Run, kb.leftShiftKey.isPressed);
@@ -50,8 +61,8 @@ namespace Runtime.Networking
         {
             input.Set(this.input);
             resetInput = true;
-
-            this.input.mouseDelta = default;
+            
+            this.input.orientationDelta = default;
         }
         public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) {  }
 

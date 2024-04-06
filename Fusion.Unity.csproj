@@ -267,11 +267,26 @@
     <Reference Include="ReportGeneratorMerged">
       <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Library\PackageCache\com.unity.testtools.codecoverage@1.2.4\lib\ReportGenerator\ReportGeneratorMerged.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Library\PackageCache\com.unity.nuget.newtonsoft-json@3.2.1\Runtime\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="websocket-sharp">
+      <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\PhotonLibs\WebSocket\websocket-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Fusion.Common">
+      <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\Fusion\Assemblies\Fusion.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Fusion.Addons.SimpleKCC.Editor">
+      <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\FusionAddons\SimpleKCC\Fusion.Addons.SimpleKCC.Editor.dll</HintPath>
     </Reference>
     <Reference Include="NanoSockets">
       <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\Fusion\Plugins\NanoSockets\NanoSockets\Dynamic\NanoSockets.dll</HintPath>
+    </Reference>
+    <Reference Include="Fusion.Sockets">
+      <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\Fusion\Assemblies\Fusion.Sockets.dll</HintPath>
+    </Reference>
+    <Reference Include="Fusion.Addons.SimpleKCC">
+      <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\FusionAddons\SimpleKCC\Fusion.Addons.SimpleKCC.dll</HintPath>
+    </Reference>
+    <Reference Include="Fusion.Runtime">
+      <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\Fusion\Assemblies\Fusion.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Photon3Unity3D">
       <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\PhotonLibs\netstandard2.0\Photon3Unity3D.dll</HintPath>
@@ -279,29 +294,14 @@
     <Reference Include="Fusion.Log">
       <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\Fusion\Assemblies\Fusion.Log.dll</HintPath>
     </Reference>
-    <Reference Include="websocket-sharp">
-      <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\PhotonLibs\WebSocket\websocket-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Fusion.Sockets">
-      <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\Fusion\Assemblies\Fusion.Sockets.dll</HintPath>
-    </Reference>
-    <Reference Include="Fusion.Common">
-      <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\Fusion\Assemblies\Fusion.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="Fusion.Realtime">
-      <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\Fusion\Assemblies\Fusion.Realtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Fusion.Runtime">
-      <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\Fusion\Assemblies\Fusion.Runtime.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Library\PackageCache\com.unity.nuget.newtonsoft-json@3.2.1\Runtime\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Library\PackageCache\com.unity.nuget.mono-cecil@1.10.2\Mono.Cecil.dll</HintPath>
     </Reference>
-    <Reference Include="Fusion.Addons.SimpleKCC">
-      <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\FusionAddons\SimpleKCC\Fusion.Addons.SimpleKCC.dll</HintPath>
-    </Reference>
-    <Reference Include="Fusion.Addons.SimpleKCC.Editor">
-      <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\FusionAddons\SimpleKCC\Fusion.Addons.SimpleKCC.Editor.dll</HintPath>
+    <Reference Include="Fusion.Realtime">
+      <HintPath>D:\Documents\Development\Unity\Projects\Circles3D\Assets\Photon\Fusion\Assemblies\Fusion.Realtime.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.16f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>
