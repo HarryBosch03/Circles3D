@@ -1,6 +1,4 @@
-using System;
 using Fusion;
-using Fusion.Addons.SimpleKCC;
 using Runtime.Networking;
 using Runtime.Weapons;
 using UnityEngine;
@@ -12,8 +10,11 @@ namespace Runtime.Player
     public class PlayerAvatar : NetworkBehaviour
     {
         [Space]
-        public float mouseSensitivity = 0.3f;
+        public float networkInterpolation = 0.1f;
 
+        [Space]
+        public float mouseSensitivity = 0.3f;
+        
         [Space]
         public float walkSpeed = 6f;
         public float runSpeed = 10f;
@@ -41,6 +42,10 @@ namespace Runtime.Player
         private Vector3 bodyInterpolatePosition1;
         public bool isAlive => gameObject.activeSelf;
 
+        [Networked]
+        public NetworkData netData { get; set; }
+        
+        [Networked]
         public NetInput input { get; set; }
         public Vector2 orientation { get; set; }
 
@@ -80,22 +85,20 @@ namespace Runtime.Player
 
         public override void FixedUpdateNetwork()
         {
-            if (GetInput(out NetInput input))
-            {
-                this.input = input;
-            }
-            else
-            {
-                this.input = default;
-            }
+            if (HasStateAuthority) netData = new NetworkData(this);
+            
+            if (GetInput(out NetInput newInput)) input = newInput;
             
             CheckForGround();
         }
-
+        
         private void FixedUpdate()
         {
+            if (!HasStateAuthority) netData.Apply(this, networkInterpolation);
+            
             body.constraints = RigidbodyConstraints.FreezeRotation;
-            orientation += input.orientationDelta;
+            var tangent = Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad * 0.5f);
+            orientation += input.orientationDelta * tangent * mouseSensitivity;
 
             Move();
             Jump();
@@ -114,7 +117,6 @@ namespace Runtime.Player
             }
 
             body.AddForce(gravity - Physics.gravity, ForceMode.Acceleration);
-
             bodyInterpolatePosition1 = bodyInterpolatePosition0;
             bodyInterpolatePosition0 = body.position;
         }
@@ -218,6 +220,29 @@ namespace Runtime.Player
             transform.position = position;
             transform.rotation = rotation;
             body.velocity = Vector3.zero;
+        }
+
+        public struct NetworkData : INetworkStruct
+        {
+            public Vector3 position;
+            public Vector3 velocity;
+            
+            public Vector2 orientation;
+
+            public NetworkData(PlayerAvatar player)
+            {
+                position = player.body.position;
+                velocity = player.body.velocity;
+                orientation = player.orientation;
+            }
+
+            public void Apply(PlayerAvatar avatar, float interpolation)
+            {
+                avatar.body.position = Vector3.Lerp(position, avatar.body.position, interpolation);
+                avatar.body.velocity = Vector3.Lerp(velocity, avatar.body.velocity, interpolation);
+
+                avatar.orientation = Vector2.Lerp(orientation, avatar.orientation, interpolation);
+            }
         }
     }
 }

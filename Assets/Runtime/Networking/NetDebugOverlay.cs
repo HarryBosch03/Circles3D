@@ -25,7 +25,8 @@ namespace Runtime.Networking
 
         private void OnGUI()
         {
-            using (new GUILayout.AreaScope(new Rect(0, 0, 150, Screen.height)))
+            var pad = 10;
+            using (new GUILayout.AreaScope(new Rect(pad, pad, 150, Screen.height - pad * 2)))
             {
                 if (!netRunnerInstance)
                 {
@@ -33,7 +34,23 @@ namespace Runtime.Networking
                     if (GUILayout.Button("Host")) StartRunner(GameMode.Host);
                     if (GUILayout.Button("Join")) StartRunner(GameMode.Client);
                 }
+                else
+                {
+                    DrawPingDisplay("You", netRunnerInstance.LocalPlayer);
+                    GUILayout.Space(8);
+                    foreach (var player in netRunnerInstance.ActivePlayers)
+                    {
+                        if (player == netRunnerInstance.LocalPlayer) continue;
+                        DrawPingDisplay("You", player);
+                    }
+                }
             }
+        }
+
+        private void DrawPingDisplay(string name, PlayerRef player)
+        {
+            if (!player.IsRealPlayer) return;
+            GUILayout.Label($"{name} | {(int)(netRunnerInstance.GetPlayerRtt(player) * 1000f),4:N0}ms");
         }
 
         private async void StartRunner(GameMode gamemode)

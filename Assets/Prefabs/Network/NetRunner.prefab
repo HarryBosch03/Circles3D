@@ -58,6 +58,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2577035e44574b6190886cb2567fc048, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mouseSensitivity: 0.3
 --- !u!114 &8992060361832377092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,6 +73,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _physicsAuthority: 2
   _physicsTiming: 3
-  ClientPhysicsSimulation: 3
+  ClientPhysicsSimulation: 2
   DeltaTimeMultiplier: 1
   SetUnityFixedTimestep: 0

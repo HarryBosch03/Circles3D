@@ -95,7 +95,6 @@ GameObject:
   - component: {fileID: 1105511911418350397}
   - component: {fileID: 3666495030575313215}
   - component: {fileID: 1232590823546260688}
-  - component: {fileID: 8098406723074394294}
   m_Layer: 0
   m_Name: Player Avatar
   m_TagString: Untagged
@@ -162,7 +161,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94bd9f52357fe094f82061568f88ab29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseSensitivity: 0.1
+  networkInterpolation: 0.1
+  mouseSensitivity: 0.3
   walkSpeed: 5
   runSpeed: 10
   moveAcceleration: 0.2
@@ -321,29 +321,6 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 8279216054243042064}
-  - {fileID: 8098406723074394294}
---- !u!114 &8098406723074394294
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 427869120341289331}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a591d221a634417e9827eb58e17de84, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SyncScale: 0
-  SyncParent: 0
-  _interpolationTarget: {fileID: 3245010073373284894}
-  UsePreciseRotation: 0
-  UseRenderSleepThresholds: 0
-  RenderThresholds:
-    UseEnergy: 1
-    Position: 0.01
-    Rotation: 0.01
-    Scale: 0.01
 --- !u!1 &1077053682744939814
 GameObject:
   m_ObjectHideFlags: 0
