@@ -1,3 +1,4 @@
+using System;
 using Fusion;
 using Runtime.Networking;
 using Runtime.Weapons;
@@ -9,9 +10,6 @@ namespace Runtime.Player
     [RequireComponent(typeof(Rigidbody))]
     public class PlayerAvatar : NetworkBehaviour
     {
-        [Space]
-        public float networkInterpolation = 0.1f;
-
         [Space]
         public float mouseSensitivity = 0.3f;
         
@@ -47,7 +45,7 @@ namespace Runtime.Player
         
         [Networked]
         public NetInput input { get; set; }
-        public Vector2 orientation { get; set; }
+        public Vector2 orientation => netData.orientation;
 
         public Transform view { get; private set; }
         public Gun gun { get; private set; }
@@ -85,23 +83,16 @@ namespace Runtime.Player
 
         public override void FixedUpdateNetwork()
         {
-            if (HasStateAuthority) netData = new NetworkData(this);
-            
             if (GetInput(out NetInput newInput)) input = newInput;
             
-            CheckForGround();
-        }
-        
-        private void FixedUpdate()
-        {
-            if (!HasStateAuthority) netData.Apply(this, networkInterpolation);
+            var netData = this.netData;
             
             body.constraints = RigidbodyConstraints.FreezeRotation;
             var tangent = Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad * 0.5f);
-            orientation += input.orientationDelta * tangent * mouseSensitivity;
+            netData.orientation += input.orientationDelta * tangent * mouseSensitivity;
 
-            Move();
-            Jump();
+            Move(ref netData);
+            Jump(ref netData);
             UpdateCamera();
 
             if (gun)
@@ -113,17 +104,33 @@ namespace Runtime.Player
                 gun.projectileSpawnPoint = view;
 
                 var recoil = gun.recoilData.angularVelocity;
-                orientation += new Vector2(-recoil.y, recoil.x) * feltRecoil * Time.deltaTime;
+                netData.orientation += new Vector2(-recoil.y, recoil.x) * feltRecoil * Runner.DeltaTime;
             }
 
-            body.AddForce(gravity - Physics.gravity, ForceMode.Acceleration);
+            netData.orientation = new Vector2
+            {
+                x = netData.orientation.x % 360f,
+                y = Mathf.Clamp(netData.orientation.y, -90f, 90f),
+            };
+            
+            netData.velocity += gravity * Runner.DeltaTime;
+
+            CheckForGround(ref netData);
+            this.netData = netData;
+            netData.Apply(this);
+        }
+
+        private void FixedUpdate()
+        {
+            if (HasStateAuthority) netData = new NetworkData(this);
+            
             bodyInterpolatePosition1 = bodyInterpolatePosition0;
-            bodyInterpolatePosition0 = body.position;
+            bodyInterpolatePosition0 = netData.position;
         }
 
         private void UpdateCamera() { body.rotation = Quaternion.Euler(0f, orientation.x, 0f); }
 
-        private void Jump()
+        private void Jump(ref NetworkData netData)
         {
             var jump = input.buttons.IsSet(InputButton.Jump);
             if (jump && !jumpFlag)
@@ -131,7 +138,7 @@ namespace Runtime.Player
                 if (!onGround) return;
 
                 var force = Vector3.up * Mathf.Sqrt(2f * jumpHeight * -gravity.y);
-                body.AddForce(force, ForceMode.VelocityChange);
+                netData.velocity += force;
             }
 
             jumpFlag = jump;
@@ -139,12 +146,6 @@ namespace Runtime.Player
 
         private void Update()
         {
-            orientation = new Vector2
-            {
-                x = orientation.x % 360f,
-                y = Mathf.Clamp(orientation.y, -90f, 90f),
-            };
-
             view.position = Vector3.Lerp(bodyInterpolatePosition1, bodyInterpolatePosition0, (Time.time - Time.fixedTime) / Time.fixedDeltaTime) + Vector3.up * cameraHeight;
             view.rotation = Quaternion.Euler(-orientation.y, orientation.x, 0f);
 
@@ -168,7 +169,7 @@ namespace Runtime.Player
             return fieldOfView;
         }
 
-        private void CheckForGround()
+        private void CheckForGround(ref NetworkData netData)
         {
             var skinWidth = onGround ? 0.35f : 0f;
             var distance = cameraHeight * 0.5f;
@@ -176,15 +177,15 @@ namespace Runtime.Player
             onGround = false;
 
             var ray = new Ray(transform.position + Vector3.up * distance, Vector3.down);
-            if (body.velocity.y < 1f && Physics.Raycast(ray, out groundHit, distance + skinWidth))
+            if (netData.velocity.y < 1f && Physics.Raycast(ray, out groundHit, distance + skinWidth))
             {
                 var dot = Vector3.Dot(groundHit.normal, Vector3.up);
-                body.position = new Vector3(body.position.x, groundHit.point.y, body.position.z);
+                netData.position = new Vector3(netData.position.x, groundHit.point.y, netData.position.z);
 
                 if (Mathf.Acos(dot) < maxWalkableSlope * Mathf.Deg2Rad)
                 {
                     onGround = true;
-                    body.velocity += Vector3.up * Mathf.Max(0f, Vector3.Dot(Vector3.up, -body.velocity));
+                    netData.velocity += Vector3.up * Mathf.Max(0f, Vector3.Dot(Vector3.up, -netData.velocity));
                     if (groundHit.rigidbody)
                     {
                         groundHit.rigidbody.AddForceAtPosition(gravity * body.mass, groundHit.point);
@@ -192,12 +193,12 @@ namespace Runtime.Player
                 }
                 else
                 {
-                    body.velocity += groundHit.normal * Mathf.Max(0f, Vector3.Dot(groundHit.normal, -body.velocity));
+                    netData.velocity += groundHit.normal * Mathf.Max(0f, Vector3.Dot(groundHit.normal, -netData.velocity));
                 }
             }
         }
 
-        private void Move()
+        private void Move(ref NetworkData netData)
         {
             var moveInput = Vector2.ClampMagnitude(input.movement, 1f);
 
@@ -206,12 +207,12 @@ namespace Runtime.Player
 
             var moveSpeed = input.buttons.IsSet(InputButton.Run) ? runSpeed : walkSpeed;
             var target = transform.TransformVector(moveInput.x, 0f, moveInput.y) * moveSpeed;
-            var force = (target - body.velocity) * acceleration;
+            var force = (target - netData.velocity) * acceleration;
             force.y = 0f;
 
             if (!onGround) force *= moveInput.magnitude;
 
-            body.AddForce(force, ForceMode.Acceleration);
+            netData.velocity += force * Runner.DeltaTime;
         }
 
         public void Respawn(Vector3 position, Quaternion rotation)
@@ -236,12 +237,10 @@ namespace Runtime.Player
                 orientation = player.orientation;
             }
 
-            public void Apply(PlayerAvatar avatar, float interpolation)
+            public void Apply(PlayerAvatar avatar)
             {
-                avatar.body.position = Vector3.Lerp(position, avatar.body.position, interpolation);
-                avatar.body.velocity = Vector3.Lerp(velocity, avatar.body.velocity, interpolation);
-
-                avatar.orientation = Vector2.Lerp(orientation, avatar.orientation, interpolation);
+                avatar.body.position = position;
+                avatar.body.velocity = velocity;
             }
         }
     }
