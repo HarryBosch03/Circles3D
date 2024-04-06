@@ -33,7 +33,6 @@ namespace Runtime.Player
         public float baseFieldOfView = 90f;
         public float aimFieldOfView = 60f;
 
-        private bool jumpFlag;
         private new Camera camera;
         private RaycastHit groundHit;
         private Vector3 bodyInterpolatePosition0;
@@ -117,15 +116,22 @@ namespace Runtime.Player
 
             CheckForGround(ref netData);
             this.netData = netData;
+            
             netData.Apply(this);
         }
 
         private void FixedUpdate()
         {
-            if (HasStateAuthority) netData = new NetworkData(this);
+            if (HasStateAuthority)
+            {
+                var netData = this.netData;
+                netData.position = body.position;
+                netData.velocity = body.velocity;
+                this.netData = netData;
+            }
             
             bodyInterpolatePosition1 = bodyInterpolatePosition0;
-            bodyInterpolatePosition0 = netData.position;
+            bodyInterpolatePosition0 = body.position;
         }
 
         private void UpdateCamera() { body.rotation = Quaternion.Euler(0f, orientation.x, 0f); }
@@ -133,7 +139,7 @@ namespace Runtime.Player
         private void Jump(ref NetworkData netData)
         {
             var jump = input.buttons.IsSet(InputButton.Jump);
-            if (jump && !jumpFlag)
+            if (jump && !netData.jumpFlag)
             {
                 if (!onGround) return;
 
@@ -141,7 +147,7 @@ namespace Runtime.Player
                 netData.velocity += force;
             }
 
-            jumpFlag = jump;
+            netData.jumpFlag = jump;
         }
 
         private void Update()
@@ -205,8 +211,10 @@ namespace Runtime.Player
             var acceleration = 2f / moveAcceleration;
             if (!onGround) acceleration *= 1f - airMovementPenalty;
 
+            var orientation = Quaternion.Euler(0f, netData.orientation.x, 0f);
+            
             var moveSpeed = input.buttons.IsSet(InputButton.Run) ? runSpeed : walkSpeed;
-            var target = transform.TransformVector(moveInput.x, 0f, moveInput.y) * moveSpeed;
+            var target = orientation * new Vector3(moveInput.x, 0f, moveInput.y) * moveSpeed;
             var force = (target - netData.velocity) * acceleration;
             force.y = 0f;
 
@@ -227,15 +235,9 @@ namespace Runtime.Player
         {
             public Vector3 position;
             public Vector3 velocity;
+            public bool jumpFlag;
             
             public Vector2 orientation;
-
-            public NetworkData(PlayerAvatar player)
-            {
-                position = player.body.position;
-                velocity = player.body.velocity;
-                orientation = player.orientation;
-            }
 
             public void Apply(PlayerAvatar avatar)
             {

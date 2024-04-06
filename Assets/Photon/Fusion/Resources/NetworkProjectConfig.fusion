@@ -39,8 +39,8 @@
     "NetworkConditions": {
         "Enabled": true,
         "DelayShape": 0,
-        "DelayMin": 0.15,
-        "DelayMax": 0.15,
+        "DelayMin": 0.029999999329447748,
+        "DelayMax": 0.05999999865889549,
         "DelayPeriod": 0.0,
         "DelayThreshold": 0.0,
         "AdditionalJitter": 0.05,

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4633334925330512844}
   - component: {fileID: 7188152344513852483}
   - component: {fileID: 2334318717756167058}
-  - component: {fileID: 8992060361832377092}
+  - component: {fileID: 1692881463035452115}
   m_Layer: 0
   m_Name: NetRunner
   m_TagString: Untagged
@@ -59,7 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mouseSensitivity: 0.3
---- !u!114 &8992060361832377092
+--- !u!114 &1692881463035452115
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -73,6 +73,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _physicsAuthority: 2
   _physicsTiming: 3
-  ClientPhysicsSimulation: 2
+  ClientPhysicsSimulation: 0
   DeltaTimeMultiplier: 1
   SetUnityFixedTimestep: 0
