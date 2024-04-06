@@ -33,7 +33,7 @@ public class BodyAnimator : MonoBehaviour
         
         var view = player.movement.orientation;
 
-        torso.localRotation = Quaternion.Euler(-view.y * 0.5f, 0f, 0f);
-        head.rotation = Quaternion.Euler(-view.y, view.x, 0f);
+        torso.localRotation = Quaternion.Euler(view.x * 0.5f, 0f, 0f);
+        head.rotation = Quaternion.Euler(view.x, view.y, 0f);
     }
 }

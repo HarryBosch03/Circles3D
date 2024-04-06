@@ -13,16 +13,28 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/32139054ccfe4261852fb0d8ff7b08a211e00/af/989ef871/KCC.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/32139054ccfe4261852fb0d8ff7b08a211e00/af/aa3de10b/KCCData.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/32139054ccfe4261852fb0d8ff7b08a211e00/dd/b8c9a784/SimpleKCC.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5a41d6b7189842eca409fd0b1c3e3dcf17bf78/d8/f4b5447c/List`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5a41d6b7189842eca409fd0b1c3e3dcf17bf78/e2/e6e5235d/Action`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a87a815ce9694a5ab7ddf97705612be2ab400/b7/7ce9a28c/NetworkBehaviour.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/bff907ed581f483ab4bd129472866e971fe00/1f/cace27f7/Rigidbody.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/bff907ed581f483ab4bd129472866e971fe00/cf/3259aacb/Physics.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f7237cf7abef49bfbb552d7eb076e422174200/45/45df1b0b/Transform.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Editor/Shortcuts.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Editor/StatPropertyDrawer.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Runtime/Animation/BodyAnimator.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Runtime/Damage/HealthController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Runtime/Level/GunTrigger.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://D:/Documents/Development/Unity/Projects/Circles3D/Assets/Runtime/Player/PlayerAvatar.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/Documents/Development/Unity/Projects/Circles3D/Assets/Runtime/Player/PlayerAvatar.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/Documents/Development/Unity/Projects/Circles3D/Assets/Runtime/Player/PlayerAvatar.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/Documents/Development/Unity/Projects/Circles3D/Assets/Runtime/Player/PlayerAvatar.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/Documents/Development/Unity/Projects/Circles3D/Assets/Runtime/Player/PlayerAvatar.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/Documents/Development/Unity/Projects/Circles3D/Assets/Runtime/Player/PlayerAvatar.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/Documents/Development/Unity/Projects/Circles3D/Assets/Runtime/Player/PlayerAvatar.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/Documents/Development/Unity/Projects/Circles3D/Assets/Runtime/Player/PlayerAvatar.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/Documents/Development/Unity/Projects/Circles3D/Assets/Runtime/Player/PlayerAvatar.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/Documents/Development/Unity/Projects/Circles3D/Assets/Runtime/Player/PlayerAvatar.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Runtime/Weapons/Gun.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Runtime/Weapons/GunAnimator.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Runtime/Weapons/Projectile.cs" root0="FORCE_HIGHLIGHTING" />

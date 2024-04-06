@@ -24,7 +24,7 @@ namespace Runtime.Player
 
         [Networked]
         public NetworkData netData { get; set; }
-        
+
         [Networked]
         public NetInput input { get; set; }
         public Transform view { get; private set; }
@@ -42,28 +42,12 @@ namespace Runtime.Player
             view = transform.Find("View");
         }
 
-        private void OnEnable()
-        {
-            if (HasInputAuthority)
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-            }
-        }
-
-        private void OnDisable()
-        {
-            if (HasInputAuthority)
-            {
-                Cursor.lockState = CursorLockMode.None;
-            }
-        }
-
         public override void FixedUpdateNetwork()
         {
             if (GetInput(out NetInput newInput)) input = newInput;
-            
+
             var netData = this.netData;
-            
+
             if (gun)
             {
                 gun.SetFirstPerson(HasInputAuthority);
@@ -83,6 +67,7 @@ namespace Runtime.Player
         {
             if (HasInputAuthority)
             {
+                Cursor.lockState = CursorLockMode.Locked;
                 camera.fieldOfView = CalculateFieldOfView();
             }
         }
@@ -99,14 +84,8 @@ namespace Runtime.Player
             return fieldOfView;
         }
 
-        public void Respawn(Vector3 position, Quaternion rotation)
-        {
-            movement.Teleport(position, rotation);
-        }
+        public void Respawn(Vector3 position, Quaternion rotation) { movement.Teleport(position, rotation); }
 
-        public struct NetworkData : INetworkStruct
-        {
-            
-        }
+        public struct NetworkData : INetworkStruct { }
     }
 }

@@ -39,8 +39,9 @@ namespace Runtime.Networking
             input.movement.x = kb.dKey.ReadValue() - kb.aKey.ReadValue();
             input.movement.y = kb.wKey.ReadValue() - kb.sKey.ReadValue();
             input.movement = Vector2.ClampMagnitude(input.movement, 1f);
-            
-            input.orientationDelta += m.delta.ReadValue();
+
+            var mouseDelta = m.delta.ReadValue();
+            input.orientationDelta += new Vector2(-mouseDelta.y, mouseDelta.x);
             
             buttons.Set(InputButton.Jump, kb.spaceKey.isPressed);
             buttons.Set(InputButton.Run, kb.leftShiftKey.isPressed);
@@ -60,6 +61,8 @@ namespace Runtime.Networking
         {
             input.Set(this.input);
             resetInput = true;
+
+            this.input.orientationDelta = default;
         }
         public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) {  }
 
