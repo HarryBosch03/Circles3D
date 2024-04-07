@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Fusion;
 using Runtime.Mods.GunMods;
 using UnityEngine;
@@ -9,14 +7,14 @@ namespace Runtime.Stats
 {
     public class StatBoard : NetworkBehaviour
     {
-        public Stats baseStats;
+        public Stats baseStats = Stats.Defaults;
         
-        [Networked]
-        public Stats evaluated { get; private set; }
+        [Networked] private Stats evaluatedInternal { get; set; }
+        public Stats evaluated => Runner ? evaluatedInternal : baseStats;
      
         public List<Mod> mods = new();
 
-        protected virtual void Awake()
+        public override void Spawned()
         {
             UpdateStats();
         }
@@ -45,7 +43,7 @@ namespace Runtime.Stats
                 stats.maxHealth = 1;
             }
 
-            this.evaluated = stats;
+            evaluatedInternal = stats;
         }
 
         public void Max(ref int stat, int max) { stat = Mathf.Max(stat, max); }

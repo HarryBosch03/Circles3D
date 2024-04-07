@@ -175,33 +175,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseStats:
-    maxHealth: 0
+    maxHealth: 100
     maxBuffer: 0
-    damage: 0
+    damage: 45
     knockback: 0
-    projectileSpeed: 0
-    spray: 0
-    attackSpeed: 0
-    magazineSize: 0
-    reloadTime: 0
-    recoil: 0
+    projectileSpeed: 200
+    spray: 0.5
+    attackSpeed: 5
+    magazineSize: 7
+    reloadTime: 1.5
+    recoil: 1
     bounces: 0
     homing: 0
-    projectileLifetime: 0
-  _evaluated:
-    maxHealth: 0
-    maxBuffer: 0
-    damage: 0
-    knockback: 0
-    projectileSpeed: 0
-    spray: 0
-    attackSpeed: 0
-    magazineSize: 0
-    reloadTime: 0
-    recoil: 0
-    bounces: 0
-    homing: 0
-    projectileLifetime: 0
+    projectileLifetime: 5
   mods: []
 --- !u!114 &1105511911418350397
 MonoBehaviour:

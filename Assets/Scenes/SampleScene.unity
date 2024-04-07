@@ -478,6 +478,7 @@ GameObject:
   - component: {fileID: 620869012}
   - component: {fileID: 620869013}
   - component: {fileID: 620869014}
+  - component: {fileID: 620869015}
   m_Layer: 0
   m_Name: Gun Trigger
   m_TagString: Untagged
@@ -530,46 +531,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00ffbe341adf6a64399f627fcbba4ef1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth:
-    baseValue: 100
-    value: 0
-  maxBuffer:
-    baseValue: 0
-    value: 0
-  damage:
-    baseValue: 45
-    value: 0
-  knockback:
-    baseValue: 0
-    value: 0
-  projectileSpeed:
-    baseValue: 120
-    value: 0
-  spray:
-    baseValue: 0.5
-    value: 0
-  attackSpeed:
-    baseValue: 5
-    value: 0
-  magazineSize:
-    baseValue: 3
-    value: 0
-  reloadTime:
-    baseValue: 1.5
-    value: 0
-  recoil:
-    baseValue: 1
-    value: 0
-  bounces:
-    baseValue: 0
-    value: 0
-  homing:
-    baseValue: 0
-    value: 0
-  projectileLifetime:
-    baseValue: 5
-    value: 0
+  baseStats:
+    maxHealth: 100
+    maxBuffer: 0
+    damage: 45
+    knockback: 0
+    projectileSpeed: 200
+    spray: 0.5
+    attackSpeed: 5
+    magazineSize: 7
+    reloadTime: 1.5
+    recoil: 1
+    bounces: 0
+    homing: 0
+    projectileLifetime: 5
   mods: []
+--- !u!114 &620869015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 620869011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 2195836139
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 620869013}
+  - {fileID: 620869014}
 --- !u!1001 &678092812
 PrefabInstance:
   m_ObjectHideFlags: 0
