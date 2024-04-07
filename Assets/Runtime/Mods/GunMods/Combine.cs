@@ -4,10 +4,10 @@ namespace Runtime.Mods.GunMods
 {
     public class Combine : Mod
     {
-        public override void Apply(StatBoard gun)
+        public override void Apply(ref StatBoard.Stats stats)
         {
-            gun.damage.value *= gun.magazineSize.value;
-            gun.magazineSize.value = 1;
+            stats.damage *= stats.magazineSize;
+            stats.magazineSize = 1;
         }
     }
 }

@@ -46,7 +46,7 @@ namespace Runtime.Weapons
 
         private PlayerAvatar owner;
         private Rigidbody body;
-        private StatBoard stats;
+        private StatBoard statboard;
 
         private Model modelFirstPerson;
         private Model modelThirdPerson;
@@ -57,6 +57,7 @@ namespace Runtime.Weapons
 
         private Transform muzzle;
 
+        public StatBoard.Stats stats => statboard.evaluated;
         public bool aiming { get; set; }
         public Transform projectileSpawnPoint { get; set; }
         public RecoilData recoilData { get; private set; }
@@ -102,7 +103,7 @@ namespace Runtime.Weapons
         {
             owner = GetComponentInParent<PlayerAvatar>();
             body = GetComponentInParent<Rigidbody>();
-            stats = GetComponentInParent<StatBoard>();
+            statboard = GetComponentInParent<StatBoard>();
 
             modelFirstPerson = new Model(gameObject.Find("Model.FirstPerson"));
             modelThirdPerson = new Model(gameObject.Find("Model.ThirdPerson"));
@@ -112,7 +113,7 @@ namespace Runtime.Weapons
             rightHandHold = modelThirdPerson.transform.Search("HandHold.R");
             muzzle = modelThirdPerson.transform.Search("Muzzle");
 
-            if (!stats) stats = gameObject.AddComponent<StatBoard>();
+            if (!statboard) statboard = gameObject.AddComponent<StatBoard>();
 
             isFirstPerson = false;
             isVisible = true;
@@ -133,7 +134,7 @@ namespace Runtime.Weapons
         private void Start()
         {
             reloadTimer = stats.reloadTime;
-            currentMagazine = stats.magazineSize.AsIntMax(1);
+            currentMagazine = stats.magazineSize;
         }
 
         private void FixedUpdate()
@@ -177,7 +178,7 @@ namespace Runtime.Weapons
             reloadTimer += Time.deltaTime;
             if (reloadTimer > stats.reloadTime)
             {
-                currentMagazine = stats.magazineSize.AsIntMax(1);
+                currentMagazine = stats.magazineSize;
             }
         }
 
@@ -198,7 +199,7 @@ namespace Runtime.Weapons
         {
             Projectile.SpawnArgs args;
 
-            var damage = new DamageArgs(stats.damage.AsInt(), stats.knockback);
+            var damage = new DamageArgs((int)stats.damage, stats.knockback);
 
             args.damage = damage;
             args.speed = stats.projectileSpeed;

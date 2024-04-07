@@ -25,6 +25,6 @@ namespace Runtime.Mods.GunMods
 
         protected virtual void OnDisable() { stats.mods.Remove(this); }
         
-        public abstract void Apply(StatBoard statBoard);
+        public abstract void Apply(ref StatBoard.Stats stats);
     }
 }

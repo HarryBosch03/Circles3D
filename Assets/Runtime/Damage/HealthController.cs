@@ -19,13 +19,14 @@ namespace Runtime.Damage
         public float regenHealthPerSecond = 10.0f;
         public float regenHealthToBufferExchangeRate = 40.0f;
 
-        private StatBoard stats;
+        private StatBoard statboard;
 
         [Networked]
         private float regenTimer { get; set; }
 
         public Rigidbody body { get; private set; }
 
+        public StatBoard.Stats stats => statboard.evaluated;
         public int currentHealth => Mathf.FloorToInt(currentPartialHealth);
         public int currentBuffer => Mathf.FloorToInt(currentPartialBuffer);
         [Networked] public float currentPartialHealth { get; private set; }
@@ -41,7 +42,7 @@ namespace Runtime.Damage
         protected virtual void Awake()
         {
             body = GetComponentInParent<Rigidbody>();
-            stats = GetComponentInParent<StatBoard>();
+            statboard = GetComponentInParent<StatBoard>();
         }
 
         public override void Spawned()
@@ -86,10 +87,10 @@ namespace Runtime.Damage
 
         private void UpdateFromStats()
         {
-            if (stats)
+            if (statboard)
             {
-                maxHealth = stats.maxHealth.AsInt();
-                maxBuffer = stats.maxBuffer.AsInt();
+                maxHealth = stats.maxHealth;
+                maxBuffer = stats.maxBuffer;
             }
             else
             {

@@ -174,45 +174,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00ffbe341adf6a64399f627fcbba4ef1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth:
-    baseValue: 100
-    value: 0
-  maxBuffer:
-    baseValue: 0
-    value: 0
-  damage:
-    baseValue: 45
-    value: 0
-  knockback:
-    baseValue: 0
-    value: 0
-  projectileSpeed:
-    baseValue: 350
-    value: 0
-  spray:
-    baseValue: 0.5
-    value: 0
-  attackSpeed:
-    baseValue: 5
-    value: 0
-  magazineSize:
-    baseValue: 7
-    value: 0
-  reloadTime:
-    baseValue: 1.5
-    value: 0
-  recoil:
-    baseValue: 1
-    value: 0
-  bounces:
-    baseValue: 0
-    value: 0
-  homing:
-    baseValue: 0
-    value: 0
-  projectileLifetime:
-    baseValue: 5
-    value: 0
+  baseStats:
+    maxHealth: 0
+    maxBuffer: 0
+    damage: 0
+    knockback: 0
+    projectileSpeed: 0
+    spray: 0
+    attackSpeed: 0
+    magazineSize: 0
+    reloadTime: 0
+    recoil: 0
+    bounces: 0
+    homing: 0
+    projectileLifetime: 0
+  _evaluated:
+    maxHealth: 0
+    maxBuffer: 0
+    damage: 0
+    knockback: 0
+    projectileSpeed: 0
+    spray: 0
+    attackSpeed: 0
+    magazineSize: 0
+    reloadTime: 0
+    recoil: 0
+    bounces: 0
+    homing: 0
+    projectileLifetime: 0
   mods: []
 --- !u!114 &1105511911418350397
 MonoBehaviour:
@@ -289,6 +278,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 8279216054243042064}
   - {fileID: 116858673824452871}
+  - {fileID: 5118894930514851959}
   - {fileID: 3217864588436646767}
   - {fileID: 5299436792547326342}
   - {fileID: 3457380028575364233}

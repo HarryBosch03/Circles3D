@@ -4,12 +4,12 @@ namespace Runtime.Mods.GunMods
 {
     public class Homing : Mod
     {
-        public override void Apply(StatBoard statBoard)
+        public override void Apply(ref StatBoard.Stats stats)
         {
-            statBoard.homing.value += 1f;
-            statBoard.projectileSpeed.value *= 0.25f;
-            statBoard.damage.value *= 0.5f;
-            statBoard.reloadTime.value += 0.25f;
+            stats.homing += 1f;
+            stats.projectileSpeed *= 0.25f;
+            stats.damage *= 0.5f;
+            stats.reloadTime += 0.25f;
         }
     }
 }
