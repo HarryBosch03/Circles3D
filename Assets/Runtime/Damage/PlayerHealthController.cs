@@ -1,3 +1,4 @@
+using Fusion;
 using Runtime.Player;
 using UnityEngine;
 
@@ -22,12 +23,13 @@ namespace Runtime.Damage
             var killerAvatar = invoker ? invoker.GetComponent<PlayerAvatar>() : null;
             var killer = killerAvatar ? killerAvatar.owningPlayerInstance : null;
             reasonForDeath = killer ? $"Killed by {killer.displayName}" : null;
-            
-            SpawnRagdoll(velocity * args.damage * 0.0006f, point);
+
+            if (HasStateAuthority) SpawnRagdoll(velocity * args.damage * 0.0006f, point);
             
             base.Kill(invoker, args, point, velocity);
         }
         
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         private void SpawnRagdoll(Vector3 force, Vector3 point)
         {
             if (!ragdollPrefab) return;

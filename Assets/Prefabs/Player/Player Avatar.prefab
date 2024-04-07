@@ -187,7 +187,7 @@ MonoBehaviour:
     baseValue: 0
     value: 0
   projectileSpeed:
-    baseValue: 120
+    baseValue: 350
     value: 0
   spray:
     baseValue: 0.5
