@@ -73,6 +73,10 @@ namespace Runtime.Player
 
             if (health.alive)
             {
+                movement.enabled = true;
+                gun.SetVisible(true, HasInputAuthority);
+                SetModelVisibility(true);
+                
                 if (gun)
                 {
                     gun.SetVisible(true, HasInputAuthority);
@@ -84,6 +88,12 @@ namespace Runtime.Player
                     var recoil = gun.recoilData.angularVelocity;
                     movement.OffsetRotation(new Vector2(-recoil.x, recoil.y) * feltRecoil * Runner.DeltaTime);
                 }
+            }
+            else
+            {
+                movement.enabled = false;
+                gun.SetVisible(false);
+                SetModelVisibility(false);
             }
         }
 
@@ -114,7 +124,6 @@ namespace Runtime.Player
 
         private void OnDied(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
         {
-            movement.enabled = false;
             gun.SetVisible(false);
             SetModelVisibility(false);
         }
@@ -124,8 +133,6 @@ namespace Runtime.Player
             movement.Spawn(position, rotation);
             
             health.Spawn();
-            gun.SetVisible(true, HasInputAuthority);
-            SetModelVisibility(true);
         }
     }
 }
