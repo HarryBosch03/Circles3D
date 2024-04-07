@@ -61,6 +61,8 @@ namespace Runtime.Player
             movement.enabled = false;
             gun.SetVisible(false);
             SetModelVisibility(false);
+            
+            Runner.SetIsSimulated(Object, true);
         }
 
         private void SetModelVisibility(bool enabled)

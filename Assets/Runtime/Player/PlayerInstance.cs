@@ -64,6 +64,8 @@ namespace Runtime.Player
         {
             Projectile.ProjectileDealtDamageEvent += OnProjectileDealtDamage;
             avatar.health.DiedEvent += OnDied;
+            
+            Runner.SetIsSimulated(Object, true);
         }
 
         public override void Despawned(NetworkRunner runner, bool hasState)
