@@ -24,13 +24,13 @@ namespace Runtime.Damage
             var killer = killerAvatar ? killerAvatar.owningPlayerInstance : null;
             reasonForDeath = killer ? $"Killed by {killer.displayName}" : null;
 
-            if (HasStateAuthority) SpawnRagdoll(velocity * args.damage * 0.0006f, point);
+            if (HasStateAuthority) SpawnRagdollRpc(velocity * args.damage * 0.0006f, point);
             
             base.Kill(invoker, args, point, velocity);
         }
         
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-        private void SpawnRagdoll(Vector3 force, Vector3 point)
+        private void SpawnRagdollRpc(Vector3 force, Vector3 point)
         {
             if (!ragdollPrefab) return;
             
