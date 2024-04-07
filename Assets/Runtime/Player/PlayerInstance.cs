@@ -89,11 +89,6 @@ namespace Runtime.Player
         {
             if (projectile.shooter != avatar) return;
 
-            PlayerDealtDamageObserverRPC(report);
-        }
-
-        private void PlayerDealtDamageObserverRPC(IDamageable.DamageReport report)
-        {
             PlayerDealtDamageEvent?.Invoke(this, report);
         }
 

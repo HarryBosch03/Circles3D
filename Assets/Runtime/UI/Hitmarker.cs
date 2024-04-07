@@ -46,6 +46,7 @@ namespace Runtime.UI
         private void OnPlayerDealtDamage(PlayerInstance player, IDamageable.DamageReport report)
         {
             if (!HasStateAuthority) return;
+            if (player.avatar != this.player) return;
             if (report.failed) return;
             
             if (report.lethal) ShowRpc(Flavour.Lethal);

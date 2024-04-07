@@ -1,3 +1,4 @@
+using System;
 using Fusion;
 using Runtime.Damage;
 using Runtime.Networking;
@@ -96,6 +97,16 @@ namespace Runtime.Player
                 movement.enabled = false;
                 gun.SetVisible(false);
                 SetModelVisibility(false);
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            if (!HasInputAuthority && !HasStateAuthority)
+            {
+                movement.enabled = health.alive;
+                gun.SetVisible(health.alive, false);
+                SetModelVisibility(health.alive);
             }
         }
 
