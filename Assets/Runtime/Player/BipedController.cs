@@ -108,7 +108,7 @@ namespace Runtime.Player
             transform.rotation = Quaternion.Euler(0f, orientation.y, 0f);
 
             view.position = Vector3.Lerp(bodyInterpolatePosition1, bodyInterpolatePosition0, (Time.time - Time.fixedTime) / Time.fixedDeltaTime) + Vector3.up * cameraHeight;
-            view.rotation = Quaternion.Euler(orientation);
+            view.rotation = Quaternion.Euler(kcc.GetLookRotation());
         }
 
         private void Move()

@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Runtime.Player
 {
     [SelectionBase]
-    [DefaultExecutionOrder(10)]
+    [DefaultExecutionOrder(100)]
     [RequireComponent(typeof(BipedController))]
     public class PlayerAvatar : NetworkBehaviour
     {
