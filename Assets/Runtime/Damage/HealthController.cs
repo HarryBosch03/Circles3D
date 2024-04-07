@@ -22,7 +22,6 @@ namespace Runtime.Damage
         private StatBoard stats;
 
         private float lastDamageTime;
-        private float regenTimer;
 
         public Rigidbody body { get; private set; }
         public int currentHealth => Mathf.FloorToInt(currentPartialHealth);
@@ -55,11 +54,7 @@ namespace Runtime.Damage
             var healthy = currentHealth >= maxHealth && currentBuffer >= maxBuffer;
             if (!healthy)
             {
-                if (regenTimer < regenDelay)
-                {
-                    regenTimer += Time.deltaTime;
-                }
-                else
+                if (Time.time - lastDamageTime > regenDelay)
                 {
                     if (currentPartialHealth < maxHealth)
                     {
@@ -70,10 +65,6 @@ namespace Runtime.Damage
                         ChangeBuffer(regenHealthPerSecond / regenHealthToBufferExchangeRate * Time.deltaTime);
                     }
                 }
-            }
-            else
-            {
-                regenTimer = 0f;
             }
         }
 
