@@ -1,5 +1,6 @@
 using System;
 using Fusion;
+using Fusion.Photon.Realtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -70,7 +71,9 @@ namespace Runtime.Networking
                 SessionName = sessionName,
                 GameMode = gamemode,
                 Scene = scene,
-                SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
+                SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
+                IsOpen = true,
+                IsVisible = true,
             });
         }
     }
