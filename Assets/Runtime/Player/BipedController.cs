@@ -32,15 +32,11 @@ namespace Runtime.Player
 
         public SimpleKCC kcc { get; private set; }
         
-        [Networked]
-        public Vector3 velocity { get; set; }
-        [Networked]
-        public float jumpImpulse { get; set; }
-        [Networked]
-        public bool jumpFlag { get; set; }
-
-        [Networked]
-        public NetInput input { get; set; }
+        [Networked] public Vector3 velocity { get; set; }
+        [Networked] public float jumpImpulse { get; set; }
+        [Networked] public NetworkBool jumpFlag { get; set; }
+        [Networked] public NetInput input { get; set; }
+        [Networked] public float fieldOfView { get; set; }
         public Transform view { get; private set; }
         public Vector2 orientation => kcc.GetLookRotation();
         public Vector3 center => kcc.Position + Vector3.up * characterHeight * 0.5f;
@@ -73,8 +69,8 @@ namespace Runtime.Player
         public override void FixedUpdateNetwork()
         {
             if (GetInput(out NetInput newInput)) input = newInput;
-
-            var tangent = Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad * 0.5f);
+            
+            var tangent = Mathf.Tan(fieldOfView * Mathf.Deg2Rad * 0.5f);
             kcc.AddLookRotation(input.orientationDelta * tangent * mouseSensitivity);
 
             Move();

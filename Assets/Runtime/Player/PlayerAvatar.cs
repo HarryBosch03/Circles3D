@@ -74,6 +74,8 @@ namespace Runtime.Player
             if (health.alive)
             {
                 movement.enabled = true;
+                movement.fieldOfView = CalculateFieldOfView();
+                
                 gun.SetVisible(true, HasInputAuthority);
                 SetModelVisibility(true);
                 
@@ -104,7 +106,7 @@ namespace Runtime.Player
                 Cursor.lockState = health.alive ? CursorLockMode.Locked : CursorLockMode.None;
                 camera.transform.position = movement.view.position;
                 camera.transform.rotation = movement.view.rotation;
-                camera.fieldOfView = CalculateFieldOfView();
+                camera.fieldOfView = movement.fieldOfView;
             }
         }
 

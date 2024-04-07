@@ -32,7 +32,7 @@ namespace Runtime.Damage
         [Networked] public float currentPartialBuffer { get; private set; }
         [Networked] public int maxHealth { get; private set; } 
         [Networked] public int maxBuffer { get; private set; }
-        [Networked] public bool alive { get; private set; }
+        [Networked] public NetworkBool alive { get; private set; }
 
         public event Action HealthChangedEvent;
         
