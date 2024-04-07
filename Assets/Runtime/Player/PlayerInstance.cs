@@ -62,13 +62,13 @@ namespace Runtime.Player
 
         public override void Spawned()
         {
-            Projectile.projectileDealtDamageEvent += OnProjectileDealtDamage;
+            Projectile.ProjectileDealtDamageEvent += OnProjectileDealtDamage;
             avatar.health.DiedEvent += OnDied;
         }
 
         public override void Despawned(NetworkRunner runner, bool hasState)
         {
-            Projectile.projectileDealtDamageEvent -= OnProjectileDealtDamage;
+            Projectile.ProjectileDealtDamageEvent -= OnProjectileDealtDamage;
             avatar.health.DiedEvent -= OnDied;
         }
 
@@ -92,7 +92,10 @@ namespace Runtime.Player
             PlayerDealtDamageObserverRPC(report);
         }
 
-        private void PlayerDealtDamageObserverRPC(IDamageable.DamageReport report) { PlayerDealtDamageEvent?.Invoke(this, report); }
+        private void PlayerDealtDamageObserverRPC(IDamageable.DamageReport report)
+        {
+            PlayerDealtDamageEvent?.Invoke(this, report);
+        }
 
         public override void FixedUpdateNetwork()
         {

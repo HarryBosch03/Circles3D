@@ -80,13 +80,14 @@ namespace Runtime.Weapons
 
         public void SetFirstPerson(bool isFirstPerson) => SetVisible(isVisible, isFirstPerson);
         public void SetVisible(bool isVisible) => SetVisible(isVisible, isFirstPerson);
+
         public void SetVisible(bool isVisible, bool isFirstPerson)
         {
             if (isVisible == this.isVisible && isFirstPerson == this.isFirstPerson) return;
-            
+
             this.isVisible = isVisible;
             this.isFirstPerson = isFirstPerson;
-            
+
             UpdateModelVisibility();
         }
 
@@ -102,10 +103,10 @@ namespace Runtime.Weapons
             owner = GetComponentInParent<PlayerAvatar>();
             body = GetComponentInParent<Rigidbody>();
             stats = GetComponentInParent<StatBoard>();
-            
+
             modelFirstPerson = new Model(gameObject.Find("Model.FirstPerson"));
             modelThirdPerson = new Model(gameObject.Find("Model.ThirdPerson"));
-            
+
             overlay = transform.Find<Canvas>("Overlay");
             leftHandHold = modelThirdPerson.transform.Search("HandHold.L");
             rightHandHold = modelThirdPerson.transform.Search("HandHold.R");
@@ -116,7 +117,7 @@ namespace Runtime.Weapons
             isFirstPerson = false;
             isVisible = true;
             UpdateModelVisibility();
-            
+
             SetModelRenderLayer(modelFirstPerson, ViewportModelLayer);
             SetModelRenderLayer(modelThirdPerson, DefaultModelLayer);
         }
@@ -217,8 +218,11 @@ namespace Runtime.Weapons
 
             var view = projectileSpawnPoint ? projectileSpawnPoint : muzzle;
             var instance = Projectile.Spawn(projectile, owner, view.position, view.forward, GetProjectileSpawnArgs());
-            instance.velocity += body ? body.velocity : Vector3.zero;
-            projectiles.Add(instance);
+            if (instance)
+            {
+                instance.velocity += body ? body.velocity : Vector3.zero;
+                projectiles.Add(instance);
+            }
 
             currentMagazine--;
             reloadTimer = 0f;

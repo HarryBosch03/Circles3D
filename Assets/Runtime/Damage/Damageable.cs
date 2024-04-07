@@ -27,6 +27,13 @@ namespace Runtime.Damage
 
         public struct DamageReport
         {
+            public static readonly DamageReport Failed = new DamageReport()
+            {
+                failed = true,
+            };
+            
+            public bool failed;
+            
             public GameObject victim;
             public DamageArgs finalDamage;
             public bool lethal;

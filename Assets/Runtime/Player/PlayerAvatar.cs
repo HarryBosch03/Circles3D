@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Runtime.Player
 {
     [SelectionBase]
-    [DefaultExecutionOrder(100)]
+    [DefaultExecutionOrder(10)]
     [RequireComponent(typeof(BipedController))]
     public class PlayerAvatar : NetworkBehaviour
     {
@@ -23,7 +23,7 @@ namespace Runtime.Player
         private Vector3 bodyInterpolatePosition0;
         private Vector3 bodyInterpolatePosition1;
         
-        private Collider[] hitbox;
+        private Transform model;
 
         [Networked]
         public NetInput input { get; set; }
@@ -31,7 +31,6 @@ namespace Runtime.Player
         public PlayerHealthController health { get; private set; }
         public Transform view { get; private set; }
         public Gun gun { get; private set; }
-        public bool onGround { get; private set; }
         public PlayerInstance owningPlayerInstance { get; set; }
 
         private void Awake()
@@ -41,7 +40,7 @@ namespace Runtime.Player
             movement = GetComponent<BipedController>();
             health = GetComponent<PlayerHealthController>();
 
-            hitbox = transform.Find("Model").GetComponentsInChildren<Collider>();
+            model = transform.Find("Model");
 
             view = transform.Find("View");
         }
@@ -56,9 +55,16 @@ namespace Runtime.Player
             health.DiedEvent -= OnDied;
         }
 
-        private void SetHitboxEnabled(bool enabled)
+        public override void Spawned()
         {
-            foreach (var c in hitbox) c.enabled = enabled;
+            movement.enabled = false;
+            gun.SetVisible(false);
+            SetModelVisibility(false);
+        }
+
+        private void SetModelVisibility(bool enabled)
+        {
+            model.gameObject.SetActive(enabled);
         }
 
         public override void FixedUpdateNetwork()
@@ -67,7 +73,6 @@ namespace Runtime.Player
 
             if (health.alive)
             {
-                movement.enabled = true;
                 if (gun)
                 {
                     gun.SetVisible(true, HasInputAuthority);
@@ -77,13 +82,8 @@ namespace Runtime.Player
                     gun.projectileSpawnPoint = view;
 
                     var recoil = gun.recoilData.angularVelocity;
-                    movement.OffsetRotation(new Vector2(-recoil.y, recoil.x) * feltRecoil * Runner.DeltaTime);
+                    movement.OffsetRotation(new Vector2(-recoil.x, recoil.y) * feltRecoil * Runner.DeltaTime);
                 }
-            }
-            else
-            {
-                gun.SetVisible(false);
-                movement.enabled = false;
             }
         }
 
@@ -115,14 +115,17 @@ namespace Runtime.Player
         private void OnDied(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
         {
             movement.enabled = false;
-            SetHitboxEnabled(false);
+            gun.SetVisible(false);
+            SetModelVisibility(false);
         }
         
         public void Spawn(Vector3 position, Quaternion rotation)
         {
             movement.Spawn(position, rotation);
+            
             health.Spawn();
-            SetHitboxEnabled(true);
+            gun.SetVisible(true, HasInputAuthority);
+            SetModelVisibility(true);
         }
     }
 }

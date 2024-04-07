@@ -1,11 +1,12 @@
+using Fusion;
 using Runtime.Weapons;
-using UnityEngine;
 
-public class GunTrigger : MonoBehaviour
+public class GunTrigger : NetworkBehaviour
 {
     public float shootDelay;
 
-    private float shootTimer;
+    [Networked]
+    private float shootTimer { get; set; }
     private Gun gun;
 
     private void Awake()
@@ -13,9 +14,9 @@ public class GunTrigger : MonoBehaviour
         gun = GetComponentInChildren<Gun>();
     }
 
-    private void FixedUpdate()
+    public override void FixedUpdateNetwork()
     {
-        shootTimer += Time.deltaTime;
+        shootTimer += Runner.DeltaTime;
         if (shootTimer > shootDelay)
         {
             shootTimer -= shootDelay;

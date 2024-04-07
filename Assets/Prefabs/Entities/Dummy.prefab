@@ -76,7 +76,7 @@ MonoBehaviour:
   _currentPartialBuffer: 0
   _maxHealth: 0
   _maxBuffer: 0
-  _alive: 0
+  _alive: 1
 --- !u!1 &2708387730023299068
 GameObject:
   m_ObjectHideFlags: 0

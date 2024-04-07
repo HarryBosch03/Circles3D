@@ -22,15 +22,19 @@ namespace Runtime.Weapons
         private LineRenderer lockLines;
 
         private SpawnArgs args;
+        public Vector3 position;
         public Vector3 velocity;
         private bool dead;
         private int age;
+
+        private Vector3 interpolationPosition0;
+        private Vector3 interpolationPosition1;
 
         private PlayerAvatar homingTarget;
 
         public PlayerAvatar shooter { get; private set; }
 
-        public static event Action<Projectile, RaycastHit, IDamageable.DamageReport> projectileDealtDamageEvent;
+        public static event Action<Projectile, RaycastHit, IDamageable.DamageReport> ProjectileDealtDamageEvent;
 
         private void Awake()
         {
@@ -63,6 +67,7 @@ namespace Runtime.Weapons
 
             var instance = Instantiate(prefab, position, Quaternion.LookRotation(direction));
             instance.args = args;
+            instance.position = position;
             instance.velocity = direction * args.speed;
             instance.shooter = shooter;
             return instance;
@@ -74,12 +79,20 @@ namespace Runtime.Weapons
             if (args.homing > float.Epsilon && age > 0) Home();
 
             Collide();
-            transform.position += velocity * Time.deltaTime;
+            position += velocity * Time.deltaTime;
             velocity += Physics.gravity * Time.deltaTime;
 
             if (age > args.lifetime / Time.fixedDeltaTime) DestroyWithStyle();
 
+            interpolationPosition1 = interpolationPosition0;
+            interpolationPosition0 = position;
+            
             age++;
+        }
+
+        private void Update()
+        {
+            transform.position = Vector3.Lerp(interpolationPosition1, interpolationPosition0, (Time.time - Time.fixedTime) / Time.fixedDeltaTime);
         }
 
         private void Home()
@@ -99,8 +112,8 @@ namespace Runtime.Weapons
                 {
                     if (i < visibleScans)
                     {
-                        sensorLines.SetPosition(3 * i + 0, transform.position);
-                        sensorLines.SetPosition(3 * i + 2, transform.position);
+                        sensorLines.SetPosition(3 * i + 0, position);
+                        sensorLines.SetPosition(3 * i + 2, position);
                     }
 
                     var orientation = Quaternion.LookRotation(velocity);
@@ -109,7 +122,7 @@ namespace Runtime.Weapons
                     direction.Normalize();
                     direction = orientation * direction;
 
-                    var ray = new Ray(transform.position, direction);
+                    var ray = new Ray(position, direction);
                     if (Physics.Raycast(ray, out var hit))
                     {
                         homingTarget = hit.collider.GetComponentInParent<PlayerAvatar>();
@@ -119,7 +132,7 @@ namespace Runtime.Weapons
                     }
                     else
                     {
-                        if (i < visibleScans) sensorLines.SetPosition(3 * i + 1, transform.position + direction * 500f);
+                        if (i < visibleScans) sensorLines.SetPosition(3 * i + 1, position + direction * 500f);
                     }
                 }
             }
@@ -131,10 +144,10 @@ namespace Runtime.Weapons
 
                 lockLines.positionCount = 2;
                 lockLines.useWorldSpace = true;
-                lockLines.SetPosition(0, transform.position);
+                lockLines.SetPosition(0, position);
                 lockLines.SetPosition(1, homingTarget.movement.center);
 
-                var target = (homingTarget.movement.center - transform.position).normalized;
+                var target = (homingTarget.movement.center - position).normalized;
                 velocity += (target * args.speed - velocity) * HomingSpeed * args.homing * Time.deltaTime;
                 velocity -= Physics.gravity * Time.deltaTime;
             }
@@ -142,7 +155,7 @@ namespace Runtime.Weapons
 
         private void Collide()
         {
-            var ray = new Ray(transform.position, velocity);
+            var ray = new Ray(position, velocity);
             var step = velocity.magnitude * Time.deltaTime * 1.01f;
 
             var mask = ~(1 << IgnoreDamageLayer);
@@ -163,7 +176,7 @@ namespace Runtime.Weapons
 
             if (IDamageable.Damage(shooter ? shooter.gameObject : null, hit, args.damage, velocity, out var report))
             {
-                projectileDealtDamageEvent?.Invoke(this, hit, report);
+                ProjectileDealtDamageEvent?.Invoke(this, hit, report);
             }
             else
             {
@@ -173,7 +186,7 @@ namespace Runtime.Weapons
                     dead = false;
 
                     velocity = Vector3.Reflect(velocity, hit.normal);
-                    transform.position = hit.point;
+                    position = hit.point;
                 }
             }
 

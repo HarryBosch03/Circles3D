@@ -1,6 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Fusion;
 using Runtime.Player;
 using UnityEngine;
@@ -38,8 +38,7 @@ namespace Runtime.Gamemodes
 
         private Transform GetSpawnpoint(PlayerInstance player)
         {
-            var best = (Transform)null;
-            var bestScore = -1f;
+            var scoredPoints = new List<(Transform sp, float score)>();
             foreach (Transform sp in EnumerateSpawnpoints())
             {
                 var score = 0f;
@@ -48,17 +47,12 @@ namespace Runtime.Gamemodes
                     var instance = other.Value;
                     if (instance == player) continue;
 
-                    score = Mathf.Max(1f / (instance.avatar.transform.position - sp.transform.position).sqrMagnitude, score);
+                    score = Mathf.Max((instance.avatar.transform.position - sp.transform.position).sqrMagnitude, score);
                 }
-
-                if (score > bestScore)
-                {
-                    bestScore = score;
-                    best = sp;
-                }
+                scoredPoints.Add((sp, score));
             }
-
-            return best ? best : transform;
+            
+            return scoredPoints.OrderBy(e => e.score).ElementAt(Random.Range(0, Mathf.Min(3, scoredPoints.Count))).sp;
         }
 
         public void PlayerJoined(PlayerRef player)

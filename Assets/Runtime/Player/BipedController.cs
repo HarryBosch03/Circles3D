@@ -27,10 +27,11 @@ namespace Runtime.Player
 
         private new Camera camera;
         private RaycastHit groundHit;
-        private SimpleKCC kcc;
         private Vector3 bodyInterpolatePosition0;
         private Vector3 bodyInterpolatePosition1;
 
+        public SimpleKCC kcc { get; private set; }
+        
         [Networked]
         public Vector3 velocity { get; set; }
         [Networked]

@@ -30,7 +30,7 @@ namespace Runtime.Damage
         public int currentBuffer => Mathf.FloorToInt(currentPartialBuffer);
         [Networked] public float currentPartialHealth { get; private set; }
         [Networked] public float currentPartialBuffer { get; private set; }
-        [Networked] public int maxHealth { get; private set; }
+        [Networked] public int maxHealth { get; private set; } 
         [Networked] public int maxBuffer { get; private set; }
         [Networked] public bool alive { get; private set; }
 
@@ -100,7 +100,7 @@ namespace Runtime.Damage
 
         public void Damage(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity, out IDamageable.DamageReport report)
         {
-            report = default;
+            report = IDamageable.DamageReport.Failed;
             if (!alive) return;
             
             regenTimer = 0f;
@@ -108,6 +108,7 @@ namespace Runtime.Damage
             report.victim = gameObject;
             report.finalDamage = args;
             report.lethal = false;
+            report.failed = false;
 
             if (currentBuffer > 0) ChangeBuffer(-1);
             else ChangeHealth(-args.damage);
@@ -145,10 +146,8 @@ namespace Runtime.Damage
 
         protected virtual void Kill(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
         {
-            if (invulnerable || !alive) return;
-
+            if (invulnerable) return;
             DiedEvent?.Invoke(invoker, args, point, velocity);
-
             alive = false;
         }
 
@@ -158,7 +157,6 @@ namespace Runtime.Damage
             var max = maxHealth_Internal + maxBuffer_Internal * BufferToHealth;
             return current / max;
         }
-        
         
         public void Spawn()
         {
