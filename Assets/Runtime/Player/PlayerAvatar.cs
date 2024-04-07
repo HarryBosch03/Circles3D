@@ -99,17 +99,7 @@ namespace Runtime.Player
                 SetModelVisibility(false);
             }
         }
-
-        private void FixedUpdate()
-        {
-            if (!HasInputAuthority && !HasStateAuthority)
-            {
-                movement.enabled = health.alive;
-                gun.SetVisible(health.alive, false);
-                SetModelVisibility(health.alive);
-            }
-        }
-
+        
         private void LateUpdate()
         {
             if (HasInputAuthority)

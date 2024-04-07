@@ -61,6 +61,7 @@ namespace Runtime.Gamemodes
 
             var netPlayer = Runner.Spawn(playerPrefab, Vector3.zero, Quaternion.identity, player);
             players.Add(player, netPlayer.GetComponent<PlayerInstance>());
+            Runner.SetIsSimulated(netPlayer, true);
         }
 
         public void PlayerLeft(PlayerRef player)
