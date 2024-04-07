@@ -149,14 +149,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9184c70cc6d94b7583affec251df046d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentPartialHealth: 0
-  currentPartialBuffer: 0
   maxHealth_Internal: 100
   maxBuffer_Internal: 0
   invulnerable: 0
   regenDelay: 5
   regenHealthPerSecond: 25
   regenHealthToBufferExchangeRate: 40
+  _currentPartialHealth: 0
+  _currentPartialBuffer: 0
+  _maxHealth: 0
+  _maxBuffer: 0
+  _alive: 0
   ragdollPrefab: {fileID: 93094525352849318, guid: 5980ff6bdc8dc8d44a8af6466181eb3d, type: 3}
 --- !u!114 &5118894930514851959
 MonoBehaviour:
@@ -284,6 +287,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 8279216054243042064}
+  - {fileID: 116858673824452871}
   - {fileID: 3217864588436646767}
   - {fileID: 5299436792547326342}
 --- !u!114 &3217864588436646767
@@ -307,9 +311,9 @@ MonoBehaviour:
   airMovementPenalty: 0
   characterHeight: 1.8
   cameraHeight: 1.7
-  characterRadius: 0.2
-  stepHeight: 0.2
-  maxWalkableSlope: 40
+  _velocity: {x: 0, y: 0, z: 0}
+  _jumpImpulse: 0
+  _jumpFlag: 0
 --- !u!54 &-8928493515211096859
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -355,7 +359,7 @@ MonoBehaviour:
     Radius: 0.35
     Height: 1.8
     Extent: 0.035
-    ColliderLayer: 0
+    ColliderLayer: 8
     CollisionLayerMask:
       serializedVersion: 2
       m_Bits: 1

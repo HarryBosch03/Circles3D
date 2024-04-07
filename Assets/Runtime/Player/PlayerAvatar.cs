@@ -1,4 +1,5 @@
 using Fusion;
+using Runtime.Damage;
 using Runtime.Networking;
 using Runtime.Weapons;
 using UnityEngine;
@@ -6,6 +7,7 @@ using UnityEngine;
 namespace Runtime.Player
 {
     [SelectionBase]
+    [DefaultExecutionOrder(100)]
     [RequireComponent(typeof(BipedController))]
     public class PlayerAvatar : NetworkBehaviour
     {
@@ -20,15 +22,14 @@ namespace Runtime.Player
         private RaycastHit groundHit;
         private Vector3 bodyInterpolatePosition0;
         private Vector3 bodyInterpolatePosition1;
-        public bool isAlive => gameObject.activeSelf;
-
-        [Networked]
-        public NetworkData netData { get; set; }
+        
+        private Collider[] hitbox;
 
         [Networked]
         public NetInput input { get; set; }
-        public Transform view { get; private set; }
         public BipedController movement { get; private set; }
+        public PlayerHealthController health { get; private set; }
+        public Transform view { get; private set; }
         public Gun gun { get; private set; }
         public bool onGround { get; private set; }
         public PlayerInstance owningPlayerInstance { get; set; }
@@ -38,36 +39,61 @@ namespace Runtime.Player
             camera = Camera.main;
             gun = GetComponentInChildren<Gun>();
             movement = GetComponent<BipedController>();
+            health = GetComponent<PlayerHealthController>();
+
+            hitbox = transform.Find("Model").GetComponentsInChildren<Collider>();
 
             view = transform.Find("View");
+        }
+        
+        private void OnEnable()
+        {
+            health.DiedEvent += OnDied;
+        }
+
+        private void OnDisable()
+        {
+            health.DiedEvent -= OnDied;
+        }
+
+        private void SetHitboxEnabled(bool enabled)
+        {
+            foreach (var c in hitbox) c.enabled = enabled;
         }
 
         public override void FixedUpdateNetwork()
         {
             if (GetInput(out NetInput newInput)) input = newInput;
 
-            var netData = this.netData;
-
-            if (gun)
+            if (health.alive)
             {
-                gun.SetFirstPerson(HasInputAuthority);
+                movement.enabled = true;
+                if (gun)
+                {
+                    gun.SetVisible(true, HasInputAuthority);
 
-                if (input.buttons.IsSet(InputButton.Shoot)) gun.Shoot();
-                gun.aiming = input.buttons.IsSet(InputButton.Aim);
-                gun.projectileSpawnPoint = view;
+                    if (input.buttons.IsSet(InputButton.Shoot)) gun.Shoot();
+                    gun.aiming = input.buttons.IsSet(InputButton.Aim);
+                    gun.projectileSpawnPoint = view;
 
-                var recoil = gun.recoilData.angularVelocity;
-                movement.OffsetRotation(new Vector2(-recoil.y, recoil.x) * feltRecoil * Runner.DeltaTime);
+                    var recoil = gun.recoilData.angularVelocity;
+                    movement.OffsetRotation(new Vector2(-recoil.y, recoil.x) * feltRecoil * Runner.DeltaTime);
+                }
             }
-
-            this.netData = netData;
+            else
+            {
+                gun.SetVisible(false);
+                movement.enabled = false;
+            }
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             if (HasInputAuthority)
             {
-                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.lockState = health.alive ? CursorLockMode.Locked : CursorLockMode.None;
+                camera.transform.position = movement.view.position;
+                camera.transform.rotation = movement.view.rotation;
                 camera.fieldOfView = CalculateFieldOfView();
             }
         }
@@ -86,6 +112,17 @@ namespace Runtime.Player
 
         public void Respawn(Vector3 position, Quaternion rotation) { movement.Teleport(position, rotation); }
 
-        public struct NetworkData : INetworkStruct { }
+        private void OnDied(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
+        {
+            movement.enabled = false;
+            SetHitboxEnabled(false);
+        }
+        
+        public void Spawn(Vector3 position, Quaternion rotation)
+        {
+            movement.Spawn(position, rotation);
+            health.Spawn();
+            SetHitboxEnabled(true);
+        }
     }
 }

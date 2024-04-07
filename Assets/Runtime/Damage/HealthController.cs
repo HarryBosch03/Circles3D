@@ -1,15 +1,15 @@
 using System;
+using Fusion;
 using Runtime.Stats;
 using UnityEngine;
 
 namespace Runtime.Damage
 {
-    public class HealthController : MonoBehaviour, IHealthController
+    [RequireComponent(typeof(NetworkObject))]
+    public class HealthController : NetworkBehaviour, IHealthController
     {
         const float BufferToHealth = 40f;
 
-        public float currentPartialHealth;
-        public float currentPartialBuffer;
         public int maxHealth_Internal = 100;
         public int maxBuffer_Internal = 0;
         public bool invulnerable;
@@ -21,15 +21,22 @@ namespace Runtime.Damage
 
         private StatBoard stats;
 
-        private float lastDamageTime;
+        [Networked]
+        private float regenTimer { get; set; }
 
         public Rigidbody body { get; private set; }
+
         public int currentHealth => Mathf.FloorToInt(currentPartialHealth);
         public int currentBuffer => Mathf.FloorToInt(currentPartialBuffer);
-        public int maxHealth => maxHealth_Internal;
-        public int maxBuffer => maxBuffer_Internal;
+        [Networked] public float currentPartialHealth { get; private set; }
+        [Networked] public float currentPartialBuffer { get; private set; }
+        [Networked] public int maxHealth { get; private set; }
+        [Networked] public int maxBuffer { get; private set; }
+        [Networked] public bool alive { get; private set; }
 
-        public static event Action<HealthController, GameObject, DamageArgs, Vector3, Vector3> DiedEvent;
+        public event Action HealthChangedEvent;
+        
+        public event Action<GameObject, DamageArgs, Vector3, Vector3> DiedEvent;
 
         protected virtual void Awake()
         {
@@ -37,57 +44,82 @@ namespace Runtime.Damage
             stats = GetComponentInParent<StatBoard>();
         }
 
-        private void OnEnable()
+        public override void Spawned()
         {
-            currentPartialHealth = maxHealth_Internal;
-            currentPartialBuffer = maxBuffer_Internal;
+            UpdateFromStats();
+            
+            currentPartialHealth = maxHealth;
+            currentPartialBuffer = maxBuffer;
+            HealthChanged();
         }
 
-        private void FixedUpdate()
+        public override void FixedUpdateNetwork()
         {
-            if (stats)
-            {
-                maxHealth_Internal = stats.maxHealth.AsInt();
-                maxBuffer_Internal = stats.maxBuffer.AsInt();
-            }
+            UpdateFromStats();
 
             var healthy = currentHealth >= maxHealth && currentBuffer >= maxBuffer;
-            if (!healthy)
+            if (!healthy && alive)
             {
-                if (Time.time - lastDamageTime > regenDelay)
+                if (regenTimer < regenDelay)
                 {
-                    if (currentPartialHealth < maxHealth)
+                    regenTimer += Runner.DeltaTime;
+                }
+                else
+                {
+                    if (currentHealth < maxHealth)
                     {
-                        ChangeHealth(regenHealthPerSecond * Time.deltaTime);
+                        ChangeHealth(regenHealthPerSecond * Runner.DeltaTime);
                     }
                     else
                     {
-                        ChangeBuffer(regenHealthPerSecond / regenHealthToBufferExchangeRate * Time.deltaTime);
+                        ChangeBuffer(regenHealthPerSecond / regenHealthToBufferExchangeRate * Runner.DeltaTime);
                     }
                 }
+            }
+            else
+            {
+                regenTimer = 0f;
+            }
+            
+            HealthChanged();
+        }
+
+        private void UpdateFromStats()
+        {
+            if (stats)
+            {
+                maxHealth = stats.maxHealth.AsInt();
+                maxBuffer = stats.maxBuffer.AsInt();
+            }
+            else
+            {
+                maxHealth = maxHealth_Internal;
+                maxBuffer = maxBuffer_Internal;
             }
         }
 
         public void Damage(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity, out IDamageable.DamageReport report)
         {
-            lastDamageTime = Time.time;
+            report = default;
+            if (!alive) return;
+            
+            regenTimer = 0f;
 
             report.victim = gameObject;
             report.finalDamage = args;
             report.lethal = false;
 
-            if (currentPartialBuffer > 0) ChangeBuffer(-1);
+            if (currentBuffer > 0) ChangeBuffer(-1);
             else ChangeHealth(-args.damage);
 
-
-            if (currentPartialHealth <= 0 && currentPartialBuffer <= 0)
+            if (currentHealth <= 0 && currentBuffer <= 0)
             {
                 report.lethal = true;
                 Kill(invoker, args, point, velocity);
             }
         }
 
-        public void ChangeHealth(float offset) => SetHealth(currentPartialHealth += offset);
+        public void ChangeHealth(float offset) => SetHealth(currentPartialHealth + offset);
 
         public void SetHealth(float health)
         {
@@ -107,21 +139,34 @@ namespace Runtime.Damage
         {
             currentPartialHealth = Mathf.Min(currentPartialHealth, maxHealth);
             currentPartialBuffer = Mathf.Min(currentPartialBuffer, maxBuffer);
+            
+            HealthChangedEvent?.Invoke();
         }
 
         protected virtual void Kill(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
         {
-            if (invulnerable) return;
+            if (invulnerable || !alive) return;
 
-            DiedEvent?.Invoke(this, invoker, args, point, velocity);
-            gameObject.SetActive(false);
+            DiedEvent?.Invoke(invoker, args, point, velocity);
+
+            alive = false;
         }
 
         public float GetHealthFactor()
         {
-            var current = currentPartialHealth + currentPartialBuffer * BufferToHealth;
+            var current = currentHealth + currentBuffer * BufferToHealth;
             var max = maxHealth_Internal + maxBuffer_Internal * BufferToHealth;
             return current / max;
+        }
+        
+        
+        public void Spawn()
+        {
+            UpdateFromStats();
+            alive = true;
+            currentPartialHealth = maxHealth;
+            currentPartialBuffer = maxBuffer;
+            regenTimer = 0f;
         }
     }
 }

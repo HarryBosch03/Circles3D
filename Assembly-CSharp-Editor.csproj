@@ -47,8 +47,11 @@
   <ItemGroup>
     <Compile Include="Assets\Editor\Shortcuts.cs" />
     <Compile Include="Assets\Editor\CleanupMissingScripts.cs" />
+    <Compile Include="Assets\Editor\IconBrowser.cs" />
     <Compile Include="Assets\Editor\Actions.cs" />
+    <Compile Include="Assets\Editor\IconMiner.cs" />
     <Compile Include="Assets\Editor\StatPropertyDrawer.cs" />
+    <Compile Include="Assets\Editor\GamemodeEditor.cs" />
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.16f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>

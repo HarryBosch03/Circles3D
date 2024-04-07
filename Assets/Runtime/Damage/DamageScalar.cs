@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Runtime.Damage
@@ -16,6 +17,8 @@ namespace Runtime.Damage
         public int maxBuffer => parent.maxBuffer;
         public float GetHealthFactor() => parent.GetHealthFactor();
         
+        public event Action HealthChangedEvent;
+        
         private void Awake()
         {
             parent = transform.parent.GetComponentInParent<IHealthController>();
@@ -24,6 +27,16 @@ namespace Runtime.Damage
                 Destroy(this);
                 throw new System.Exception($"DamageScalar \"{name}\" component is missing parent");
             }
+        }
+
+        private void OnEnable()
+        {
+            parent.HealthChangedEvent += HealthChangedEvent;
+        }
+
+        private void OnDisable()
+        {
+            parent.HealthChangedEvent -= HealthChangedEvent;
         }
 
         public void Damage(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity, out IDamageable.DamageReport report)

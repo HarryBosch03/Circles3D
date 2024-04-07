@@ -5,6 +5,7 @@ using Runtime.Player;
 using Runtime.Stats;
 using Runtime.Util;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -51,9 +52,11 @@ namespace Runtime.Weapons
         private Model modelThirdPerson;
         private Canvas overlay;
 
+        private bool isFirstPerson;
+        private bool isVisible;
+
         private Transform muzzle;
 
-        public bool IsFirstPerson { get; private set; }
         public bool aiming { get; set; }
         public Transform projectileSpawnPoint { get; set; }
         public RecoilData recoilData { get; private set; }
@@ -75,15 +78,23 @@ namespace Runtime.Weapons
             }
         }
 
-        public void SetFirstPerson(bool isFirstPerson)
+        public void SetFirstPerson(bool isFirstPerson) => SetVisible(isVisible, isFirstPerson);
+        public void SetVisible(bool isVisible) => SetVisible(isVisible, isFirstPerson);
+        public void SetVisible(bool isVisible, bool isFirstPerson)
         {
-            if (IsFirstPerson == isFirstPerson) return;
+            if (isVisible == this.isVisible && isFirstPerson == this.isFirstPerson) return;
             
-            IsFirstPerson = isFirstPerson;
+            this.isVisible = isVisible;
+            this.isFirstPerson = isFirstPerson;
+            
+            UpdateModelVisibility();
+        }
 
-            overlay.gameObject.SetActive(isFirstPerson);
-            modelFirstPerson.ShouldRender(IsFirstPerson);
-            modelThirdPerson.ShouldRender(!IsFirstPerson);
+        private void UpdateModelVisibility()
+        {
+            overlay.gameObject.SetActive(isVisible && isFirstPerson);
+            modelFirstPerson.ShouldRender(isVisible && isFirstPerson);
+            modelThirdPerson.ShouldRender(isVisible && !isFirstPerson);
         }
 
         private void Awake()
@@ -102,8 +113,9 @@ namespace Runtime.Weapons
 
             if (!stats) stats = gameObject.AddComponent<StatBoard>();
 
-            IsFirstPerson = true;
-            SetFirstPerson(false);
+            isFirstPerson = false;
+            isVisible = true;
+            UpdateModelVisibility();
             
             SetModelRenderLayer(modelFirstPerson, ViewportModelLayer);
             SetModelRenderLayer(modelThirdPerson, DefaultModelLayer);
@@ -123,19 +135,20 @@ namespace Runtime.Weapons
             currentMagazine = stats.magazineSize.AsIntMax(1);
         }
 
-        private void LateUpdate()
-        {
-            aimPercent += ((Mouse.current.rightButton.isPressed ? 1f : 0f) - aimPercent) * aimSpeed * Time.deltaTime;
-            aimPercent = Mathf.Clamp01(aimPercent);
-        }
-
         private void FixedUpdate()
         {
             projectiles.RemoveAll(e => !e);
 
             UpdateRecoil();
+            UpdateAiming();
             Reload();
             UpdateUI();
+        }
+
+        private void UpdateAiming()
+        {
+            aimPercent += ((aiming ? 1f : 0f) - aimPercent) * aimSpeed * Time.deltaTime;
+            aimPercent = Mathf.Clamp01(aimPercent);
         }
 
         private void UpdateUI()

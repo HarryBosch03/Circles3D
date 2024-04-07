@@ -2,7 +2,6 @@ using System;
 using Fusion;
 using Runtime.Damage;
 using Runtime.Gamemodes;
-using Runtime.Networking;
 using Runtime.Weapons;
 using TMPro;
 using UnityEngine;
@@ -22,13 +21,13 @@ namespace Runtime.Player
         public Button respawnButton;
         public TMP_Text deathReasonText;
 
+        private bool respawn;
+        
         private Camera mainCam;
         public string displayName => name;
 
         public static event Action<PlayerInstance, IDamageable.DamageReport> PlayerDealtDamageEvent;
 
-        [Networked]
-        public NetworkState netState { get; set; }
         public bool isOwner => HasInputAuthority;
 
         private void Awake()
@@ -43,39 +42,39 @@ namespace Runtime.Player
         }
 
         [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, Channel = RpcChannel.Reliable)]
-        private void RpcRequestRespawn() { Gamemode.current.RespawnPlayer(this); }
+        private void RpcRequestRespawn()
+        {
+            respawn = true;
+            Gamemode.current.RespawnPlayer(this);
+        }
 
         public void SpawnAt(Vector3 position, Quaternion rotation)
         {
             SetDeathReason(null);
-
-            avatar.gameObject.SetActive(true);
-            avatar.transform.position = position;
-            avatar.transform.rotation = rotation;
             avatar.owningPlayerInstance = this;
+            avatar.Spawn(position, rotation);
         }
 
         private void OnEnable()
         {
-            Projectile.projectileDealtDamageEvent += OnProjectileDealtDamage;
-            HealthController.DiedEvent += OnDied;
-
             deathCanvas.gameObject.SetActive(false);
         }
 
-        private void OnDisable()
+        public override void Spawned()
         {
-            Cursor.lockState = CursorLockMode.None;
-            Projectile.projectileDealtDamageEvent -= OnProjectileDealtDamage;
-            HealthController.DiedEvent -= OnDied;
+            Projectile.projectileDealtDamageEvent += OnProjectileDealtDamage;
+            avatar.health.DiedEvent += OnDied;
         }
 
-        private void OnDied(HealthController victim, GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
+        public override void Despawned(NetworkRunner runner, bool hasState)
         {
-            if (!victim) return;
-            if (victim.gameObject != avatar.gameObject) return;
+            Projectile.projectileDealtDamageEvent -= OnProjectileDealtDamage;
+            avatar.health.DiedEvent -= OnDied;
+        }
 
-            SetDeathReason(((PlayerHealthController)victim).reasonForDeath);
+        private void OnDied(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
+        {
+            SetDeathReason(avatar.health.reasonForDeath);
         }
 
         private void OnPlayerKilledByPlayer(PlayerInstance killer, PlayerInstance victim, IDamageable.DamageReport report)
@@ -98,20 +97,14 @@ namespace Runtime.Player
         public override void FixedUpdateNetwork()
         {
             avatar.owningPlayerInstance = this;
-            
-            if (HasStateAuthority)
-            {
-                netState = new NetworkState
-                {
-                    alive = avatar.gameObject.activeSelf,
-                };
-            }
-            else
-            {
-                avatar.gameObject.SetActive(netState.alive);
-            }
 
-            if (!avatar.gameObject.activeSelf && HasInputAuthority)
+            if (respawn)
+            {
+                Gamemode.current.RespawnPlayer(this);
+                respawn = false;
+            }
+            
+            if (!avatar.health.alive && HasInputAuthority)
             {
                 deathCanvas.gameObject.SetActive(true);
                 deathUI.alpha = Mathf.MoveTowards(deathUI.alpha, 1f, Time.deltaTime * 10f);
@@ -125,17 +118,12 @@ namespace Runtime.Player
 
         private void Update()
         {
-            if (!avatar.gameObject.activeSelf && HasInputAuthority)
+            if (!avatar.health.alive && HasInputAuthority)
             {
                 if (Keyboard.current.spaceKey.wasPressedThisFrame) RpcRequestRespawn();
             }
         }
 
         private void SetDeathReason(string text) => deathReasonText.text = (text ?? "Killed by Dying").ToUpper();
-
-        public struct NetworkState : INetworkStruct
-        {
-            public bool alive;
-        }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Runtime.Damage
@@ -8,6 +9,7 @@ namespace Runtime.Damage
         public int currentBuffer { get; }
         public int maxHealth { get; }
         public int maxBuffer { get; }
+        public event Action HealthChangedEvent;
 
         public float GetHealthFactor();
     }

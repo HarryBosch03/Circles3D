@@ -32,7 +32,11 @@ namespace Runtime.Player
         private Vector3 bodyInterpolatePosition1;
 
         [Networked]
-        public NetworkData netData { get; set; }
+        public Vector3 velocity { get; set; }
+        [Networked]
+        public float jumpImpulse { get; set; }
+        [Networked]
+        public bool jumpFlag { get; set; }
 
         [Networked]
         public NetInput input { get; set; }
@@ -69,18 +73,14 @@ namespace Runtime.Player
         {
             if (GetInput(out NetInput newInput)) input = newInput;
 
-            var netData = this.netData;
-
             var tangent = Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad * 0.5f);
             kcc.AddLookRotation(input.orientationDelta * tangent * mouseSensitivity);
 
-            Move(ref netData);
-            Jump(ref netData);
+            Move();
+            Jump();
             
-            kcc.Move(netData.velocity, netData.jumpImpulse);
+            kcc.Move(velocity, jumpImpulse);
             kcc.SetGravity(gravity.y);
-            
-            this.netData = netData;
         }
 
         private void FixedUpdate()
@@ -89,17 +89,17 @@ namespace Runtime.Player
             bodyInterpolatePosition0 = kcc.Position;
         }
 
-        private void Jump(ref NetworkData netData)
+        private void Jump()
         {
-            netData.jumpImpulse = 0f;
+            jumpImpulse = 0f;
             
             var jump = input.buttons.IsSet(InputButton.Jump);
-            if (jump && !netData.jumpFlag && kcc.IsGrounded)
+            if (jump && !jumpFlag && kcc.IsGrounded)
             {
-                netData.jumpImpulse = Mathf.Sqrt(2f * jumpHeight * -gravity.y) * kcc.Rigidbody.mass;
+                jumpImpulse = Mathf.Sqrt(2f * jumpHeight * -gravity.y) * kcc.Rigidbody.mass;
             }
 
-            netData.jumpFlag = jump;
+            jumpFlag = jump;
         }
 
         private void LateUpdate()
@@ -108,15 +108,9 @@ namespace Runtime.Player
 
             view.position = Vector3.Lerp(bodyInterpolatePosition1, bodyInterpolatePosition0, (Time.time - Time.fixedTime) / Time.fixedDeltaTime) + Vector3.up * cameraHeight;
             view.rotation = Quaternion.Euler(orientation);
-
-            if (HasInputAuthority)
-            {
-                camera.transform.position = view.position;
-                camera.transform.rotation = view.rotation;
-            }
         }
 
-        private void Move(ref NetworkData netData)
+        private void Move()
         {
             var moveInput = Vector2.ClampMagnitude(input.movement, 1f);
 
@@ -127,34 +121,30 @@ namespace Runtime.Player
 
             var moveSpeed = input.buttons.IsSet(InputButton.Run) ? runSpeed : walkSpeed;
             var target = orientation * new Vector3(moveInput.x, 0f, moveInput.y) * moveSpeed;
-            var force = (target - netData.velocity) * acceleration;
+            var force = (target - velocity) * acceleration;
             force.y = 0f;
 
             if (!kcc.IsGrounded) force *= moveInput.magnitude;
 
-            netData.velocity += force * Runner.DeltaTime;
+            velocity += force * Runner.DeltaTime;
         }
 
         public void Teleport(Vector3 position, Quaternion rotation)
         {
-            var netData = this.netData;
             gameObject.SetActive(true);
 
             kcc.SetPosition(position);
-            netData.velocity = Vector3.zero;
+            velocity = Vector3.zero;
             kcc.SetLookRotation(new Vector2(rotation.y, rotation.x));
-
-            this.netData = netData;
         }
 
-        public struct NetworkData : INetworkStruct
+        public void OffsetRotation(Vector2 delta) => kcc.AddLookRotation(delta);
+
+        public void Spawn(Vector3 position, Quaternion rotation)
         {
-            public Vector3 velocity;
-            public float jumpImpulse;
-
-            public bool jumpFlag;
+            enabled = true;
+            kcc.SetPosition(position);
+            kcc.SetLookRotation(rotation);
         }
-
-        public void OffsetRotation(Vector2 delta) { }
     }
 }
