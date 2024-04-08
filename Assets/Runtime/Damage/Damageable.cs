@@ -1,3 +1,4 @@
+using Fusion;
 using UnityEngine;
 
 namespace Runtime.Damage
@@ -25,7 +26,7 @@ namespace Runtime.Damage
             return false;
         }
 
-        public struct DamageReport
+        public struct DamageReport : INetworkStruct
         {
             public static readonly DamageReport Failed = new DamageReport()
             {
@@ -34,7 +35,7 @@ namespace Runtime.Damage
             
             public bool failed;
             
-            public GameObject victim;
+            public NetworkId victim;
             public DamageArgs finalDamage;
             public bool lethal;
         }

@@ -1,7 +1,8 @@
-using System;
 using Fusion;
 using Runtime.Damage;
+using Runtime.Mods;
 using Runtime.Networking;
+using Runtime.Stats;
 using Runtime.Weapons;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ namespace Runtime.Player
     {
         [Space]
         public float feltRecoil = 1.0f;
+        public float ragdollCamSmoothing = 1f;
 
         [Space]
         public float baseFieldOfView = 90f;
@@ -23,13 +25,14 @@ namespace Runtime.Player
         private RaycastHit groundHit;
         private Vector3 bodyInterpolatePosition0;
         private Vector3 bodyInterpolatePosition1;
-        
+
         private Transform model;
 
         [Networked]
         public NetInput input { get; set; }
         public BipedController movement { get; private set; }
         public PlayerHealthController health { get; private set; }
+        public StatBoard statboard { get; set; }
         public Transform view { get; private set; }
         public Gun gun { get; private set; }
         public PlayerInstance owningPlayerInstance { get; set; }
@@ -40,35 +43,27 @@ namespace Runtime.Player
             gun = GetComponentInChildren<Gun>();
             movement = GetComponent<BipedController>();
             health = GetComponent<PlayerHealthController>();
+            statboard = GetComponent<StatBoard>();
 
             model = transform.Find("Model");
 
             view = transform.Find("View");
         }
-        
-        private void OnEnable()
-        {
-            health.DiedEvent += OnDied;
-        }
 
-        private void OnDisable()
-        {
-            health.DiedEvent -= OnDied;
-        }
+        private void OnEnable() { health.DiedEvent += OnDied; }
+
+        private void OnDisable() { health.DiedEvent -= OnDied; }
 
         public override void Spawned()
         {
             movement.enabled = false;
             gun.SetVisible(false);
             SetModelVisibility(false);
-            
+
             Runner.SetIsSimulated(Object, true);
         }
 
-        private void SetModelVisibility(bool enabled)
-        {
-            model.gameObject.SetActive(enabled);
-        }
+        private void SetModelVisibility(bool enabled) { model.gameObject.SetActive(enabled); }
 
         public override void FixedUpdateNetwork()
         {
@@ -78,10 +73,10 @@ namespace Runtime.Player
             {
                 movement.enabled = true;
                 movement.fieldOfView = CalculateFieldOfView();
-                
+
                 gun.SetVisible(true, HasInputAuthority);
                 SetModelVisibility(true);
-                
+
                 if (gun)
                 {
                     gun.SetVisible(true, HasInputAuthority);
@@ -101,15 +96,22 @@ namespace Runtime.Player
                 SetModelVisibility(false);
             }
         }
-        
+
         private void LateUpdate()
         {
             if (HasInputAuthority)
             {
-                Cursor.lockState = health.alive ? CursorLockMode.Locked : CursorLockMode.None;
-                camera.transform.position = movement.view.position;
-                camera.transform.rotation = movement.view.rotation;
-                camera.fieldOfView = movement.fieldOfView;
+                if (health.alive)
+                {
+                    camera.transform.position = movement.view.position;
+                    camera.transform.rotation = movement.view.rotation;
+                    camera.fieldOfView = movement.fieldOfView;
+                }
+                else if (health.latestRagdollHead)
+                {
+                    camera.transform.position = Vector3.Lerp(camera.transform.position, health.latestRagdollHead.position, Time.deltaTime / ragdollCamSmoothing);
+                    camera.transform.rotation = Quaternion.Slerp(camera.transform.rotation, health.latestRagdollHead.rotation, Time.deltaTime / ragdollCamSmoothing);
+                }
             }
         }
 
@@ -129,14 +131,15 @@ namespace Runtime.Player
 
         private void OnDied(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
         {
+            InputManager.SetIsControllingPlayer(false);
             gun.SetVisible(false);
             SetModelVisibility(false);
         }
-        
+
         public void Spawn(Vector3 position, Quaternion rotation)
         {
+            InputManager.SetIsControllingPlayer(true);
             movement.Spawn(position, rotation);
-            
             health.Spawn();
         }
     }

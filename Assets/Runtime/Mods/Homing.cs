@@ -1,6 +1,6 @@
 using Runtime.Stats;
 
-namespace Runtime.Mods.GunMods
+namespace Runtime.Mods
 {
     public class Homing : Mod
     {

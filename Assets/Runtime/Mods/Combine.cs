@@ -1,13 +1,13 @@
 using Runtime.Stats;
 
-namespace Runtime.Mods.GunMods
+namespace Runtime.Mods
 {
     public class Combine : Mod
     {
         public override void Apply(ref StatBoard.Stats stats)
         {
-            stats.damage *= stats.magazineSize;
-            stats.magazineSize = 1;
+            stats.damage *= 3f;
+            stats.magazineSize = 4;
         }
     }
 }

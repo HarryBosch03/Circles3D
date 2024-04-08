@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using Fusion;
-using Runtime.Mods.GunMods;
+using Runtime.Mods;
 using UnityEngine;
 
 namespace Runtime.Stats
 {
     public class StatBoard : NetworkBehaviour
     {
+        public ModList modList;
         public Stats baseStats = Stats.Defaults;
         
         [Networked] private Stats evaluatedInternal { get; set; }
@@ -44,6 +45,23 @@ namespace Runtime.Stats
             }
 
             evaluatedInternal = stats;
+        }
+
+        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+        public void AddModRpc(string modName)
+        {
+            var mod = modList.Find(modName);
+            var instance = Runner.Spawn(mod);
+            instance.name = mod.name;
+            instance.SetOwnerRpc(this);
+        }
+        
+        
+        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+        public void RemoveModRpc(string modName)
+        {
+            var mod = mods.Find(mod => mod.name.ToLower().Trim() == modName.ToLower().Trim());
+            Runner.Despawn(mod.Object);
         }
 
         public void Max(ref int stat, int max) { stat = Mathf.Max(stat, max); }

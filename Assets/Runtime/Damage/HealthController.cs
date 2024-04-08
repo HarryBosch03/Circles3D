@@ -99,14 +99,14 @@ namespace Runtime.Damage
             }
         }
 
-        public void Damage(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity, out IDamageable.DamageReport report)
+        public virtual void Damage(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity, out IDamageable.DamageReport report)
         {
             report = IDamageable.DamageReport.Failed;
             if (!alive) return;
             
             regenTimer = 0f;
 
-            report.victim = gameObject;
+            report.victim = Object;
             report.finalDamage = args;
             report.lethal = false;
             report.failed = false;

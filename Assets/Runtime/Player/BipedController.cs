@@ -37,6 +37,7 @@ namespace Runtime.Player
         [Networked] public NetworkBool jumpFlag { get; set; }
         [Networked] public NetInput input { get; set; }
         [Networked] public float fieldOfView { get; set; }
+        public float cameraDutch { get; set; }
         public Transform view { get; private set; }
         public Vector2 orientation => kcc.GetLookRotation();
         public Vector3 center => kcc.Position + Vector3.up * characterHeight * 0.5f;
@@ -104,7 +105,7 @@ namespace Runtime.Player
             transform.rotation = Quaternion.Euler(0f, orientation.y, 0f);
 
             view.position = Vector3.Lerp(bodyInterpolatePosition1, bodyInterpolatePosition0, (Time.time - Time.fixedTime) / Time.fixedDeltaTime) + Vector3.up * cameraHeight;
-            view.rotation = Quaternion.Euler(kcc.GetLookRotation());
+            view.rotation = Quaternion.Euler(kcc.GetLookRotation()) * Quaternion.Euler(0f, 0f, cameraDutch);
         }
 
         private void Move()

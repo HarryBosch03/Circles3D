@@ -27,6 +27,7 @@ namespace Runtime.Weapons
         private bool dead;
         private int age;
 
+        private Vector3 startPosition;
         private Vector3 interpolationPosition0;
         private Vector3 interpolationPosition1;
 
@@ -39,19 +40,20 @@ namespace Runtime.Weapons
         private void Awake()
         {
             trail = transform.Find<TrailRenderer>("Trail");
+            
             sensorLines = transform.Find<LineRenderer>("Sensor");
             lockLines = transform.Find<LineRenderer>("Lock");
         }
 
         private void Start()
         {
-            if (trail)
-            {
-                trail.enabled = false;
-            }
-
+            trail.Clear();
             sensorLines.enabled = false;
             lockLines.enabled = false;
+
+            startPosition = position;
+            interpolationPosition0 = position;
+            interpolationPosition1 = interpolationPosition0;
         }
 
         public static Projectile Spawn(Projectile prefab, PlayerAvatar shooter, Vector3 position, Vector3 direction, SpawnArgs args)
@@ -75,7 +77,6 @@ namespace Runtime.Weapons
 
         private void FixedUpdate()
         {
-            if (trail && age == 1) trail.enabled = true;
             if (args.homing > float.Epsilon && age > 0) Home();
 
             Collide();
@@ -173,6 +174,7 @@ namespace Runtime.Weapons
             if (age < 2 && shooter && hit.collider.transform.IsChildOf(shooter.transform)) return;
 
             dead = true;
+            trail.AddPosition(hit.point);
 
             if (IDamageable.Damage(shooter ? shooter.gameObject : null, hit, args.damage, velocity, out var report))
             {
@@ -186,13 +188,14 @@ namespace Runtime.Weapons
                     dead = false;
 
                     velocity = Vector3.Reflect(velocity, hit.normal);
-                    position = hit.point;
+                    position = hit.point + velocity.normalized * 0.01f - velocity * Time.deltaTime;
                 }
             }
 
             if (hitFX) Instantiate(hitFX, hit.point, Quaternion.LookRotation(hit.normal));
             if (!dead) return;
 
+            transform.position = hit.point;
             DestroyWithStyle();
         }
 
