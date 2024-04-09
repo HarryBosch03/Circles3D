@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +16,17 @@ namespace Runtime.Damage
             fill = GetComponent<Image>();
         }
 
-        private void Update()
+        private void OnEnable()
+        {
+            target.HealthChangedEvent += OnHealthChanged;
+        }
+
+        private void OnDisable()
+        {
+            target.HealthChangedEvent -= OnHealthChanged;
+        }
+
+        private void OnHealthChanged()
         {
             fill.fillAmount = Mathf.Clamp01((float)target.currentHealth / target.maxHealth);
         }

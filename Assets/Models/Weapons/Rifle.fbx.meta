@@ -1,14 +1,9 @@
 fileFormatVersion: 2
-guid: de79fed499c798e44ab2f2e5caeb9e26
+guid: 46608beae8c263b44b8848e15f27629b
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
   externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Gun Metal
-    second: {fileID: 2100000, guid: 9c25907f11c158842b18bb16682e6872, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -19,30 +14,10 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: Gun_Slide
     second: {fileID: 2100000, guid: a317cb4754ae1c642b6ac06dc9aa9b30, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Metal
-    second: {fileID: 2100000, guid: f57efd7ba35472240b6cdae66141404d, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Paint
-    second: {fileID: 2100000, guid: 4b37b355d4e9eab498a08834bdecf937, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Rubber
-    second: {fileID: 2100000, guid: de2d5d602adb18f4a8e3b9ba064db427, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Sight
-    second: {fileID: 2100000, guid: 3f734666e3c0dbb429bcef538eb4f405, type: 2}
   materials:
     materialImportMode: 2
-    materialName: 1
-    materialSearch: 2
+    materialName: 0
+    materialSearch: 1
     materialLocation: 1
   animations:
     legacyGenerateAnimations: 4

@@ -1,4 +1,4 @@
-using System;
+using Fusion;
 using Runtime.Damage;
 using Runtime.Player;
 using UnityEngine;
@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace Runtime.UI
 {
     [RequireComponent(typeof(CanvasGroup))]
-    public class Hitmarker : MonoBehaviour
+    public class Hitmarker : NetworkBehaviour
     {
         public float duration;
         public AnimationCurve animationCurve;
@@ -45,13 +45,13 @@ namespace Runtime.UI
 
         private void OnPlayerDealtDamage(PlayerInstance player, IDamageable.DamageReport report)
         {
-            if (!this.player) return;
-            if (player != this.player.owningPlayerInstance) return;
-            if (!player.IsOwner) return;
-
-            if (report.lethal) Show(Flavour.Lethal);
-            else if (report.finalDamage.damageScale > 1f) Show(Flavour.Critical);
-            else Show(Flavour.Hit);
+            if (!HasStateAuthority) return;
+            if (player.avatar != this.player) return;
+            if (report.failed) return;
+            
+            if (report.lethal) ShowRpc(Flavour.Lethal);
+            else if (report.finalDamage.damageScale > 1f) ShowRpc(Flavour.Critical);
+            else ShowRpc(Flavour.Hit);
         }
 
         private void Update()
@@ -61,7 +61,8 @@ namespace Runtime.UI
             time += Time.deltaTime;
         }
 
-        public void Show(Flavour flavour)
+        [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
+        public void ShowRpc(Flavour flavour)
         {
             time = 0f;
 

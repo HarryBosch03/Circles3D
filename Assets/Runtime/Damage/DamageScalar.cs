@@ -1,4 +1,4 @@
-using FishNet.Object;
+using System;
 using UnityEngine;
 
 namespace Runtime.Damage
@@ -17,6 +17,8 @@ namespace Runtime.Damage
         public int maxBuffer => parent.maxBuffer;
         public float GetHealthFactor() => parent.GetHealthFactor();
         
+        public event Action HealthChangedEvent;
+        
         private void Awake()
         {
             parent = transform.parent.GetComponentInParent<IHealthController>();
@@ -27,7 +29,17 @@ namespace Runtime.Damage
             }
         }
 
-        public void Damage(NetworkObject invoker, DamageArgs args, Vector3 point, Vector3 velocity, out IDamageable.DamageReport report)
+        private void OnEnable()
+        {
+            parent.HealthChangedEvent += HealthChangedEvent;
+        }
+
+        private void OnDisable()
+        {
+            parent.HealthChangedEvent -= HealthChangedEvent;
+        }
+
+        public void Damage(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity, out IDamageable.DamageReport report)
         {
             args.damageScale *= damageScale;
             parent.Damage(invoker, args, point, velocity, out report);

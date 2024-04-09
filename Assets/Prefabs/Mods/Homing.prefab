@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7927607656598062705}
   - component: {fileID: 3313724339531327770}
+  - component: {fileID: -6903990235927640945}
   m_Layer: 0
   m_Name: Homing
   m_TagString: Untagged
@@ -44,3 +45,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 096b7c2e85274f38853c0b6137fb4414, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-6903990235927640945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6644041749587999437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 1956999649
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 3313724339531327770}

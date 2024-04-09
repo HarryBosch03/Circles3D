@@ -32,7 +32,7 @@ namespace Runtime.Weapons
 
         private void LateUpdate()
         {
-            groundedBlend = Mathf.MoveTowards(groundedBlend, player.onGround ? 1f : 0f, Time.deltaTime * 10f);
+            groundedBlend = Mathf.MoveTowards(groundedBlend, player.movement.kcc.IsGrounded ? 1f : 0f, Time.deltaTime * 10f);
 
             ApplySmoothing();
             ApplyMovement();
@@ -47,7 +47,7 @@ namespace Runtime.Weapons
 
         private void ApplyMovement()
         {
-            var velocity = Vector3.Lerp(Vector3.zero, player.body.velocity, groundedBlend);
+            var velocity = Vector3.Lerp(Vector3.zero, player.movement.velocity, groundedBlend);
             var speed = new Vector2(velocity.x, velocity.z).magnitude;
 
             distance += speed * moveFrequency * Time.deltaTime;

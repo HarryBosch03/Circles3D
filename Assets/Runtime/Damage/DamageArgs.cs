@@ -1,10 +1,11 @@
 using System;
+using Fusion;
 using UnityEngine;
 
 namespace Runtime.Damage
 {
     [Serializable]
-    public struct DamageArgs
+    public struct DamageArgs : INetworkStruct
     {
         public int baseDamage;
         public float damageScale;

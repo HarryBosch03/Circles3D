@@ -4,6 +4,7 @@ namespace Runtime.Weapons
 {
     public class SlideAnimator : MonoBehaviour
     {
+        public Vector3 offset;
         public Vector3 position0;
         public Vector3 position1;
         public AnimationCurve curve;
@@ -19,7 +20,7 @@ namespace Runtime.Weapons
         private void Update()
         {
             var t = Mathf.Clamp01((Time.time - gun.lastShootTime) / duration);
-            transform.localPosition = Vector3.Lerp(position0, position1, curve.Evaluate(t / duration));
+            transform.localPosition = offset + Vector3.Lerp(position0, position1, curve.Evaluate(t / duration));
         }
     }
 }

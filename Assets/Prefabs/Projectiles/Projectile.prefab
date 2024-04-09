@@ -320,6 +320,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitFX: {fileID: 7214011327040026964, guid: 9d756d0512f06f14c88ec1dc024d6191, type: 3}
+  baseSize: 0.1
+  position: {x: 0, y: 0, z: 0}
   velocity: {x: 0, y: 0, z: 0}
 --- !u!1 &7022703576797262494
 GameObject:
@@ -347,7 +349,7 @@ Transform:
   m_GameObject: {fileID: 7022703576797262494}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.119, y: -0.094, z: 0.392}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -461,7 +463,7 @@ TrailRenderer:
     textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
-  m_MinVertexDistance: 0.1
+  m_MinVertexDistance: 0.02
   m_MaskInteraction: 0
   m_Autodestruct: 0
   m_Emitting: 1

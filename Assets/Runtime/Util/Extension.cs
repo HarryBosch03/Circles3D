@@ -1,5 +1,5 @@
 using System;
-using GameKit.Utilities;
+using System.Text.RegularExpressions;
 using Unity.Burst.Intrinsics;
 using UnityEngine;
 
@@ -35,12 +35,13 @@ namespace Runtime.Util
             var find = gameObject.transform.Find(path);
             return find ? find.gameObject : null;
         }
-        
-        public static Transform Search(this Transform transform, string name)
+
+        public static Transform Search(this Transform transform, string pattern, RegexOptions regexOptions = RegexOptions.IgnoreCase)
         {
+            var regex = new Regex(pattern, regexOptions);
             foreach (var child in transform.GetComponentsInChildren<Transform>())
             {
-                if (child.name == name) return child;
+                if (regex.IsMatch(child.name)) return child;
             }
             return null;
         }
