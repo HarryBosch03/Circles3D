@@ -20,7 +20,7 @@ namespace Runtime.Player
         private UIBar bufferBar;
         private float healthBufferBlend;
 
-        public bool isOwner => player.owningPlayerInstance;
+        public bool isOwner => player.HasInputAuthority;
 
         private void Awake()
         {

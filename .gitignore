@@ -35,12 +35,12 @@ Assets/Plugins/Editor/JetBrains*
 
 
 ### Unity ###
-[Ll]ibrary/
-[Tt]emp/
-[Oo]bj/
-[Bb]uild/
-[Bb]uilds/
-[Ll]ogs/
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
 Assets/AssetStoreTools*
 # Unity local user project setting
 [Uu]ser[Ss]ettings/

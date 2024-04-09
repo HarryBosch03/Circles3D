@@ -8,7 +8,7 @@ namespace Runtime.Damage
     [RequireComponent(typeof(NetworkObject))]
     public class HealthController : NetworkBehaviour, IHealthController
     {
-        const float BufferToHealth = 40f;
+        public const float BufferToHealth = 30f;
 
         public int maxHealth_Internal = 100;
         public int maxBuffer_Internal = 0;
