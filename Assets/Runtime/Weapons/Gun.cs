@@ -7,9 +7,7 @@ using Runtime.Player;
 using Runtime.Stats;
 using Runtime.Util;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -48,6 +46,7 @@ namespace Runtime.Weapons
         public CanvasGroup dot;
 
         private PlayerAvatar owner;
+        private bool hasDryFired;
         private Rigidbody body;
         private StatBoard statboard;
 
@@ -238,7 +237,7 @@ namespace Runtime.Weapons
             spawnProjectileEvent?.Invoke();
 
             lastShootTime = Time.time;
-            
+
             var view = projectileSpawnPoint ? projectileSpawnPoint : muzzle;
             var instances = Projectile.Spawn(projectile, owner, view.position, view.forward, GetProjectileSpawnArgs());
             foreach (var instance in instances)
@@ -272,9 +271,15 @@ namespace Runtime.Weapons
         {
             if (shootEventBufferIndex >= shootEventBuffer.Length) shootEventBufferIndex = 0;
             var shootEvent = shootEventBuffer[shootEventBufferIndex++];
-            shootEvent.set3DAttributes(muzzle.To3DAttributes());
-            shootEvent.setParameterByName("Magazine", currentMagazine);
-            shootEvent.start();
+
+            if (currentMagazine > 0 || !hasDryFired)
+            {
+                shootEvent.set3DAttributes(muzzle.To3DAttributes());
+                shootEvent.setParameterByName("Magazine", currentMagazine);
+                shootEvent.start();
+            }
+
+            hasDryFired = currentMagazine == 0;
         }
 
         public struct RecoilData

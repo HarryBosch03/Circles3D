@@ -1,6 +1,5 @@
 using Fusion;
 using Runtime.Damage;
-using Runtime.Mods;
 using Runtime.Networking;
 using Runtime.Stats;
 using Runtime.Weapons;
@@ -28,11 +27,8 @@ namespace Runtime.Player
 
         private Transform model;
 
-        [Networked]
-        public NetInput input { get; set; }
-        [Networked]
-        public NetworkButtons previousButtons { get; set; }
-        
+        [Networked] public NetInput input { get; set; }
+        [Networked] public NetworkButtons previousButtons { get; set; }
         public BipedController movement { get; private set; }
         public PlayerHealthController health { get; private set; }
         public StatBoard statboard { get; set; }

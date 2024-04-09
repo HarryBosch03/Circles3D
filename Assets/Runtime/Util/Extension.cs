@@ -1,6 +1,5 @@
 using System;
 using System.Text.RegularExpressions;
-using Unity.Burst.Intrinsics;
 using UnityEngine;
 
 namespace Runtime.Util

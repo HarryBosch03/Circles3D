@@ -13,12 +13,7 @@ namespace Runtime.Mods
         public Gun gun => player.gun;
         public List<Projectile> projectiles => player.gun.projectiles;
 
-        public override void Spawned()
-        {
-            SetOwnerRpc(statboard);
-        }
-
-        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All, InvokeLocal = true)]
         public void SetOwnerRpc(NetworkBehaviourId statboardNetId)
         {
             Runner.TryFindBehaviour(statboardNetId, out StatBoard statboard);
@@ -26,16 +21,16 @@ namespace Runtime.Mods
 
             this.statboard = statboard;
             statboard.mods.Add(this);
-            
+
             player = statboard.GetComponent<PlayerAvatar>();
             transform.SetParent(statboard.transform);
         }
 
         public override void Despawned(NetworkRunner runner, bool hasState)
         {
-            if (statboard) statboard.mods.Remove(this);   
+            if (statboard) statboard.mods.Remove(this);
         }
-        
+
         public abstract void Apply(ref StatBoard.Stats stats);
     }
 }

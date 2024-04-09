@@ -1,17 +1,14 @@
-using System;
 using Fusion;
-using Fusion.Photon.Realtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 namespace Runtime.Networking
 {
-    public class NetDebugOverlay : MonoBehaviour
+    public class DebugNetworkUI : MonoBehaviour
     {
         public string sessionName = "UntitledRoom";
         public NetworkRunner netRunnerPrefab;
-
         private NetworkRunner netRunnerInstance;
 
         private void Update()
@@ -19,8 +16,8 @@ namespace Runtime.Networking
             if (!netRunnerInstance)
             {
                 var kb = Keyboard.current;
-                if (kb.hKey.wasPressedThisFrame) StartRunner(GameMode.Host);
-                if (kb.cKey.wasPressedThisFrame) StartRunner(GameMode.Client);
+                if (kb.spaceKey.wasPressedThisFrame) StartRunner(GameMode.AutoHostOrClient);
+                if (kb.sKey.wasPressedThisFrame) StartRunner(GameMode.Single);
             }
         }
 
@@ -32,8 +29,8 @@ namespace Runtime.Networking
                 if (!netRunnerInstance)
                 {
                     sessionName = GUILayout.TextField(sessionName);
-                    if (GUILayout.Button("Host")) StartRunner(GameMode.Host);
-                    if (GUILayout.Button("Join")) StartRunner(GameMode.Client);
+                    if (GUILayout.Button("Online")) StartRunner(GameMode.AutoHostOrClient);
+                    if (GUILayout.Button("Offline")) StartRunner(GameMode.Single);
                 }
                 else
                 {
