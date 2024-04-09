@@ -230,7 +230,8 @@ MonoBehaviour:
     maxBuffer: 0
     damage: 45
     knockback: 0
-    projectileSpeed: 100
+    bulletSpeed: 100
+    bulletCount: 1
     spray: 0.5
     attackSpeed: 5
     magazineSize: 7
@@ -357,8 +358,6 @@ MonoBehaviour:
     Path: event:/Land
   _velocity: {x: 0, y: 0, z: 0}
   _jumpImpulse: 0
-  _jumpFlag:
-    _value: 0
   _fieldOfView: 0
 --- !u!54 &-8928493515211096859
 Rigidbody:
@@ -1156,13 +1155,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b54e55b9a49d9e45b9c2afe9d1042d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  translationSway: 0.01
+  translationSway: 0.04
   rotationSway: 0
   smoothing: 0.1
-  clamp: 0.5
+  clamp: 5
   moveAmplitude: {x: 0.001, y: 0.0005}
   moveFrequency: 1.5
-  aimReduction: 0.1
+  aimReduction: 0.308
 --- !u!1 &5382529010397731053
 GameObject:
   m_ObjectHideFlags: 0
