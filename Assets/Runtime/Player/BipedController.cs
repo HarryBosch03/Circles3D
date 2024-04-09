@@ -1,7 +1,11 @@
+using System;
+using FMOD.Studio;
+using FMODUnity;
 using Fusion;
 using Fusion.Addons.SimpleKCC;
 using Runtime.Networking;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Runtime.Player
 {
@@ -25,6 +29,14 @@ namespace Runtime.Player
         public float characterHeight = 1.8f;
         public float cameraHeight = 1.7f;
 
+        [Space]
+        public EventReference footstepRef;
+        public EventReference landRef;
+
+        private EventInstance footstepSound;
+        private EventInstance landSound;
+        private bool wasOnGround;
+        
         private new Camera camera;
         private RaycastHit groundHit;
         private Vector3 bodyInterpolatePosition0;
@@ -57,6 +69,13 @@ namespace Runtime.Player
             {
                 Cursor.lockState = CursorLockMode.Locked;
             }
+
+            footstepSound.release();
+            footstepSound = RuntimeManager.CreateInstance(footstepRef);
+            footstepSound.start();
+            
+            landSound.release();
+            landSound = RuntimeManager.CreateInstance(landRef);
         }
 
         private void OnDisable()
@@ -65,6 +84,9 @@ namespace Runtime.Player
             {
                 Cursor.lockState = CursorLockMode.None;
             }
+
+            footstepSound.release();
+            landSound.release();
         }
 
         public override void FixedUpdateNetwork()
@@ -85,6 +107,20 @@ namespace Runtime.Player
         {
             bodyInterpolatePosition1 = bodyInterpolatePosition0;
             bodyInterpolatePosition0 = kcc.Position;
+        }
+
+        private void Update()
+        {
+            if (kcc.IsGrounded && !wasOnGround)
+            {
+                landSound.set3DAttributes(gameObject.To3DAttributes());
+                landSound.start();
+            }
+            
+            wasOnGround = kcc.IsGrounded;
+            
+            footstepSound.set3DAttributes(gameObject.To3DAttributes());
+            footstepSound.setParameterByName("MoveSpeed", kcc.IsGrounded ? new Vector2(velocity.x, velocity.z).magnitude / runSpeed : 0f);
         }
 
         private void Jump()

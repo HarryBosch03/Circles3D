@@ -341,6 +341,20 @@ MonoBehaviour:
   airMovementPenalty: 0.75
   characterHeight: 1.8
   cameraHeight: 1.7
+  footstepRef:
+    Guid:
+      Data1: 1583887405
+      Data2: 1133809064
+      Data3: 1540619416
+      Data4: 1498762455
+    Path: event:/Footsteps
+  landRef:
+    Guid:
+      Data1: -1412576858
+      Data2: 1144642322
+      Data3: -1701881413
+      Data4: 51859110
+    Path: event:/Land
   _velocity: {x: 0, y: 0, z: 0}
   _jumpImpulse: 0
   _jumpFlag:
@@ -1147,7 +1161,7 @@ MonoBehaviour:
   smoothing: 0.1
   clamp: 0.5
   moveAmplitude: {x: 0.001, y: 0.0005}
-  moveFrequency: 1
+  moveFrequency: 1.5
   aimReduction: 0.1
 --- !u!1 &5382529010397731053
 GameObject:
@@ -2419,6 +2433,22 @@ PrefabInstance:
       propertyPath: thirdPersonParent
       value: 
       objectReference: {fileID: 8530645282653239459}
+    - target: {fileID: 1732615043508938031, guid: 61bc52b12b0257e4d92f9f49e0214ab0, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732615043508938031, guid: 61bc52b12b0257e4d92f9f49e0214ab0, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732615043508938031, guid: 61bc52b12b0257e4d92f9f49e0214ab0, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732615043508938031, guid: 61bc52b12b0257e4d92f9f49e0214ab0, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2657046844289162553, guid: 61bc52b12b0257e4d92f9f49e0214ab0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2463,9 +2493,29 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rifle
       objectReference: {fileID: 0}
+    - target: {fileID: 3912540410328137521, guid: 61bc52b12b0257e4d92f9f49e0214ab0, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5918022014858057650, guid: 61bc52b12b0257e4d92f9f49e0214ab0, type: 3}
       propertyPath: aimZoom
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6102608247210707246, guid: 61bc52b12b0257e4d92f9f49e0214ab0, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6102608247210707246, guid: 61bc52b12b0257e4d92f9f49e0214ab0, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6102608247210707246, guid: 61bc52b12b0257e4d92f9f49e0214ab0, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6102608247210707246, guid: 61bc52b12b0257e4d92f9f49e0214ab0, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7834481335619128500, guid: 61bc52b12b0257e4d92f9f49e0214ab0, type: 3}
       propertyPath: <IsNested>k__BackingField

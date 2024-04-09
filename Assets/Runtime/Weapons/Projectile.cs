@@ -12,7 +12,7 @@ namespace Runtime.Weapons
     {
         private const int IgnoreDamageLayer = 8;
 
-        private const float HomingSpeed = 8f;
+        private const float HomingSpeed = 3f;
 
         public GameObject hitFX;
         public float baseSize = 0.1f;
@@ -40,7 +40,7 @@ namespace Runtime.Weapons
         private void Awake()
         {
             trail = transform.Find<TrailRenderer>("Trail");
-            
+
             sensorLines = transform.Find<LineRenderer>("Sensor");
             lockLines = transform.Find<LineRenderer>("Lock");
         }
@@ -56,23 +56,28 @@ namespace Runtime.Weapons
             interpolationPosition1 = interpolationPosition0;
         }
 
-        public static Projectile Spawn(Projectile prefab, PlayerAvatar shooter, Vector3 position, Vector3 direction, SpawnArgs args)
+        public static Projectile[] Spawn(Projectile prefab, PlayerAvatar shooter, Vector3 position, Vector3 direction, SpawnArgs args)
         {
+            var projectiles = new Projectile[args.count];
             direction.Normalize();
-            var orientation = Quaternion.LookRotation(direction);
 
-            var pa = Random.Range(-Mathf.PI, Mathf.PI);
-            var pd = Random.Range(0f, args.sprayAngle);
+            for (var i = 0; i < projectiles.Length; i++)
+            {
+                var pa = Random.Range(-Mathf.PI, Mathf.PI);
+                var pd = Random.Range(0f, args.sprayAngle);
 
-            orientation *= Quaternion.Euler(new Vector3(Mathf.Cos(pa), Mathf.Sin(pa)) * pd);
-            direction = orientation * Vector3.forward;
+                var orientation = Quaternion.LookRotation(direction);
+                orientation *= Quaternion.Euler(new Vector3(Mathf.Cos(pa), Mathf.Sin(pa)) * pd);
+                var instance = Instantiate(prefab, position, Quaternion.LookRotation(direction));
+                instance.args = args;
+                instance.position = position;
+                instance.velocity = orientation * Vector3.forward * args.speed;
+                instance.shooter = shooter;
 
-            var instance = Instantiate(prefab, position, Quaternion.LookRotation(direction));
-            instance.args = args;
-            instance.position = position;
-            instance.velocity = direction * args.speed;
-            instance.shooter = shooter;
-            return instance;
+                projectiles[i] = instance;
+            }
+
+            return projectiles;
         }
 
         private void FixedUpdate()
@@ -87,14 +92,11 @@ namespace Runtime.Weapons
 
             interpolationPosition1 = interpolationPosition0;
             interpolationPosition0 = position;
-            
+
             age++;
         }
 
-        private void Update()
-        {
-            transform.position = Vector3.Lerp(interpolationPosition1, interpolationPosition0, (Time.time - Time.fixedTime) / Time.fixedDeltaTime);
-        }
+        private void Update() { transform.position = Vector3.Lerp(interpolationPosition1, interpolationPosition0, (Time.time - Time.fixedTime) / Time.fixedDeltaTime); }
 
         private void Home()
         {
@@ -136,6 +138,13 @@ namespace Runtime.Weapons
                         if (i < visibleScans) sensorLines.SetPosition(3 * i + 1, position + direction * 500f);
                     }
                 }
+            }
+
+            if (homingTarget)
+            {
+                var dot = Vector3.Dot(velocity.normalized, homingTarget.movement.center - position);
+                var angle = Mathf.Acos(dot) * Mathf.Rad2Deg;
+                if (angle > 45f) homingTarget = null;
             }
 
             if (homingTarget)
@@ -216,6 +225,7 @@ namespace Runtime.Weapons
             public DamageArgs damage;
             public float speed;
             public float sprayAngle;
+            public int count;
             public int bounces;
             public float homing;
             public float lifetime;

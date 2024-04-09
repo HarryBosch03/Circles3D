@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{446f6712-4ceb-434e-8eb8-c338f1ff1b33}">
+		<property name="assetPath">
+			<value>1928A1-Shoot-05.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>96</value>
+		</property>
+		<property name="channelCount">
+			<value>1</value>
+		</property>
+		<property name="length">
+			<value>0.38296875000000002</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{f5a0e97a-cd3f-4906-adb9-e86e23903118}</destination>
+		</relationship>
+	</object>
+</objects>

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Fusion;
 using Runtime.Mods;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Runtime.Stats
 {
@@ -29,7 +30,8 @@ namespace Runtime.Stats
 
             Max(ref stats.maxHealth, 0);
             Max(ref stats.maxBuffer, 0);
-            Max(ref stats.projectileSpeed, 0);
+            Max(ref stats.bulletSpeed, 0);
+            Max(ref stats.bulletCount, 1);
             Max(ref stats.spray, 0);
             Max(ref stats.attackSpeed, 0);
             Max(ref stats.magazineSize, 1);
@@ -76,7 +78,8 @@ namespace Runtime.Stats
                 maxBuffer = 0,
                 damage = 45,
                 knockback = 0f,
-                projectileSpeed = 200f,
+                bulletSpeed = 200f,
+                bulletCount = 1,
                 spray = 0.5f,
                 attackSpeed = 5f,
                 magazineSize = 7,
@@ -91,7 +94,9 @@ namespace Runtime.Stats
             public int maxBuffer;
             public float damage;
             public float knockback;
-            public float projectileSpeed;
+            [FormerlySerializedAs("projectileSpeed")] 
+            public float bulletSpeed;
+            public int bulletCount;
             public float spray;
             public float attackSpeed;
             public int magazineSize;

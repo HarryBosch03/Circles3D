@@ -6,7 +6,7 @@ namespace Runtime.Mods
     {
         public override void Apply(ref StatBoard.Stats stats)
         {
-            stats.attackSpeed *= 5f;
+            stats.attackSpeed *= 4f;
             stats.magazineSize += 13;
             stats.reloadTime += 0.5f;
             stats.spray += 2.0f;

@@ -24,9 +24,10 @@ namespace Editor
                 {
                     newModInstance.AddComponent(type);
                     newModInstance.AddComponent<NetworkObject>();
-                    PrefabUtility.SaveAsPrefabAsset(newModInstance, path);
+                    var prefab = PrefabUtility.SaveAsPrefabAsset(newModInstance, path);
                     AssetDatabase.SaveAssets();
                     AssetDatabase.Refresh();
+                    AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
                 }
                 finally
                 {

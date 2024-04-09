@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using FMOD.Studio;
+using FMODUnity;
 using Runtime.Damage;
 using Runtime.Player;
 using Runtime.Stats;
@@ -37,6 +39,7 @@ namespace Runtime.Weapons
 
         [Space]
         public ParticleSystem flash;
+        public EventReference shootSound;
 
         [Space]
         public TMP_Text ammoText;
@@ -54,6 +57,8 @@ namespace Runtime.Weapons
 
         private bool isFirstPerson;
         private bool isVisible;
+        private EventInstance[] shootEventBuffer = new EventInstance[10];
+        private int shootEventBufferIndex;
 
         private Transform muzzle;
 
@@ -67,15 +72,18 @@ namespace Runtime.Weapons
         public Transform rightHandHold { get; private set; }
         public float zoom => Mathf.Lerp(1f, aimZoom, aimPercent);
         public float lastShootTime { get; private set; } = float.MinValue;
+        public float lastInputTime { get; private set; } = float.MinValue;
         public List<Projectile> projectiles = new();
 
         public Action spawnProjectileEvent;
 
         public void Shoot()
         {
-            if (currentMagazine > 0 && Time.time - lastShootTime > 1f / stats.attackSpeed)
+            if (Time.time - lastInputTime > 1f / stats.attackSpeed)
             {
-                SpawnProjectile();
+                PlayShootSound();
+                if (currentMagazine > 0) SpawnProjectile();
+                lastInputTime = Time.time;
             }
         }
 
@@ -121,6 +129,19 @@ namespace Runtime.Weapons
 
             SetModelRenderLayer(modelFirstPerson, ViewportModelLayer);
             SetModelRenderLayer(modelThirdPerson, DefaultModelLayer);
+
+            for (var i = 0; i < shootEventBuffer.Length; i++)
+            {
+                shootEventBuffer[i] = RuntimeManager.CreateInstance(shootSound);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            for (var i = 0; i < shootEventBuffer.Length; i++)
+            {
+                shootEventBuffer[i].release();
+            }
         }
 
         private void SetModelRenderLayer(Model model, int layer)
@@ -202,9 +223,10 @@ namespace Runtime.Weapons
             var damage = new DamageArgs((int)stats.damage, stats.knockback);
 
             args.damage = damage;
-            args.speed = stats.projectileSpeed;
+            args.speed = stats.bulletSpeed;
             args.sprayAngle = stats.spray;
-            args.bounces = (int)stats.bounces;
+            args.count = stats.bulletCount;
+            args.bounces = stats.bounces;
             args.homing = stats.homing;
             args.lifetime = stats.projectileLifetime;
 
@@ -216,10 +238,10 @@ namespace Runtime.Weapons
             spawnProjectileEvent?.Invoke();
 
             lastShootTime = Time.time;
-
+            
             var view = projectileSpawnPoint ? projectileSpawnPoint : muzzle;
-            var instance = Projectile.Spawn(projectile, owner, view.position, view.forward, GetProjectileSpawnArgs());
-            if (instance)
+            var instances = Projectile.Spawn(projectile, owner, view.position, view.forward, GetProjectileSpawnArgs());
+            foreach (var instance in instances)
             {
                 instance.velocity += body ? body.velocity : Vector3.zero;
                 projectiles.Add(instance);
@@ -244,6 +266,15 @@ namespace Runtime.Weapons
             this.recoilData = recoilData;
 
             if (flash) flash.Play();
+        }
+
+        private void PlayShootSound()
+        {
+            if (shootEventBufferIndex >= shootEventBuffer.Length) shootEventBufferIndex = 0;
+            var shootEvent = shootEventBuffer[shootEventBufferIndex++];
+            shootEvent.set3DAttributes(muzzle.To3DAttributes());
+            shootEvent.setParameterByName("Magazine", currentMagazine);
+            shootEvent.start();
         }
 
         public struct RecoilData

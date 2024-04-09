@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{6eb32852-30ad-4521-bfb6-f43516a62e88}">
+		<property name="assetPath">
+			<value>1806 - Footsteps - Sneakers on Carpet - 90 fpm - Loop.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>96</value>
+		</property>
+		<property name="channelCount">
+			<value>1</value>
+		</property>
+		<property name="length">
+			<value>30</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{f5a0e97a-cd3f-4906-adb9-e86e23903118}</destination>
+		</relationship>
+	</object>
+</objects>

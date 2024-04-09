@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{117b535c-a087-40ec-8d5c-912d2f43768c}">
+		<property name="name">
+			<value>Magazine</value>
+		</property>
+		<relationship name="folder">
+			<destination>{d9c8b3be-ae73-43e5-a0a8-dcfeb59c7904}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{cb028ddf-a9d5-4b03-a698-c36fad76805f}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{cb028ddf-a9d5-4b03-a698-c36fad76805f}">
+		<property name="maximum">
+			<value>5</value>
+		</property>
+		<property name="initialValue">
+			<value>5</value>
+		</property>
+	</object>
+</objects>

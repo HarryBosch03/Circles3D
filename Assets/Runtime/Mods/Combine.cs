@@ -7,7 +7,7 @@ namespace Runtime.Mods
         public override void Apply(ref StatBoard.Stats stats)
         {
             stats.damage *= 3f;
-            stats.magazineSize = 4;
+            stats.magazineSize -= 4;
         }
     }
 }
