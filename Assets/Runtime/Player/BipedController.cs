@@ -46,7 +46,6 @@ namespace Runtime.Player
         
         [Networked] public Vector3 velocity { get; set; }
         [Networked] public float jumpImpulse { get; set; }
-        [Networked] public NetworkBool jumpFlag { get; set; }
         [Networked] public NetInput input { get; set; }
         [Networked] public float fieldOfView { get; set; }
         public float cameraDutch { get; set; }
@@ -61,21 +60,24 @@ namespace Runtime.Player
             view = transform.Find("View");
 
             kcc = GetBehaviour<SimpleKCC>();
+            
+            footstepSound = RuntimeManager.CreateInstance(footstepRef);
+            landSound = RuntimeManager.CreateInstance(landRef);
         }
 
+        private void OnDestroy()
+        {
+            footstepSound.release();
+            landSound.release();
+        }
+        
         private void OnEnable()
         {
             if (HasInputAuthority)
             {
                 Cursor.lockState = CursorLockMode.Locked;
             }
-
-            footstepSound.release();
-            footstepSound = RuntimeManager.CreateInstance(footstepRef);
             footstepSound.start();
-            
-            landSound.release();
-            landSound = RuntimeManager.CreateInstance(landRef);
         }
 
         private void OnDisable()
@@ -84,9 +86,7 @@ namespace Runtime.Player
             {
                 Cursor.lockState = CursorLockMode.None;
             }
-
-            footstepSound.release();
-            landSound.release();
+            footstepSound.stop(STOP_MODE.IMMEDIATE);
         }
 
         public override void FixedUpdateNetwork()
@@ -127,13 +127,12 @@ namespace Runtime.Player
         {
             jumpImpulse = 0f;
             
+            //var jump = input.buttons.WasPressed( InputButton.Jump);
             var jump = input.buttons.IsSet(InputButton.Jump);
-            if (jump && !jumpFlag && kcc.IsGrounded)
+            if (jump && kcc.IsGrounded)
             {
                 jumpImpulse = Mathf.Sqrt(2f * jumpHeight * -gravity.y) * kcc.Rigidbody.mass;
             }
-
-            jumpFlag = jump;
         }
 
         private void LateUpdate()

@@ -13,6 +13,11 @@ namespace Runtime.Mods
         public Gun gun => player.gun;
         public List<Projectile> projectiles => player.gun.projectiles;
 
+        public override void Spawned()
+        {
+            SetOwnerRpc(statboard);
+        }
+
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         public void SetOwnerRpc(NetworkBehaviourId statboardNetId)
         {
@@ -23,6 +28,7 @@ namespace Runtime.Mods
             statboard.mods.Add(this);
             
             player = statboard.GetComponent<PlayerAvatar>();
+            transform.SetParent(statboard.transform);
         }
 
         public override void Despawned(NetworkRunner runner, bool hasState)

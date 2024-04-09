@@ -55,7 +55,7 @@ namespace Runtime.Stats
             var mod = modList.Find(modName);
             var instance = Runner.Spawn(mod);
             instance.name = mod.name;
-            instance.SetOwnerRpc(this);
+            instance.transform.SetParent(transform);
         }
         
         

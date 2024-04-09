@@ -30,6 +30,9 @@ namespace Runtime.Player
 
         [Networked]
         public NetInput input { get; set; }
+        [Networked]
+        public NetworkButtons previousButtons { get; set; }
+        
         public BipedController movement { get; private set; }
         public PlayerHealthController health { get; private set; }
         public StatBoard statboard { get; set; }
@@ -95,6 +98,8 @@ namespace Runtime.Player
                 gun.SetVisible(false);
                 SetModelVisibility(false);
             }
+
+            previousButtons = input.buttons;
         }
 
         private void LateUpdate()
@@ -131,14 +136,14 @@ namespace Runtime.Player
 
         private void OnDied(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
         {
-            InputManager.SetIsControllingPlayer(false);
+            if (HasInputAuthority) InputManager.SetIsControllingPlayer(false);
             gun.SetVisible(false);
             SetModelVisibility(false);
         }
 
         public void Spawn(Vector3 position, Quaternion rotation)
         {
-            InputManager.SetIsControllingPlayer(true);
+            if (HasInputAuthority) InputManager.SetIsControllingPlayer(true);
             movement.Spawn(position, rotation);
             health.Spawn();
         }

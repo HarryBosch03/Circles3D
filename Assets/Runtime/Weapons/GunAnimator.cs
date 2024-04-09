@@ -8,6 +8,7 @@ namespace Runtime.Weapons
     [DisallowMultipleComponent]
     public class GunAnimator : MonoBehaviour
     {
+        public Transform target;
         public Vector3 viewPosition = new Vector3(0.09f,-0.03f,0.35f);
         public Vector3 aimPosition = new Vector3(0,0,0.24f);
 
@@ -24,6 +25,7 @@ namespace Runtime.Weapons
         private void Awake()
         {
             gun = GetComponentInParent<Gun>();
+            if (!target) target = transform;
         }
 
         private void Update()
@@ -41,8 +43,8 @@ namespace Runtime.Weapons
             localPosition += recoil.position;
             localRotation *= Quaternion.Euler(recoil.rotation);
             
-            transform.position = refRotation * localPosition + refPosition;
-            transform.rotation = refRotation * localRotation;
+            target.position = refRotation * localPosition + refPosition;
+            target.rotation = refRotation * localRotation;
         }
 
         private void OnDrawGizmosSelected()
