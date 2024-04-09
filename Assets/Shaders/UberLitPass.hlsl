@@ -25,6 +25,9 @@ struct Varyings
 DECLARE_TEX(_Albedo);
 DECLARE_TEX(_NormalMap);
 float _NormalStrength;
+DECLARE_TEX(_EmissionMap);
+float4 _EmissionColor;
+float _EmissionValue;
 DECLARE_TEX(_Tint_Mask);
 float _InvertTint;
 float4 _Tint_Color;
@@ -76,5 +79,8 @@ half4 UberLitPassFragment(Varyings input) : SV_Target
     half3 normalTS = UnpackNormalScale(SAMPLE_TEX(_NormalMap, input.uv), _NormalStrength);
     half4 final = UniversalFragmentBlinnPhong(inputData, albedo, 0.0, 0.0, 0.0, 1.0, normalTS);
 
+    half4 emission = SAMPLE_TEX(_EmissionMap, input.uv) * _EmissionColor;
+    final.rgb += emission.rgb * pow(2, _EmissionValue) * saturate(emission.a);
+    
     return final;
 }

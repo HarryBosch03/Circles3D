@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b4b204a8935391c40a0bc92625bee694
+guid: b9d1f56570150084da03f89091c373bf
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,18 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: ExtraBits
-    second: {fileID: 2100000, guid: d96a820ed9f660d48aefb9339d4e43c5, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: GroundYay
-    second: {fileID: 2100000, guid: 57ec0c4b03ed3544084fdab07f56bdcc, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material
-    second: {fileID: 2100000, guid: 8a6af1f6795285e4889a511d5f8db739, type: 2}
+      name: Downlight
+    second: {fileID: 2100000, guid: bf571993a63b3e34083e4092e5a529c6, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -52,7 +42,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 1
+    addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
     importPhysicalCameras: 1
@@ -93,7 +83,7 @@ ModelImporter:
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
   referencedClips: []
-  importAnimation: 0
+  importAnimation: 1
   humanDescription:
     serializedVersion: 3
     human: []
@@ -112,7 +102,7 @@ ModelImporter:
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
   avatarSetup: 0
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1

@@ -239,7 +239,7 @@ namespace Runtime.Weapons
             lastShootTime = Time.time;
 
             var view = projectileSpawnPoint ? projectileSpawnPoint : muzzle;
-            var instances = Projectile.Spawn(projectile, owner, view.position, view.forward, GetProjectileSpawnArgs());
+            var instances = Projectile.Spawn(projectile, owner, view.position + view.forward * 0.1f, view.forward, GetProjectileSpawnArgs());
             foreach (var instance in instances)
             {
                 instance.velocity += body ? body.velocity : Vector3.zero;
