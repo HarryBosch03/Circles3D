@@ -1158,7 +1158,7 @@ MonoBehaviour:
   translationSway: 0.04
   rotationSway: 0
   smoothing: 0.1
-  clamp: 5
+  clamp: 1
   moveAmplitude: {x: 0.001, y: 0.0005}
   moveFrequency: 1.5
   aimReduction: 0.308
