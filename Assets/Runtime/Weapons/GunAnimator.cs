@@ -40,6 +40,11 @@ namespace Runtime.Weapons
             
             localPosition += recoil.position;
             localRotation *= Quaternion.Euler(recoil.rotation);
+
+            if (gun.currentSight)
+            {
+                localPosition += Vector3.up * gun.currentSight.heightOffset;
+            }
             
             target.position = refRotation * localPosition + refPosition;
             target.rotation = refRotation * localRotation;

@@ -22,6 +22,7 @@ struct Varyings
     float2 uv : TEXCOORD0;
 };
 
+float4 _BaseColor;
 DECLARE_TEX(_Albedo);
 DECLARE_TEX(_NormalMap);
 float _NormalStrength;
@@ -59,7 +60,7 @@ half4 UberLitPassFragment(Varyings input) : SV_Target
 
     float3x3 tsMatrix = CreateTangentToWorld(input.normalWS, input.tangentWS.xyz, input.tangentWS.w);
 
-    half4 sample = SAMPLE_TEX(_Albedo, input.uv);
+    half4 sample = SAMPLE_TEX(_Albedo, input.uv) * _BaseColor;
     half3 albedo = sample.rgb;
     half alpha = sample.a * _Alpha;
     

@@ -56,15 +56,22 @@ namespace Runtime.Stats
             var instance = Runner.Spawn(mod);
             instance.name = mod.name;
             instance.transform.SetParent(transform);
-            instance.SetOwnerRpc(this);
+            RegisterModRpc(instance.name, instance.Object);
         }
-        
-        
+
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All, InvokeLocal = true)]
+        private void RegisterModRpc(string name, NetworkId modInstanceId)
+        {
+            var mod = Runner.FindObject(modInstanceId).GetComponent<Mod>();
+            mod.name = name;
+            mod.SetParent(this);
+        }
+
         [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
         public void RemoveModRpc(string modName)
         {
             var mod = mods.Find(mod => mod.name.ToLower().Trim() == modName.ToLower().Trim());
-            Runner.Despawn(mod.Object);
+            if (mod) Runner.Despawn(mod.Object);
         }
 
         public void Max(ref int stat, int max) { stat = Mathf.Max(stat, max); }

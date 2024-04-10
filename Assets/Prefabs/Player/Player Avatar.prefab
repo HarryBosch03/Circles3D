@@ -139,6 +139,8 @@ MonoBehaviour:
   ragdollCamSmoothing: 0.15
   baseFieldOfView: 90
   aimFieldOfView: 60
+  baseViewportFieldOfView: 43
+  aimViewportFieldOfView: 10
 --- !u!114 &116858673824452871
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,8 +232,9 @@ MonoBehaviour:
     maxBuffer: 0
     damage: 45
     knockback: 0
-    projectileSpeed: 100
-    spray: 0.5
+    bulletSpeed: 100
+    bulletCount: 1
+    spray: 0
     attackSpeed: 5
     magazineSize: 7
     reloadTime: 1.5
@@ -357,8 +360,6 @@ MonoBehaviour:
     Path: event:/Land
   _velocity: {x: 0, y: 0, z: 0}
   _jumpImpulse: 0
-  _jumpFlag:
-    _value: 0
   _fieldOfView: 0
 --- !u!54 &-8928493515211096859
 Rigidbody:

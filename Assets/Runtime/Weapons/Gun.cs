@@ -9,7 +9,6 @@ using Runtime.Util;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 namespace Runtime.Weapons
 {
@@ -22,7 +21,8 @@ namespace Runtime.Weapons
 
         public Projectile projectile;
         public float aimSpeed = 40f;
-        public float aimZoom = 1f;
+        public float baseZoom = 1f;
+        public Sight currentSight;
 
         [Space]
         public int currentMagazine = 3;
@@ -61,6 +61,7 @@ namespace Runtime.Weapons
 
         private Transform muzzle;
 
+        public float aimZoom => currentSight ? currentSight.zoomLevel : baseZoom;
         public StatBoard.Stats stats => statboard.evaluated;
         public bool aiming { get; set; }
         public Transform projectileSpawnPoint { get; set; }
@@ -239,7 +240,7 @@ namespace Runtime.Weapons
             lastShootTime = Time.time;
 
             var view = projectileSpawnPoint ? projectileSpawnPoint : muzzle;
-            var instances = Projectile.Spawn(projectile, owner, view.position + view.forward * 0.1f, view.forward, GetProjectileSpawnArgs());
+            var instances = Projectile.Spawn(projectile, owner, view.position + view.forward * 0.1f, muzzle.forward, GetProjectileSpawnArgs(), currentMagazine);
             foreach (var instance in instances)
             {
                 instance.velocity += body ? body.velocity : Vector3.zero;
@@ -249,18 +250,20 @@ namespace Runtime.Weapons
             currentMagazine--;
             reloadTimer = 0f;
 
+            var shuffle = new Shuffler(currentMagazine);
+            
             var recoilData = this.recoilData;
             recoilData.position += new Vector3
             {
-                x = translationRecoil.x * Mathf.Sign(Random.value - 0.5f),
+                x = translationRecoil.x * Mathf.Sign(shuffle.Next01() - 0.5f),
                 y = translationRecoil.y,
                 z = translationRecoil.z,
             } * stats.recoil;
             recoilData.rotation += new Vector3
             {
                 x = rotationRecoil.x,
-                y = rotationRecoil.y * Mathf.Sign(Random.value - 0.5f),
-                z = rotationRecoil.z * Mathf.Sign(Random.value - 0.5f),
+                y = rotationRecoil.y * Mathf.Sign(shuffle.Next01() - 0.5f),
+                z = rotationRecoil.z * Mathf.Sign(shuffle.Next01() - 0.5f),
             } * stats.recoil;
             this.recoilData = recoilData;
 

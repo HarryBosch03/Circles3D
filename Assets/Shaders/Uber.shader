@@ -2,6 +2,7 @@ Shader "Unlit/Uber"
 {
     Properties
     {
+        _BaseColor("Base Color", Color) = (1, 1, 1, 1)
         _Albedo ("Albedo", 2D) = "white" {}
         _Tint_Mask("Tint Mask", 2D) = "black" {}
         _NormalMap("Normal Map", 2D) = "normal" {}

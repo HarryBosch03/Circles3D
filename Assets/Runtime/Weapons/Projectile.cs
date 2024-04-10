@@ -48,6 +48,7 @@ namespace Runtime.Weapons
         private void Start()
         {
             trail.Clear();
+            trail.emitting = false;
             sensorLines.enabled = false;
             lockLines.enabled = false;
 
@@ -56,15 +57,17 @@ namespace Runtime.Weapons
             interpolationPosition1 = interpolationPosition0;
         }
 
-        public static Projectile[] Spawn(Projectile prefab, PlayerAvatar shooter, Vector3 position, Vector3 direction, SpawnArgs args)
+        public static Projectile[] Spawn(Projectile prefab, PlayerAvatar shooter, Vector3 position, Vector3 direction, SpawnArgs args, int seed)
         {
             var projectiles = new Projectile[args.count];
             direction.Normalize();
 
+            var shuffle = new Shuffler(args.damage.damage + args.count + args.bounces + seed);
+            
             for (var i = 0; i < projectiles.Length; i++)
             {
-                var pa = Random.Range(-Mathf.PI, Mathf.PI);
-                var pd = Random.Range(0f, args.sprayAngle);
+                var pa = shuffle.Next(-Mathf.PI, Mathf.PI);
+                var pd = shuffle.Next(0f, args.sprayAngle);
 
                 var orientation = Quaternion.LookRotation(direction);
                 orientation *= Quaternion.Euler(new Vector3(Mathf.Cos(pa), Mathf.Sin(pa)) * pd);
@@ -93,10 +96,14 @@ namespace Runtime.Weapons
             interpolationPosition1 = interpolationPosition0;
             interpolationPosition0 = position;
 
+            if (age == 1) trail.emitting = true;
             age++;
         }
 
-        private void Update() { transform.position = Vector3.Lerp(interpolationPosition1, interpolationPosition0, (Time.time - Time.fixedTime) / Time.fixedDeltaTime); }
+        private void Update()
+        {
+            transform.position = Vector3.Lerp(interpolationPosition1, interpolationPosition0, (Time.time - Time.fixedTime) / Time.fixedDeltaTime);
+        }
 
         private void Home()
         {

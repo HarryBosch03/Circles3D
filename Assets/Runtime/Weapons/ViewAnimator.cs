@@ -47,6 +47,8 @@ namespace Runtime.Weapons
 
         private void ApplyMovement()
         {
+            if (!player.Runner) return;
+            
             var velocity = Vector3.Lerp(Vector3.zero, player.movement.velocity, groundedBlend);
             var speed = new Vector2(velocity.x, velocity.z).magnitude;
 

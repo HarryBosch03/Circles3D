@@ -36,11 +36,11 @@ namespace Runtime.Player
         {
             if (!isOwner)
             {
-                canvas.gameObject.SetActive(false);
+                canvas.enabled = false;
                 return;
             }
             
-            canvas.gameObject.SetActive(true);
+            canvas.enabled = true;
             healthBufferBlend = Mathf.MoveTowards(healthBufferBlend, health.currentBuffer > 0 && health.maxBuffer > 0 ? 1f : 0f, animationSpeed * Time.deltaTime);
             
             var t = animation.Evaluate(healthBufferBlend);

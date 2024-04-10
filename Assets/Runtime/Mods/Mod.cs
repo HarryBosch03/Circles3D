@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Fusion;
 using Runtime.Player;
@@ -13,19 +14,15 @@ namespace Runtime.Mods
         public Gun gun => player.gun;
         public List<Projectile> projectiles => player.gun.projectiles;
 
-        [Rpc(RpcSources.StateAuthority, RpcTargets.All, InvokeLocal = true)]
-        public void SetOwnerRpc(NetworkBehaviourId statboardNetId)
+        public void SetParent(StatBoard statboard)
         {
-            Runner.TryFindBehaviour(statboardNetId, out StatBoard statboard);
-            if (!statboard) return;
-
             this.statboard = statboard;
             statboard.mods.Add(this);
 
             player = statboard.GetComponent<PlayerAvatar>();
             transform.SetParent(statboard.transform);
         }
-
+        
         public override void Despawned(NetworkRunner runner, bool hasState)
         {
             if (statboard) statboard.mods.Remove(this);
