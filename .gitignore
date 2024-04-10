@@ -45,6 +45,9 @@ Assets/AssetStoreTools*
 # Unity local user project setting
 [Uu]ser[Ss]ettings/
 
+/[Aa]ssets/[Ss]treaming[Aa]ssets/
+/[Aa]ssets/[Ss]treaming[Aa]ssets.meta
+
 # Visual Studio cache directory
 .vs/
 

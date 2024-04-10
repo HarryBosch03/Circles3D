@@ -1,11 +1,9 @@
-using System;
 using FMOD.Studio;
 using FMODUnity;
 using Fusion;
 using Fusion.Addons.SimpleKCC;
 using Runtime.Networking;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Runtime.Player
 {
@@ -47,6 +45,7 @@ namespace Runtime.Player
         [Networked] public Vector3 velocity { get; set; }
         [Networked] public float jumpImpulse { get; set; }
         [Networked] public NetInput input { get; set; }
+        [Networked] public NetworkButtons prevButtons { get; set; }
         [Networked] public float fieldOfView { get; set; }
         public float cameraDutch { get; set; }
         public Transform view { get; private set; }
@@ -101,6 +100,8 @@ namespace Runtime.Player
             
             kcc.Move(velocity, jumpImpulse);
             kcc.SetGravity(gravity.y);
+
+            prevButtons = input.buttons;
         }
 
         private void FixedUpdate()
@@ -127,8 +128,7 @@ namespace Runtime.Player
         {
             jumpImpulse = 0f;
             
-            //var jump = input.buttons.WasPressed( InputButton.Jump);
-            var jump = input.buttons.IsSet(InputButton.Jump);
+            var jump = input.buttons.WasPressed(prevButtons, InputButton.Jump);
             if (jump && kcc.IsGrounded)
             {
                 jumpImpulse = Mathf.Sqrt(2f * jumpHeight * -gravity.y) * kcc.Rigidbody.mass;

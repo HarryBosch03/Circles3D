@@ -1,7 +1,5 @@
-using System;
 using Runtime.Util;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Runtime.Weapons
 {
