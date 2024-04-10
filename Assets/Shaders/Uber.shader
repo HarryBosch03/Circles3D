@@ -2,10 +2,14 @@ Shader "Unlit/Uber"
 {
     Properties
     {
+        _BaseColor("Base Color", Color) = (1, 1, 1, 1)
         _Albedo ("Albedo", 2D) = "white" {}
         _Tint_Mask("Tint Mask", 2D) = "black" {}
         _NormalMap("Normal Map", 2D) = "normal" {}
         _NormalStrength("Normal Strength", float) = 1
+        _EmissionMap("Emission Map", 2D) = "black" {}
+        _EmissionColor("Emission Color", Color) = (1, 1, 1, 1)
+        _EmissionValue("Emissive Power", float) = 1
         _Tint_Color("Tint Color", Color) = (1, 1, 1, 1)
         _Alpha("Alpha", Range(0, 1)) = 1
     }

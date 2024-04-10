@@ -19,8 +19,11 @@ namespace Runtime.Player
         [Space]
         public float baseFieldOfView = 90f;
         public float aimFieldOfView = 60f;
+        public float baseViewportFieldOfView = 43f;
+        public float aimViewportFieldOfView = 10f;
 
-        private new Camera camera;
+        private Camera mainCam;
+        private Camera viewportCam;
         private RaycastHit groundHit;
         private Vector3 bodyInterpolatePosition0;
         private Vector3 bodyInterpolatePosition1;
@@ -38,7 +41,9 @@ namespace Runtime.Player
 
         private void Awake()
         {
-            camera = Camera.main;
+            mainCam = Camera.main;
+            viewportCam = mainCam.transform.GetChild(0).GetComponent<Camera>();
+
             gun = GetComponentInChildren<Gun>();
             movement = GetComponent<BipedController>();
             health = GetComponent<PlayerHealthController>();
@@ -104,14 +109,20 @@ namespace Runtime.Player
             {
                 if (health.alive)
                 {
-                    camera.transform.position = movement.view.position;
-                    camera.transform.rotation = movement.view.rotation;
-                    camera.fieldOfView = movement.fieldOfView;
+                    mainCam.transform.position = movement.view.position;
+                    mainCam.transform.rotation = movement.view.rotation;
+                    mainCam.fieldOfView = movement.fieldOfView;
+
+                    var viewportFov = Mathf.Lerp(baseViewportFieldOfView, gun.currentSight ? gun.currentSight.viewportFov : aimViewportFieldOfView, gun.aimPercent);
+                    var zOffset = Mathf.Lerp(0f, gun.currentSight ? gun.currentSight.zOffset : 0f, gun.aimPercent);
+                    
+                    viewportCam.fieldOfView = viewportFov;
+                    viewportCam.transform.localPosition = Vector3.forward * zOffset;
                 }
                 else if (health.latestRagdollHead)
                 {
-                    camera.transform.position = Vector3.Lerp(camera.transform.position, health.latestRagdollHead.position, Time.deltaTime / ragdollCamSmoothing);
-                    camera.transform.rotation = Quaternion.Slerp(camera.transform.rotation, health.latestRagdollHead.rotation, Time.deltaTime / ragdollCamSmoothing);
+                    mainCam.transform.position = Vector3.Lerp(mainCam.transform.position, health.latestRagdollHead.position, Time.deltaTime / ragdollCamSmoothing);
+                    mainCam.transform.rotation = Quaternion.Slerp(mainCam.transform.rotation, health.latestRagdollHead.rotation, Time.deltaTime / ragdollCamSmoothing);
                 }
             }
         }

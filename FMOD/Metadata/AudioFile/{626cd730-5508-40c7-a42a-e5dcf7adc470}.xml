@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{626cd730-5508-40c7-a42a-e5dcf7adc470}">
+		<property name="assetPath">
+			<value>Ice Breaks/Ice Impacts - 1.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>1</value>
+		</property>
+		<property name="length">
+			<value>0.65625850340136049</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{f5a0e97a-cd3f-4906-adb9-e86e23903118}</destination>
+		</relationship>
+	</object>
+</objects>

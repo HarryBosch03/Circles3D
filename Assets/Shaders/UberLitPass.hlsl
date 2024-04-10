@@ -22,9 +22,13 @@ struct Varyings
     float2 uv : TEXCOORD0;
 };
 
+float4 _BaseColor;
 DECLARE_TEX(_Albedo);
 DECLARE_TEX(_NormalMap);
 float _NormalStrength;
+DECLARE_TEX(_EmissionMap);
+float4 _EmissionColor;
+float _EmissionValue;
 DECLARE_TEX(_Tint_Mask);
 float _InvertTint;
 float4 _Tint_Color;
@@ -56,7 +60,7 @@ half4 UberLitPassFragment(Varyings input) : SV_Target
 
     float3x3 tsMatrix = CreateTangentToWorld(input.normalWS, input.tangentWS.xyz, input.tangentWS.w);
 
-    half4 sample = SAMPLE_TEX(_Albedo, input.uv);
+    half4 sample = SAMPLE_TEX(_Albedo, input.uv) * _BaseColor;
     half3 albedo = sample.rgb;
     half alpha = sample.a * _Alpha;
     
@@ -76,5 +80,8 @@ half4 UberLitPassFragment(Varyings input) : SV_Target
     half3 normalTS = UnpackNormalScale(SAMPLE_TEX(_NormalMap, input.uv), _NormalStrength);
     half4 final = UniversalFragmentBlinnPhong(inputData, albedo, 0.0, 0.0, 0.0, 1.0, normalTS);
 
+    half4 emission = SAMPLE_TEX(_EmissionMap, input.uv) * _EmissionColor;
+    final.rgb += emission.rgb * pow(2, _EmissionValue) * saturate(emission.a);
+    
     return final;
 }

@@ -139,6 +139,8 @@ MonoBehaviour:
   ragdollCamSmoothing: 0.15
   baseFieldOfView: 90
   aimFieldOfView: 60
+  baseViewportFieldOfView: 43
+  aimViewportFieldOfView: 10
 --- !u!114 &116858673824452871
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,7 +234,7 @@ MonoBehaviour:
     knockback: 0
     bulletSpeed: 100
     bulletCount: 1
-    spray: 0.5
+    spray: 0
     attackSpeed: 5
     magazineSize: 7
     reloadTime: 1.5
@@ -1155,13 +1157,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b54e55b9a49d9e45b9c2afe9d1042d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  translationSway: 0.04
+  translationSway: 0.01
   rotationSway: 0
   smoothing: 0.1
-  clamp: 1
+  clamp: 0.5
   moveAmplitude: {x: 0.001, y: 0.0005}
   moveFrequency: 1.5
-  aimReduction: 0.308
+  aimReduction: 0.1
 --- !u!1 &5382529010397731053
 GameObject:
   m_ObjectHideFlags: 0
