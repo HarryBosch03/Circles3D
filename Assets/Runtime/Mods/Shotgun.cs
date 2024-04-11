@@ -6,11 +6,12 @@ namespace Circles3D.Runtime.Mods
     {
         public override void Apply(ref StatBoard.Stats stats)
         {
-            stats.damage *= 0.25f;
-            stats.bulletCount += 11;
+            stats.damage *= 0.35f;
+            stats.bulletCount += 8;
             stats.attackSpeed *= 0.6f;
             stats.magazineSize -= 4;
             stats.spray += 4.0f;
+            stats.reloadTime += 0.5f;
         }
     }
 }

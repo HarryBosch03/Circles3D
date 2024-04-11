@@ -7,7 +7,7 @@ namespace Circles3D.Runtime.Mods
         public override void Apply(ref StatBoard.Stats stats)
         {
             stats.attackSpeed *= 4f;
-            stats.magazineSize += 13;
+            stats.magazineSize += 8;
             stats.reloadTime += 0.5f;
             stats.spray += 2.0f;
             stats.damage *= 0.4f;

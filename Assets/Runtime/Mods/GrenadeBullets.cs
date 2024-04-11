@@ -12,6 +12,7 @@ namespace Circles3D.Runtime.Mods
         {
             stats.bulletSpeed *= 0.4f;
             stats.damage *= 0.8f;
+            stats.reloadTime += 0.5f;
         }
 
         public override void ProjectileHit(Projectile projectile, RaycastHit hit)

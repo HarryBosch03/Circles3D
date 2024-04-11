@@ -9,7 +9,7 @@ namespace Circles3D.Runtime.Mods
         public override void Apply(ref StatBoard.Stats stats)
         {
             stats.homing += strength;
-            stats.bulletSpeed *= 0.25f;
+            stats.bulletSpeed *= 0.6f;
             stats.damage *= 0.5f;
             stats.reloadTime += 0.25f;
         }

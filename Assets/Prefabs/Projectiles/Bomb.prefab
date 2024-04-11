@@ -9982,7 +9982,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   knockback: 1
   range: 4
-  rays: 128
+  rays: 32
   lifetime: 0.5
   vfx: {fileID: 3803594017203832955}
   vfxLifetime: 3

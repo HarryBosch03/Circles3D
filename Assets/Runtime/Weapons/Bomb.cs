@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Circles3D.Runtime.Damage;
 using UnityEngine;
@@ -44,17 +45,37 @@ namespace Circles3D.Runtime.Weapons
 
         private void Detonate()
         {
-            var ignoreList = new List<IDamageable>();
-            for (var i = 0; i < rays; i++)
+            var broadPhase = Physics.OverlapSphere(transform.position, range);
+            var valid = false;
+            foreach (var other in broadPhase)
             {
-                var ray = new Ray(transform.position, Random.insideUnitSphere);
-                if (Physics.Raycast(ray, out var hit, range))
+                var damageable = other.GetComponentInParent<IDamageable>();
+                if (damageable == null) continue;
+                valid = true;
+                break;
+            }
+
+            if (valid)
+            {
+                var ignoreList = new List<IDamageable>();
+                for (var i = 0; i < rays / 2; i++)
                 {
-                    var damageable = hit.collider.GetComponentInParent<IDamageable>();
-                    if (damageable != null && !ignoreList.Contains(damageable))
+                    var u = (i + 1f) / (rays / 2 + 1f) * 180f - 90f;
+                    for (var j = 0; j < rays; j++)
                     {
-                        damageable.Damage(owner, new DamageArgs((int)damage.Evaluate(hit.distance), knockback), hit.point, ray.direction, out _);
-                        ignoreList.Add(damageable);
+                        var v = j / (float)rays * 360f;
+
+                        var angle = Quaternion.Euler(u, v, 0f);
+                        var ray = new Ray(transform.position, angle * Vector3.forward);
+                        if (Physics.Raycast(ray, out var hit, range))
+                        {
+                            var damageable = hit.collider.GetComponentInParent<IDamageable>();
+                            if (damageable != null && !ignoreList.Contains(damageable))
+                            {
+                                damageable.Damage(owner, new DamageArgs((int)damage.Evaluate(hit.distance), knockback), hit.point, ray.direction, out _);
+                                ignoreList.Add(damageable);
+                            }
+                        }
                     }
                 }
             }
@@ -71,17 +92,17 @@ namespace Circles3D.Runtime.Weapons
 
         private void OnDrawGizmosSelected()
         {
-            Gizmos.color = Color.red;
-            for (var i = 0; i < rays; i++)
+            Gizmos.color = Color.magenta;
+            for (var i = 0; i < rays / 2; i++)
             {
-                var ray = new Ray(transform.position, Random.insideUnitSphere);
-                if (Physics.Raycast(ray, out var hit, range))
+                var u = (i + 1f) / (rays / 2 + 1f) * 180f - 90f;
+                for (var j = 0; j < rays; j++)
                 {
-                    Gizmos.DrawLine(ray.origin, hit.point);
-                }
-                else
-                {
-                    Gizmos.DrawLine(ray.origin, ray.GetPoint(range));
+                    var v = j / (float)rays * 360f;
+
+                    var angle = Quaternion.Euler(u, v, 0f);
+                    var ray = new Ray(transform.position, angle * Vector3.forward);
+                    Gizmos.DrawSphere(ray.GetPoint(range), 0.02f);
                 }
             }
         }
