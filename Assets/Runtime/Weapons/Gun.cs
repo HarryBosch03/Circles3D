@@ -188,7 +188,7 @@ namespace Runtime.Weapons
             }
 
             crosshair.alpha = 1f - aimPercent;
-            var size = Vector2.one * 15f;
+            var size = Vector2.one * 15.2f;
             size *= Vector2.one * (1f + Vector3.ProjectOnPlane(muzzle.forward, transform.forward).magnitude * crosshairBloom);
             ((RectTransform)crosshair.transform).sizeDelta = size;
             var position = Vector2.zero;

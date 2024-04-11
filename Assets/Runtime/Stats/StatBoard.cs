@@ -68,7 +68,7 @@ namespace Runtime.Stats
         [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
         public void RemoveModRpc(string modName)
         {
-            var mod = mods.Find(mod => mod.name.ToLower().Trim() == modName.ToLower().Trim());
+            var mod = mods.Find(mod => mod.IdentifiesAs(modName));
             if (mod) Runner.Despawn(mod.Object);
         }
 

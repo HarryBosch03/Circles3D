@@ -9,14 +9,14 @@ namespace Runtime.Mods
         public float strength = 5f;
 
         private NetInput input;
-        public bool active => player && !player.movement.onGround && player.input.buttons.IsSet(NetInput.Jump);
+        public bool active => player && !player.movement.onGround && player.gun.aiming;
         
         public override void Apply(ref StatBoard.Stats stats) { }
 
         public override void FixedUpdateNetwork()
         {
             base.FixedUpdateNetwork();
-            if (active) player.movement.velocity -= Vector3.up * (player.movement.velocity.y * Mathf.Min(1f, strength * Runner.DeltaTime));
+            if (active) player.movement.velocity -= player.movement.velocity * Mathf.Min(1f, strength * Runner.DeltaTime);
         }
     }
 }

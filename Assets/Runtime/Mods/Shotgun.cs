@@ -10,7 +10,7 @@ namespace Runtime.Mods
             stats.bulletCount += 11;
             stats.attackSpeed *= 0.6f;
             stats.magazineSize -= 4;
-            stats.spray += 2.0f;
+            stats.spray += 4.0f;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Runtime.Mods
             stats.reloadTime += 0.5f;
             stats.spray += 2.0f;
             stats.damage *= 0.4f;
-            stats.recoil *= 1.5f;
+            stats.recoil *= 1.2f;
         }
     }
 }
