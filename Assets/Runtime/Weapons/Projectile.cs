@@ -98,6 +98,9 @@ namespace Circles3D.Runtime.Weapons
 
         private void Update()
         {
+            var scale = args.damage.baseDamage / 30f;
+            trail.widthMultiplier = scale * 0.1f;
+            transform.localScale = Vector3.one * scale;
             transform.position = Vector3.Lerp(interpolationPosition1, interpolationPosition0, (Time.time - Time.fixedTime) / Time.fixedDeltaTime);
         }
 

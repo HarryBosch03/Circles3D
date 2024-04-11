@@ -1,3 +1,4 @@
+using System;
 using Circles3D.Runtime.Damage;
 using Circles3D.Runtime.Networking;
 using Circles3D.Runtime.Stats;
@@ -42,6 +43,8 @@ namespace Circles3D.Runtime.Player
         public bool activeViewer { get; set; }
         public float mass => 80f;
 
+        public static event Action<PlayerAvatar, GameObject, DamageArgs, Vector3, Vector3> DeathEvent;
+        
         private void Awake()
         {
             mainCam = Camera.main;
@@ -160,6 +163,8 @@ namespace Circles3D.Runtime.Player
             if (HasInputAuthority) InputManager.SetIsControllingPlayer(false);
             gun.SetVisible(false);
             SetModelVisibility(false);
+
+            DeathEvent?.Invoke(this, invoker, args, point, velocity);
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All, InvokeLocal = true)]

@@ -156,7 +156,7 @@ namespace Circles3D.Runtime.Damage
             HealthChangedEvent?.Invoke();
         }
 
-        protected virtual void Kill(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
+        public virtual void Kill(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
         {
             if (invulnerable) return;
             DiedEvent?.Invoke(invoker, args, point, velocity);

@@ -55,7 +55,7 @@ namespace Circles3D.Runtime.Damage
         [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
         public void RpcNotifyDamage(IDamageable.DamageReport report) => hurtAnimationTime = 0f;
 
-        protected override void Kill(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
+        public override void Kill(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
         {
             var killerAvatar = invoker ? invoker.GetComponent<PlayerAvatar>() : null;
             var killer = killerAvatar ? killerAvatar.owningPlayerInstance : null;

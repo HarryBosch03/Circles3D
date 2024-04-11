@@ -10,7 +10,7 @@ namespace Circles3D.Runtime.Mods
         {
             stats.homing += strength;
             stats.bulletSpeed *= 0.6f;
-            stats.damage *= 0.5f;
+            stats.damage *= 0.8f;
             stats.reloadTime += 0.25f;
         }
     }

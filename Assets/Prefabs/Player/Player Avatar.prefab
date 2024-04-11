@@ -231,7 +231,7 @@ MonoBehaviour:
     moveSpeed: 8
     acceleration: 10
     gravity: 1
-    damage: 45
+    damage: 30
     knockback: 0
     bulletSpeed: 100
     bulletCount: 1
