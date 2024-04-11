@@ -8,8 +8,8 @@ namespace Runtime.Mods
     {
         public override void Apply(ref StatBoard.Stats stats)
         {
-            stats.maxBuffer += Mathf.CeilToInt(stats.maxHealth / HealthController.BufferToHealth);
-            stats.maxHealth = 0;
+            stats.maxBuffer += 4;
+            stats.maxHealth -= 100;
         }
     }
 }

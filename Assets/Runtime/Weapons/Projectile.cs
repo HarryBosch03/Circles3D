@@ -36,6 +36,7 @@ namespace Runtime.Weapons
         public PlayerAvatar shooter { get; private set; }
 
         public static event Action<Projectile, RaycastHit, IDamageable.DamageReport> ProjectileDealtDamageEvent;
+        public static event Action<Projectile, RaycastHit> ProjectileHitEvent;
 
         private void Awake()
         {
@@ -61,7 +62,7 @@ namespace Runtime.Weapons
         {
             var projectiles = new Projectile[args.count];
             direction.Normalize();
-
+            
             var shuffle = new Shuffler(args.damage.damage + args.count + args.bounces + seed);
             
             for (var i = 0; i < projectiles.Length; i++)
@@ -208,6 +209,8 @@ namespace Runtime.Weapons
                 }
             }
 
+            ProjectileHitEvent?.Invoke(this, hit);
+            
             if (hitFX) Instantiate(hitFX, hit.point, Quaternion.LookRotation(hit.normal));
             if (!dead) return;
 

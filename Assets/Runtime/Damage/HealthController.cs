@@ -58,6 +58,20 @@ namespace Runtime.Damage
         {
             UpdateFromStats();
 
+            var overHealth = currentHealth - maxHealth;
+            if (overHealth > 0 && currentBuffer < maxBuffer)
+            {
+                currentPartialBuffer += overHealth / regenHealthToBufferExchangeRate;
+                currentPartialHealth = maxHealth;
+            }
+
+            var overBuffer = currentBuffer - maxBuffer;
+            if (overBuffer > 0 && currentHealth < maxHealth)
+            {
+                currentPartialHealth += overBuffer * regenHealthToBufferExchangeRate;
+                currentPartialBuffer = maxBuffer;
+            }
+            
             var healthy = currentHealth >= maxHealth && currentBuffer >= maxBuffer;
             if (!healthy && alive)
             {

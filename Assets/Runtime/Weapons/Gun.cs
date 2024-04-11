@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using FMOD.Studio;
 using FMODUnity;
+using Fusion;
 using Runtime.Damage;
 using Runtime.Player;
 using Runtime.Stats;
@@ -240,18 +241,16 @@ namespace Runtime.Weapons
             lastShootTime = Time.time;
 
             var view = projectileSpawnPoint ? projectileSpawnPoint : muzzle;
-            var instances = Projectile.Spawn(projectile, owner, view.position + view.forward * 0.1f, muzzle.forward, GetProjectileSpawnArgs(), currentMagazine);
-            foreach (var instance in instances)
-            {
-                instance.velocity += body ? body.velocity : Vector3.zero;
-                projectiles.Add(instance);
-            }
+            var runner = NetworkRunner.Instances.Count > 0 ? NetworkRunner.Instances[0] : null;
+            var tick = runner ? runner.Tick.Raw : 0;
+            var instances = Projectile.Spawn(projectile, owner, view.position + view.forward * 0.1f, muzzle.forward, GetProjectileSpawnArgs(), currentMagazine + tick);
+            projectiles.AddRange(instances);
 
             currentMagazine--;
             reloadTimer = 0f;
 
             var shuffle = new Shuffler(currentMagazine);
-            
+
             var recoilData = this.recoilData;
             recoilData.position += new Vector3
             {

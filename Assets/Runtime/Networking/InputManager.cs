@@ -48,10 +48,10 @@ namespace Runtime.Networking
                 var mouseDelta = m.delta.ReadValue();
                 input.orientationDelta += new Vector2(-mouseDelta.y, mouseDelta.x);
 
-                buttons.Set(InputButton.Jump, kb.spaceKey.isPressed);
-                buttons.Set(InputButton.Run, kb.leftShiftKey.isPressed);
-                buttons.Set(InputButton.Shoot, m.leftButton.isPressed);
-                buttons.Set(InputButton.Aim, m.rightButton.isPressed);
+                buttons.Set(NetInput.Button.Jump, kb.spaceKey.isPressed);
+                buttons.Set(NetInput.Button.Run, kb.leftShiftKey.isPressed);
+                buttons.Set(NetInput.Button.Shoot, m.leftButton.isPressed);
+                buttons.Set(NetInput.Button.Aim, m.rightButton.isPressed);
             }
 
             input.buttons = new NetworkButtons(input.buttons.Bits | buttons.Bits);

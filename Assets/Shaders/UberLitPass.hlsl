@@ -11,6 +11,7 @@ struct Attributes
     float3 normalOS : NORMAL;
     float4 tangentOS : TANGENT;
     float2 uv : TEXCOORD0;
+    float4 color : COLOR;
 };
 
 struct Varyings
@@ -20,6 +21,7 @@ struct Varyings
     float3 normalWS : NORMAL;
     float4 tangentWS : TANGENT;
     float2 uv : TEXCOORD0;
+    float4 color : COLOR;
 };
 
 float4 _BaseColor;
@@ -45,6 +47,7 @@ Varyings UberLitPassVertex(Attributes input)
     output.tangentWS.w = input.tangentOS.w;
 
     output.uv = input.uv;
+    output.color = input.color;
     return output;
 }
 
@@ -68,7 +71,7 @@ half4 UberLitPassFragment(Varyings input) : SV_Target
     
     half3 tintMask = SAMPLE_TEX(_Tint_Mask, input.uv).rgb;
 
-    albedo = lerp(albedo, overlay(albedo, _Tint_Color.rgb), tintMask);
+    albedo = lerp(albedo, overlay(albedo, _Tint_Color.rgb), tintMask) * input.color;
 
     InputData inputData = (InputData)0;
     inputData.positionCS = input.positionCS;

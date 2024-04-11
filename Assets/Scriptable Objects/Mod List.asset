@@ -13,8 +13,12 @@ MonoBehaviour:
   m_Name: Mod List
   m_EditorClassIdentifier: 
   mods:
+  - {fileID: 3900300603763580545, guid: e113e83d73c539c45b5fea9455f74f77, type: 3}
+  - {fileID: 7290130152987106709, guid: 24415c186a1eb58468611b447b86c8e4, type: 3}
   - {fileID: 6255915453989933628, guid: 09d6e16ba3d042046ab43c4554c95525, type: 3}
+  - {fileID: 8825025448093174749, guid: b44bd9409abb6374a88c2f31aacf452f, type: 3}
   - {fileID: 3313724339531327770, guid: 66f49c9d24df61949bc1d27898802c72, type: 3}
+  - {fileID: 3033757959666688337, guid: 8b9aebd04e6c4ab47a0a5c898af4e266, type: 3}
   - {fileID: 1423692484860631383, guid: bd5c7c7669367f441b7932db7dcafd59, type: 3}
   - {fileID: 8758613831578488989, guid: 584c3d5119e1e9248917a975db25eba3, type: 3}
   - {fileID: -9079098479665834294, guid: 4608e1080740bc64eb482e000c22897a, type: 3}

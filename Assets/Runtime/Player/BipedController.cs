@@ -3,6 +3,7 @@ using FMODUnity;
 using Fusion;
 using Fusion.Addons.SimpleKCC;
 using Runtime.Networking;
+using Runtime.Stats;
 using UnityEngine;
 
 namespace Runtime.Player
@@ -15,11 +16,9 @@ namespace Runtime.Player
         public float mouseSensitivity = 0.3f;
 
         [Space]
-        public float walkSpeed = 6f;
-        public float runSpeed = 10f;
-        public float moveAcceleration = 0.1f;
-        public float jumpHeight = 2.5f;
-        public float gravityScale = 2.5f;
+        public float walkSpeedFactor = 5f / 8f;
+        public float jumpHeight = 1.5f;
+        public float gravityScale = 2f;
         [Range(0f, 1f)]
         public float airMovementPenalty;
 
@@ -34,31 +33,31 @@ namespace Runtime.Player
         private EventInstance footstepSound;
         private EventInstance landSound;
         private bool wasOnGround;
-        
-        private new Camera camera;
+
+        private StatBoard statboard;
         private RaycastHit groundHit;
         private Vector3 bodyInterpolatePosition0;
         private Vector3 bodyInterpolatePosition1;
 
         public SimpleKCC kcc { get; private set; }
-        
         [Networked] public Vector3 velocity { get; set; }
         [Networked] public float jumpImpulse { get; set; }
         [Networked] public NetInput input { get; set; }
         [Networked] public NetworkButtons prevButtons { get; set; }
         [Networked] public float fieldOfView { get; set; }
+        public StatBoard.Stats stats => statboard.evaluated;
         public float cameraDutch { get; set; }
         public Transform view { get; private set; }
         public Vector2 orientation => kcc.GetLookRotation();
         public Vector3 center => kcc.Position + Vector3.up * characterHeight * 0.5f;
-        private Vector3 gravity => Physics.gravity * gravityScale;
+        public Vector3 gravity => Physics.gravity * gravityScale * stats.gravity;
 
         private void Awake()
         {
-            camera = Camera.main;
             view = transform.Find("View");
 
             kcc = GetBehaviour<SimpleKCC>();
+            statboard = GetBehaviour<StatBoard>();
             
             footstepSound = RuntimeManager.CreateInstance(footstepRef);
             landSound = RuntimeManager.CreateInstance(landRef);
@@ -121,14 +120,14 @@ namespace Runtime.Player
             wasOnGround = kcc.IsGrounded;
             
             footstepSound.set3DAttributes(gameObject.To3DAttributes());
-            footstepSound.setParameterByName("MoveSpeed", kcc.IsGrounded ? new Vector2(velocity.x, velocity.z).magnitude / runSpeed : 0f);
+            footstepSound.setParameterByName("MoveSpeed", kcc.IsGrounded ? new Vector2(velocity.x, velocity.z).magnitude / 8f : 0f);
         }
 
         private void Jump()
         {
             jumpImpulse = 0f;
             
-            var jump = input.buttons.WasPressed(prevButtons, InputButton.Jump);
+            var jump = input.buttons.WasPressed(prevButtons, NetInput.Button.Jump);
             if (jump && kcc.IsGrounded)
             {
                 jumpImpulse = Mathf.Sqrt(2f * jumpHeight * -gravity.y) * kcc.Rigidbody.mass;
@@ -147,12 +146,14 @@ namespace Runtime.Player
         {
             var moveInput = Vector2.ClampMagnitude(input.movement, 1f);
 
-            var acceleration = 2f / moveAcceleration;
+            var acceleration = stats.acceleration;
             if (!kcc.IsGrounded) acceleration *= 1f - airMovementPenalty;
             
             var orientation = Quaternion.Euler(0f, kcc.GetLookRotation().y, 0f);
 
-            var moveSpeed = input.buttons.IsSet(InputButton.Run) ? runSpeed : walkSpeed;
+            var moveSpeed = stats.moveSpeed;
+            if (!input.buttons.IsSet(NetInput.Button.Run)) moveSpeed *= walkSpeedFactor;
+            
             var target = orientation * new Vector3(moveInput.x, 0f, moveInput.y) * moveSpeed;
             var force = (target - velocity) * acceleration;
             force.y = 0f;

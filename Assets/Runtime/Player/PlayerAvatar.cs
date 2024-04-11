@@ -85,8 +85,8 @@ namespace Runtime.Player
                 {
                     gun.SetVisible(true, HasInputAuthority);
 
-                    if (input.buttons.IsSet(InputButton.Shoot)) gun.Shoot();
-                    gun.aiming = input.buttons.IsSet(InputButton.Aim);
+                    if (input.buttons.IsSet(NetInput.Button.Shoot)) gun.Shoot();
+                    gun.aiming = input.buttons.IsSet(NetInput.Button.Aim);
                     gun.projectileSpawnPoint = view;
 
                     var recoil = gun.recoilData.angularVelocity;

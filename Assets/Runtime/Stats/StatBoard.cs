@@ -30,7 +30,7 @@ namespace Runtime.Stats
 
             Max(ref stats.maxHealth, 0);
             Max(ref stats.maxBuffer, 0);
-            Max(ref stats.bulletSpeed, 0);
+            Max(ref stats.bulletSpeed, 30);
             Max(ref stats.bulletCount, 1);
             Max(ref stats.spray, 0);
             Max(ref stats.attackSpeed, 0);
@@ -84,6 +84,10 @@ namespace Runtime.Stats
             {
                 maxHealth = 100,
                 maxBuffer = 0,
+                moveSpeed = 8f,
+                acceleration = 10f,
+                gravity = 1f,
+                
                 damage = 45,
                 knockback = 0f,
                 bulletSpeed = 200f,
@@ -98,8 +102,14 @@ namespace Runtime.Stats
                 projectileLifetime = 5f,
             };
 
+            [Header("Player Stats")]
             public int maxHealth;
             public int maxBuffer;
+            public float moveSpeed;
+            public float acceleration;
+            public float gravity;
+            
+            [Header("Projectile Stats")]
             public float damage;
             public float knockback;
             [FormerlySerializedAs("projectileSpeed")] 
