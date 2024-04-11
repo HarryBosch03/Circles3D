@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Fusion;
 using Runtime.Networking;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace Runtime.Player
     {
         private bool open;
         private PlayerAvatar player;
+        private string search;
 
         private void Awake() { player = GetComponent<PlayerAvatar>(); }
 
@@ -54,14 +56,15 @@ namespace Runtime.Player
             using (new GUILayout.AreaScope(rect))
             {
                 GUILayout.Label("Admin Menu");
-
+                search = GUILayout.TextField(search);
+                
                 using (new GUILayout.HorizontalScope(GUILayout.ExpandHeight(true)))
                 {
                     using (new GUILayout.VerticalScope(box, GUILayout.ExpandWidth(true)))
                     {
                         foreach (var mod in player.statboard.modList.mods)
                         {
-                            if (GUILayout.Button($"Give {mod.name}")) player.statboard.AddModRpc(mod.name);
+                            if (doesMatchSearch(mod.displayName) && GUILayout.Button($"Give {mod.displayName}")) player.statboard.AddModRpc(mod.identifier);
                         }
                     }
 
@@ -71,9 +74,9 @@ namespace Runtime.Player
                         {
                             foreach (var mod in player.statboard.mods)
                             {
-                                if (GUILayout.Button($"Remove {mod.name}"))
+                                if (doesMatchSearch(mod.displayName) && GUILayout.Button($"Remove {mod.displayName}"))
                                 {
-                                    player.statboard.RemoveModRpc(mod.name);
+                                    player.statboard.RemoveModRpc(mod.identifier);
                                     break;
                                 }
                             }
@@ -85,6 +88,8 @@ namespace Runtime.Player
                     }
                 }
             }
+
+            bool doesMatchSearch(string text) => string.IsNullOrWhiteSpace(search) || new Regex(search, RegexOptions.IgnoreCase).IsMatch(text);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Fusion;
 using Runtime.Player;
@@ -9,11 +10,41 @@ namespace Runtime.Mods
 {
     public abstract class Mod : NetworkBehaviour
     {
+        [Space(20)]
+        public string displayName;
+        [TextArea] public string description;
+        public List<StatChange> changes = new();
+        
         public StatBoard statboard { get; private set; }
         public PlayerAvatar player { get; private set; }
         public Gun gun => player.gun;
         public List<Projectile> projectiles => player.gun.projectiles;
 
+        public string identifier => ValidateIdentity(name);
+        private static string ValidateIdentity(string identifier) => identifier.ToLower().Replace(" ", "");
+        public bool IdentifiesAs(string identifier) => ValidateIdentity(identifier) == this.identifier;
+        
+        public string FormatName()
+        {
+            var input = GetType().Name;
+            var name = string.Empty;
+            
+            foreach (var c in input)
+            {
+                if (c >= 'A' && c <= 'Z') name += ' ';
+                name += c;
+            }
+            
+            return name.Trim();
+        }
+
+        protected virtual void OnValidate()
+        {
+            if (string.IsNullOrEmpty(displayName))
+            {
+                displayName = FormatName();
+            }
+        }
 
         public void SetParent(StatBoard statboard)
         {
@@ -35,7 +66,11 @@ namespace Runtime.Mods
             }
         }
 
-        public override void Spawned() { Projectile.ProjectileHitEvent += OnProjectileHit; }
+        public override void Spawned()
+        {
+            Projectile.ProjectileHitEvent += OnProjectileHit;
+            name = displayName;
+        }
 
         public override void Despawned(NetworkRunner runner, bool hasState)
         {
@@ -53,5 +88,20 @@ namespace Runtime.Mods
 
         public virtual void ProjectileHit(Projectile projectile, RaycastHit hit) { }
         public virtual void ProjectileTick(Projectile projectile) { }
+
+        [Serializable]
+        public struct StatChange
+        {
+            private string statName;
+            private string change;
+            private Polarity polarity;
+
+            public enum Polarity
+            {
+                Positive,
+                Negative,
+                Neutral
+            }
+        }
     }
 }

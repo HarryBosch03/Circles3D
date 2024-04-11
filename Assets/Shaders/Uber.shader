@@ -12,6 +12,7 @@ Shader "Unlit/Uber"
         _EmissionValue("Emissive Power", float) = 1
         _Tint_Color("Tint Color", Color) = (1, 1, 1, 1)
         _Alpha("Alpha", Range(0, 1)) = 1
+        [Toggle(_DO_STATIC_LIGHTING)] _DoStaticLighting("Static Lighting", float) = 0
     }
     SubShader
     {
@@ -45,6 +46,7 @@ Shader "Unlit/Uber"
             #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
             #pragma multi_compile_fragment _ _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
             #pragma multi_compile_fragment _ _LIGHT_COOKIES
+            #pragma multi_compile_fragment _ _DO_STATIC_LIGHTING
 
             #define DYNAMICLIGHTMAP_ON
 

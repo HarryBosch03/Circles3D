@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Fusion;
 using Runtime.Mods;
 using UnityEditor;
@@ -53,6 +54,24 @@ namespace Editor
                 modList.mods.AddRange(mods);
                 EditorUtility.SetDirty(modList);
             }
+
+            WriteModList(mods);
+        }
+
+        private static void WriteModList(List<Mod> mods)
+        {
+            var file = new StringBuilder();
+
+            file.AppendLine("# Current Mod List");
+            for (var i = 0; i < mods.Count; i++)
+            {
+                var mod = mods[i];
+                file.AppendLine($"{i + 1}. {mod.displayName}");
+            }
+
+            var path = "./mod-list.md";
+            File.WriteAllText(path, file.ToString());
+            Debug.Log($"Written Mods List to \"{Path.GetFullPath(path)}\"");
         }
     }
 }

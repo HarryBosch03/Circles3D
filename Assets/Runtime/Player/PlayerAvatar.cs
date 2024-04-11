@@ -4,6 +4,7 @@ using Runtime.Networking;
 using Runtime.Stats;
 using Runtime.Weapons;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Runtime.Player
 {
@@ -38,6 +39,8 @@ namespace Runtime.Player
         public Transform view { get; private set; }
         public Gun gun { get; private set; }
         public PlayerInstance owningPlayerInstance { get; set; }
+        public bool activeViewer { get; set; }
+        public float mass => 80f;
 
         private void Awake()
         {
@@ -78,19 +81,19 @@ namespace Runtime.Player
                 movement.enabled = true;
                 movement.fieldOfView = CalculateFieldOfView();
 
-                gun.SetVisible(true, HasInputAuthority);
+                gun.SetVisible(true, activeViewer);
                 SetModelVisibility(true);
 
                 if (gun)
                 {
-                    gun.SetVisible(true, HasInputAuthority);
+                    gun.SetVisible(true, activeViewer);
 
-                    if (input.buttons.IsSet(NetInput.Button.Shoot)) gun.Shoot();
-                    gun.aiming = input.buttons.IsSet(NetInput.Button.Aim);
+                    if (input.buttons.IsSet(NetInput.Shoot)) gun.Shoot();
+                    gun.aiming = input.buttons.IsSet(NetInput.Aim);
                     gun.projectileSpawnPoint = view;
 
                     var recoil = gun.recoilData.angularVelocity;
-                    movement.OffsetRotation(new Vector2(-recoil.x, recoil.y) * feltRecoil * Runner.DeltaTime);
+                    movement.orientation += (new Vector2(-recoil.x, recoil.y) * feltRecoil * Runner.DeltaTime);
                 }
             }
             else
@@ -105,7 +108,18 @@ namespace Runtime.Player
 
         private void LateUpdate()
         {
+#if UNITY_EDITOR
             if (HasInputAuthority)
+            {
+                var kb = Keyboard.current;
+                if (kb.tabKey.isPressed)
+                {
+                    if (kb.vKey.wasPressedThisFrame) ToggleActiveViewer();
+                }
+            }
+#endif
+
+            if (activeViewer)
             {
                 if (health.alive)
                 {
@@ -115,7 +129,7 @@ namespace Runtime.Player
 
                     var viewportFov = Mathf.Lerp(baseViewportFieldOfView, gun.currentSight ? gun.currentSight.viewportFov : aimViewportFieldOfView, gun.aimPercent);
                     var zOffset = Mathf.Lerp(0f, gun.currentSight ? gun.currentSight.zOffset : 0f, gun.aimPercent);
-                    
+
                     viewportCam.fieldOfView = viewportFov;
                     viewportCam.transform.localPosition = Vector3.forward * zOffset;
                 }
@@ -148,11 +162,20 @@ namespace Runtime.Player
             SetModelVisibility(false);
         }
 
-        public void Spawn(Vector3 position, Quaternion rotation)
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All, InvokeLocal = true)]
+        public void SpawnRpc(Vector3 position, Quaternion rotation)
         {
-            if (HasInputAuthority) InputManager.SetIsControllingPlayer(true);
+            if (HasInputAuthority)
+            {
+                InputManager.SetIsControllingPlayer(true);
+                activeViewer = true;
+            }
+
             movement.Spawn(position, rotation);
             health.Spawn();
         }
+
+        [ContextMenu("Toggle Active Viewer")]
+        private void ToggleActiveViewer() => activeViewer = !activeViewer;
     }
 }

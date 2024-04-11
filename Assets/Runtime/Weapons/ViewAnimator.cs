@@ -32,7 +32,7 @@ namespace Runtime.Weapons
 
         private void LateUpdate()
         {
-            groundedBlend = Mathf.MoveTowards(groundedBlend, player.movement.kcc.IsGrounded ? 1f : 0f, Time.deltaTime * 10f);
+            groundedBlend = Mathf.MoveTowards(groundedBlend, player.movement.onGround ? 1f : 0f, Time.deltaTime * 10f);
 
             ApplySmoothing();
             ApplyMovement();

@@ -24,8 +24,6 @@ namespace Runtime.Damage
         [Networked]
         private float regenTimer { get; set; }
 
-        public Rigidbody body { get; private set; }
-
         public StatBoard.Stats stats => statboard.evaluated;
         public int currentHealth => Mathf.FloorToInt(currentPartialHealth);
         public int currentBuffer => Mathf.FloorToInt(currentPartialBuffer);
@@ -41,7 +39,6 @@ namespace Runtime.Damage
 
         protected virtual void Awake()
         {
-            body = GetComponentInParent<Rigidbody>();
             statboard = GetComponentInParent<StatBoard>();
         }
 

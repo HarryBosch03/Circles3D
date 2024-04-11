@@ -45,7 +45,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6147e5d55ce4bf28c7014e5396a57c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strength: 0
+  displayName: Hoverpack
+  description: 
+  changes: []
+  strength: 15
 --- !u!114 &3070193858532472774
 MonoBehaviour:
   m_ObjectHideFlags: 0

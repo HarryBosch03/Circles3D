@@ -26,6 +26,8 @@ namespace Runtime.Networking
         
         private void Awake() { mainCam = Camera.main; }
 
+        public static Vector2 SwizzleMouseDelta(Vector2 mouseDelta) => new Vector2(-mouseDelta.y, mouseDelta.x);
+        
         public void BeforeUpdate()
         {
             if (resetInput)
@@ -46,12 +48,12 @@ namespace Runtime.Networking
                 input.movement = Vector2.ClampMagnitude(input.movement, 1f);
 
                 var mouseDelta = m.delta.ReadValue();
-                input.orientationDelta += new Vector2(-mouseDelta.y, mouseDelta.x);
+                input.mouseDelta += SwizzleMouseDelta(mouseDelta);
 
-                buttons.Set(NetInput.Button.Jump, kb.spaceKey.isPressed);
-                buttons.Set(NetInput.Button.Run, kb.leftShiftKey.isPressed);
-                buttons.Set(NetInput.Button.Shoot, m.leftButton.isPressed);
-                buttons.Set(NetInput.Button.Aim, m.rightButton.isPressed);
+                buttons.Set(NetInput.Jump, kb.spaceKey.isPressed);
+                buttons.Set(NetInput.Run, kb.leftShiftKey.isPressed);
+                buttons.Set(NetInput.Shoot, m.leftButton.isPressed);
+                buttons.Set(NetInput.Aim, m.rightButton.isPressed);
             }
 
             input.buttons = new NetworkButtons(input.buttons.Bits | buttons.Bits);
@@ -68,7 +70,7 @@ namespace Runtime.Networking
             input.Set(this.input);
             resetInput = true;
 
-            this.input.orientationDelta = default;
+            this.input.mouseDelta = default;
         }
 
         public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }

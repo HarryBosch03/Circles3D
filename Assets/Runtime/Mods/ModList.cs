@@ -8,11 +8,11 @@ namespace Runtime.Mods
     {
         public List<Mod> mods = new();
 
-        public Mod Find(string s)
+        public Mod Find(string identifier)
         {
             foreach (var mod in mods)
             {
-                if (mod.name.ToLower().Trim() == s.ToLower().Trim()) return mod;
+                if (mod.IdentifiesAs(identifier)) return mod;
             }
             return null;
         }

@@ -18,7 +18,7 @@ struct Varyings
 {
     float4 positionCS : SV_POSITION;
     float3 positionWS : POSITION_WS;
-    float3 normalWS : NORMAL;
+    float3 normalWS : NORMAL_WS;
     float4 tangentWS : TANGENT;
     float2 uv : TEXCOORD0;
     float4 color : COLOR;
@@ -81,10 +81,21 @@ half4 UberLitPassFragment(Varyings input) : SV_Target
     inputData.shadowCoord = TransformWorldToShadowCoord(input.positionWS);
 
     half3 normalTS = UnpackNormalScale(SAMPLE_TEX(_NormalMap, input.uv), _NormalStrength);
+#ifndef _DO_STATIC_LIGHTING
     half4 final = UniversalFragmentBlinnPhong(inputData, albedo, 0.0, 0.0, 0.0, 1.0, normalTS);
+#else
+    half4 final;
+    final.rgb = albedo * saturate(dot(float3(0, 1, 0), input.normalWS) * 0.5 + 0.7);
+    final.a = 1.0;
+
+    float3 view = normalize(_WorldSpaceCameraPos - input.positionWS);
+    final.rgb += saturate(pow(1 - dot(view, input.normalWS), 2)) * 0.4;
+#endif
 
     half4 emission = SAMPLE_TEX(_EmissionMap, input.uv) * _EmissionColor;
     final.rgb += emission.rgb * pow(2, _EmissionValue) * saturate(emission.a);
+
+    
     
     return final;
 }

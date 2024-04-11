@@ -1,4 +1,5 @@
 using Fusion;
+using Runtime.Player;
 using UnityEngine;
 
 namespace Runtime.Damage
@@ -15,6 +16,12 @@ namespace Runtime.Damage
             if (body)
             {
                 body.AddForce(velocity * args.knockback);
+            }
+
+            var player = hit.collider.GetComponentInParent<PlayerAvatar>();
+            if (player)
+            {
+                player.movement.velocity += velocity * args.knockback / player.mass;
             }
             
             var damageable = hit.collider.GetComponentInParent<IDamageable>();

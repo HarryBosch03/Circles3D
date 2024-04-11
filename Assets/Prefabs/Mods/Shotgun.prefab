@@ -45,6 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ff307b3c0b54ccd8bc6d0b1191bb03e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  displayName: Shotgun Conversion Kit
+  description: 
+  changes: []
 --- !u!114 &4113019176201547991
 MonoBehaviour:
   m_ObjectHideFlags: 0

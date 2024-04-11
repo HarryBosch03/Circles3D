@@ -12,7 +12,7 @@ namespace Runtime.Player
         public new AnimationCurve animation = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
         public float animationSpeed = 10f;
         
-        private PlayerAvatar player;
+        private PlayerAvatar avatar;
         private HealthController health;
 
         private Canvas canvas;
@@ -20,11 +20,9 @@ namespace Runtime.Player
         private UIBar bufferBar;
         private float healthBufferBlend;
 
-        public bool isOwner => player.HasInputAuthority;
-
         private void Awake()
         {
-            player = GetComponent<PlayerAvatar>();
+            avatar = GetComponent<PlayerAvatar>();
             health = GetComponent<HealthController>();
 
             canvas = transform.Find<Canvas>("Overlay");
@@ -34,7 +32,7 @@ namespace Runtime.Player
 
         private void Update()
         {
-            if (!isOwner)
+            if (!avatar.activeViewer)
             {
                 canvas.enabled = false;
                 return;

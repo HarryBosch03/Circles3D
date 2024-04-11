@@ -1,86 +1,88 @@
-using System;
 using System.Collections.Generic;
 using Runtime.Damage;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class Bomb : MonoBehaviour
+namespace Runtime.Weapons
 {
-    public AnimationCurve damage;
-    public float knockback = 1f;
-    public float range = 3f;
-    public int rays = 48;
-    public float lifetime = 0.5f;
-    public GameObject vfx;
-    public float vfxLifetime;
-
-    private float age;
-
-    [HideInInspector] public GameObject owner;
-
-    private void OnEnable()
+    public class Bomb : MonoBehaviour
     {
-        if (vfx) vfx.SetActive(false);
-    }
+        public AnimationCurve damage;
+        public float knockback = 1f;
+        public float range = 3f;
+        public int rays = 48;
+        public float lifetime = 0.5f;
+        public GameObject vfx;
+        public float vfxLifetime;
 
-    private void FixedUpdate()
-    {
-        age += Time.deltaTime;
-        if (age > lifetime)
+        private float age;
+
+        [HideInInspector] public GameObject owner;
+
+        private void OnEnable()
         {
-            Detonate();
+            if (vfx) vfx.SetActive(false);
         }
-    }
 
-    private void OnValidate()
-    {
-        var keys = damage.keys;
-        if (keys.Length > 1)
+        private void FixedUpdate()
         {
-            range = keys[^1].time;
-        }
-    }
-
-    private void Detonate()
-    {
-        var ignoreList = new List<IDamageable>();
-        for (var i = 0; i < rays; i++)
-        {
-            var ray = new Ray(transform.position, Random.insideUnitSphere);
-            if (Physics.Raycast(ray, out var hit, range))
+            age += Time.deltaTime;
+            if (age > lifetime)
             {
-                var damageable = hit.collider.GetComponentInParent<IDamageable>();
-                if (damageable != null && !ignoreList.Contains(damageable))
+                Detonate();
+            }
+        }
+
+        private void OnValidate()
+        {
+            var keys = damage.keys;
+            if (keys.Length > 1)
+            {
+                range = keys[^1].time;
+            }
+        }
+
+        private void Detonate()
+        {
+            var ignoreList = new List<IDamageable>();
+            for (var i = 0; i < rays; i++)
+            {
+                var ray = new Ray(transform.position, Random.insideUnitSphere);
+                if (Physics.Raycast(ray, out var hit, range))
                 {
-                    damageable.Damage(owner, new DamageArgs((int)damage.Evaluate(hit.distance), knockback), hit.point, ray.direction, out _);
-                    ignoreList.Add(damageable);
+                    var damageable = hit.collider.GetComponentInParent<IDamageable>();
+                    if (damageable != null && !ignoreList.Contains(damageable))
+                    {
+                        damageable.Damage(owner, new DamageArgs((int)damage.Evaluate(hit.distance), knockback), hit.point, ray.direction, out _);
+                        ignoreList.Add(damageable);
+                    }
                 }
             }
-        }
 
-        if (vfx)
-        {
-            vfx.SetActive(true);
-            vfx.transform.SetParent(null);
-            Destroy(vfx, vfxLifetime);
-        }
-
-        Destroy(gameObject);
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        for (var i = 0; i < rays; i++)
-        {
-            var ray = new Ray(transform.position, Random.insideUnitSphere);
-            if (Physics.Raycast(ray, out var hit, range))
+            if (vfx)
             {
-                Gizmos.DrawLine(ray.origin, hit.point);
+                vfx.SetActive(true);
+                vfx.transform.SetParent(null);
+                Destroy(vfx, vfxLifetime);
             }
-            else
+
+            Destroy(gameObject);
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.red;
+            for (var i = 0; i < rays; i++)
             {
-                Gizmos.DrawLine(ray.origin, ray.GetPoint(range));
+                var ray = new Ray(transform.position, Random.insideUnitSphere);
+                if (Physics.Raycast(ray, out var hit, range))
+                {
+                    Gizmos.DrawLine(ray.origin, hit.point);
+                }
+                else
+                {
+                    Gizmos.DrawLine(ray.origin, ray.GetPoint(range));
+                }
             }
         }
     }

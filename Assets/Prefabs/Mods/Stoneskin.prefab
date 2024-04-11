@@ -45,6 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df562fecc4c9458c9e5f078a1b3e98a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  displayName: Stoneskin Brew
+  description: 
+  changes: []
 --- !u!114 &2479366164949500649
 MonoBehaviour:
   m_ObjectHideFlags: 0
