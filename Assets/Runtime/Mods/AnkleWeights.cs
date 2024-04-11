@@ -1,6 +1,6 @@
-using Runtime.Stats;
+using Circles3D.Runtime.Stats;
 
-namespace Runtime.Mods
+namespace Circles3D.Runtime.Mods
 {
     public class AnkleWeights : Mod
     {

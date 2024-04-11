@@ -1,7 +1,7 @@
+using Circles3D.Runtime.Weapons;
 using Fusion;
-using Runtime.Weapons;
 
-namespace Runtime.Level
+namespace Circles3D.Runtime.Level
 {
     public class GunTrigger : NetworkBehaviour
     {

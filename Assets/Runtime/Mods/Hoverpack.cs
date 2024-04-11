@@ -1,8 +1,8 @@
-using Runtime.Networking;
-using Runtime.Stats;
+using Circles3D.Runtime.Networking;
+using Circles3D.Runtime.Stats;
 using UnityEngine;
 
-namespace Runtime.Mods
+namespace Circles3D.Runtime.Mods
 {
     public class Hoverpack : Mod
     {

@@ -1,6 +1,6 @@
-using Runtime.Player;
+using Circles3D.Runtime.Player;
 
-namespace Runtime.Gamemodes
+namespace Circles3D.Runtime.Gamemodes
 {
     public class SandboxGamemode : Gamemode
     {

@@ -1,10 +1,10 @@
 using System.Collections.Generic;
+using Circles3D.Runtime.Mods;
 using Fusion;
-using Runtime.Mods;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace Runtime.Stats
+namespace Circles3D.Runtime.Stats
 {
     public class StatBoard : NetworkBehaviour
     {
@@ -30,7 +30,7 @@ namespace Runtime.Stats
 
             Max(ref stats.maxHealth, 0);
             Max(ref stats.maxBuffer, 0);
-            Max(ref stats.bulletSpeed, 30);
+            Max(ref stats.bulletSpeed, 20);
             Max(ref stats.bulletCount, 1);
             Max(ref stats.spray, 0);
             Max(ref stats.attackSpeed, 0);

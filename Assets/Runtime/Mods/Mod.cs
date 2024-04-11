@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Circles3D.Runtime.Player;
+using Circles3D.Runtime.Stats;
+using Circles3D.Runtime.Weapons;
 using Fusion;
-using Runtime.Player;
-using Runtime.Stats;
-using Runtime.Weapons;
 using UnityEngine;
 
-namespace Runtime.Mods
+namespace Circles3D.Runtime.Mods
 {
     public abstract class Mod : NetworkBehaviour
     {
@@ -14,7 +14,8 @@ namespace Runtime.Mods
         public string displayName;
         [TextArea] public string description;
         public List<StatChange> changes = new();
-        
+        public GameObject weaponAddition;
+
         public StatBoard statboard { get; private set; }
         public PlayerAvatar player { get; private set; }
         public Gun gun => player.gun;
@@ -23,18 +24,18 @@ namespace Runtime.Mods
         public string identifier => ValidateIdentity(name);
         private static string ValidateIdentity(string identifier) => identifier.ToLower().Replace(" ", "");
         public bool IdentifiesAs(string identifier) => ValidateIdentity(identifier) == this.identifier;
-        
+
         public string FormatName()
         {
             var input = GetType().Name;
             var name = string.Empty;
-            
+
             foreach (var c in input)
             {
                 if (c >= 'A' && c <= 'Z') name += ' ';
                 name += c;
             }
-            
+
             return name.Trim();
         }
 
@@ -63,6 +64,24 @@ namespace Runtime.Mods
                 {
                     ProjectileTick(projectile);
                 }
+            }
+        }
+
+        protected virtual void LateUpdate()
+        {
+            if (weaponAddition)
+            {
+                if (weaponAddition.gameObject.layer != gun.modelDataActive.layer)
+                {
+                    foreach (var child in weaponAddition.GetComponentsInChildren<Transform>())
+                    {
+                        child.gameObject.layer = gun.modelDataActive.layer;
+                    }
+                }
+
+                var root = gun.modelDataActive.root;
+                weaponAddition.transform.position = root.position;
+                weaponAddition.transform.rotation = root.rotation;
             }
         }
 

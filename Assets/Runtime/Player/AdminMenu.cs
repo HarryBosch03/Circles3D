@@ -1,10 +1,10 @@
 using System.Text.RegularExpressions;
+using Circles3D.Runtime.Networking;
 using Fusion;
-using Runtime.Networking;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Runtime.Player
+namespace Circles3D.Runtime.Player
 {
     [RequireComponent(typeof(PlayerAvatar))]
     public class AdminMenu : NetworkBehaviour

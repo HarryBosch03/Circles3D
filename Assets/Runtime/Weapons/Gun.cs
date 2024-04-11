@@ -1,17 +1,17 @@
 using System;
 using System.Collections.Generic;
+using Circles3D.Runtime.Damage;
+using Circles3D.Runtime.Player;
+using Circles3D.Runtime.Stats;
+using Circles3D.Runtime.Util;
 using FMOD.Studio;
 using FMODUnity;
 using Fusion;
-using Runtime.Damage;
-using Runtime.Player;
-using Runtime.Stats;
-using Runtime.Util;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Runtime.Weapons
+namespace Circles3D.Runtime.Weapons
 {
     [SelectionBase]
     [DisallowMultipleComponent]
@@ -72,6 +72,7 @@ namespace Runtime.Weapons
         public float lastInputTime { get; private set; } = float.MinValue;
         public ModelData modelDataFirstPerson { get; private set; }
         public ModelData modelDataThirdPerson { get; private set; }
+        public ModelData modelDataActive => isFirstPerson ? modelDataFirstPerson : modelDataThirdPerson;
         public List<Projectile> projectiles = new();
 
         public Action spawnProjectileEvent;
@@ -112,8 +113,8 @@ namespace Runtime.Weapons
             GetComponentInParent<Rigidbody>();
             statboard = GetComponentInParent<StatBoard>();
 
-            modelDataFirstPerson = new ModelData(gameObject.Find("Model.FirstPerson"));
-            modelDataThirdPerson = new ModelData(gameObject.Find("Model.ThirdPerson"));
+            modelDataFirstPerson = new ModelData(gameObject.Find("Model.FirstPerson"), ViewportModelLayer);
+            modelDataThirdPerson = new ModelData(gameObject.Find("Model.ThirdPerson"), DefaultModelLayer);
 
             overlay = transform.Find<Canvas>("Overlay");
 
@@ -122,9 +123,6 @@ namespace Runtime.Weapons
             isFirstPerson = false;
             isVisible = true;
             UpdateModelVisibility();
-
-            SetModelRenderLayer(modelDataFirstPerson, ViewportModelLayer);
-            SetModelRenderLayer(modelDataThirdPerson, DefaultModelLayer);
 
             for (var i = 0; i < shootEventBuffer.Length; i++)
             {
@@ -137,14 +135,6 @@ namespace Runtime.Weapons
             for (var i = 0; i < shootEventBuffer.Length; i++)
             {
                 shootEventBuffer[i].release();
-            }
-        }
-
-        private void SetModelRenderLayer(ModelData modelData, int layer)
-        {
-            foreach (var child in modelData.gameObject.GetComponentsInChildren<Transform>())
-            {
-                child.gameObject.layer = layer;
             }
         }
 
@@ -299,25 +289,35 @@ namespace Runtime.Weapons
             public readonly Transform transform;
             public readonly Renderer[] renderers;
 
+            public readonly Transform root;
             public readonly Transform muzzle;
             public readonly Transform leftHandTarget;
             public readonly Transform rightHandTarget;
+            public int layer;
 
             public void ShouldRender(bool state)
             {
                 foreach (var r in renderers) r.enabled = state;
             }
 
-            public ModelData(GameObject gameObject)
+            public ModelData(GameObject gameObject, int layer)
             {
                 this.gameObject = gameObject;
-
+                this.layer = layer;
+                
                 transform = gameObject.transform;
                 renderers = gameObject.GetComponentsInChildren<Renderer>();
+
+                root = transform.Search("root");
                 
                 leftHandTarget = transform.Search("Hand.L");
                 rightHandTarget = transform.Search("Hand.R");
                 muzzle = transform.Search("Muzzle");
+                
+                foreach (var child in gameObject.GetComponentsInChildren<Transform>())
+                {
+                    child.gameObject.layer = layer;
+                }
             }
         }
     }

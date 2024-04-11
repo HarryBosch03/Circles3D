@@ -1,6 +1,6 @@
 using System;
 
-namespace Runtime.Damage
+namespace Circles3D.Runtime.Damage
 {
     public interface IHealthController : IDamageable
     {

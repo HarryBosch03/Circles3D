@@ -1,8 +1,8 @@
-using Runtime.Player;
+using Circles3D.Runtime.Player;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace Runtime.Weapons
+namespace Circles3D.Runtime.Weapons
 {
     public class ViewAnimator : MonoBehaviour
     {

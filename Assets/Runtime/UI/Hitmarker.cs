@@ -1,10 +1,10 @@
+using Circles3D.Runtime.Damage;
+using Circles3D.Runtime.Player;
 using Fusion;
-using Runtime.Damage;
-using Runtime.Player;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Runtime.UI
+namespace Circles3D.Runtime.UI
 {
     [RequireComponent(typeof(CanvasGroup))]
     public class Hitmarker : NetworkBehaviour

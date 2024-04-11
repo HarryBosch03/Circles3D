@@ -1,9 +1,9 @@
-using Runtime.Util;
+using Circles3D.Runtime.Util;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Runtime.UI
+namespace Circles3D.Runtime.UI
 {
     [SelectionBase]
     [DisallowMultipleComponent]

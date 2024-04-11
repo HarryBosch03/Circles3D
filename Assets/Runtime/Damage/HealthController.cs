@@ -1,9 +1,9 @@
 using System;
+using Circles3D.Runtime.Stats;
 using Fusion;
-using Runtime.Stats;
 using UnityEngine;
 
-namespace Runtime.Damage
+namespace Circles3D.Runtime.Damage
 {
     [RequireComponent(typeof(NetworkObject))]
     public class HealthController : NetworkBehaviour, IHealthController

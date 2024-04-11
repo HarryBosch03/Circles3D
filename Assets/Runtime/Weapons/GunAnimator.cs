@@ -1,8 +1,8 @@
 using System;
-using Runtime.Util;
+using Circles3D.Runtime.Util;
 using UnityEngine;
 
-namespace Runtime.Weapons
+namespace Circles3D.Runtime.Weapons
 {
     [DisallowMultipleComponent]
     public class GunAnimator : MonoBehaviour

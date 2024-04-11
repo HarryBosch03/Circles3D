@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Runtime.Damage
+namespace Circles3D.Runtime.Damage
 {
     [RequireComponent(typeof(Image))]
     public class HealthBar : MonoBehaviour

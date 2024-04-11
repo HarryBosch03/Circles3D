@@ -1,9 +1,9 @@
-using Runtime.Damage;
-using Runtime.UI;
-using Runtime.Util;
+using Circles3D.Runtime.Damage;
+using Circles3D.Runtime.UI;
+using Circles3D.Runtime.Util;
 using UnityEngine;
 
-namespace Runtime.Player
+namespace Circles3D.Runtime.Player
 {
     public class PlayerUI : MonoBehaviour
     {

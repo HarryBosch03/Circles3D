@@ -1,14 +1,14 @@
 using System;
+using Circles3D.Runtime.Damage;
+using Circles3D.Runtime.Gamemodes;
+using Circles3D.Runtime.Weapons;
 using Fusion;
-using Runtime.Damage;
-using Runtime.Gamemodes;
-using Runtime.Weapons;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-namespace Runtime.Player
+namespace Circles3D.Runtime.Player
 {
     public class PlayerInstance : NetworkBehaviour
     {

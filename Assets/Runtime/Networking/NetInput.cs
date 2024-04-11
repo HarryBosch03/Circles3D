@@ -1,7 +1,7 @@
 using Fusion;
 using UnityEngine;
 
-namespace Runtime.Networking
+namespace Circles3D.Runtime.Networking
 {
     public struct NetInput : INetworkInput
     {

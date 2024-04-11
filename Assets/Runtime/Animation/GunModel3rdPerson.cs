@@ -1,7 +1,7 @@
-using Runtime.Weapons;
+using Circles3D.Runtime.Weapons;
 using UnityEngine;
 
-namespace Runtime.Animation
+namespace Circles3D.Runtime.Animation
 {
     public class GunModel3rdPerson : MonoBehaviour
     {

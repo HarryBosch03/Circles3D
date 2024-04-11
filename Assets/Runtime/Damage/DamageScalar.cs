@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Runtime.Damage
+namespace Circles3D.Runtime.Damage
 {
     [SelectionBase]
     [DisallowMultipleComponent]

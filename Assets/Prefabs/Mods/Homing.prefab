@@ -48,6 +48,9 @@ MonoBehaviour:
   displayName: Homing Bullets
   description: 
   changes: []
+  weaponAddition: {fileID: 0}
+  strength: 6
+  lines: {fileID: 0}
 --- !u!114 &-6903990235927640945
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,18 +1,15 @@
 using System;
 using System.Linq;
-using Runtime.Damage;
-using Runtime.Player;
-using Runtime.Util;
+using Circles3D.Runtime.Damage;
+using Circles3D.Runtime.Player;
+using Circles3D.Runtime.Util;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
-namespace Runtime.Weapons
+namespace Circles3D.Runtime.Weapons
 {
     public class Projectile : MonoBehaviour
     {
         private const int IgnoreDamageLayer = 8;
-
-        private const float HomingSpeed = 3f;
 
         public GameObject hitFX;
         public float baseSize = 0.1f;
@@ -30,8 +27,6 @@ namespace Runtime.Weapons
         private Vector3 startPosition;
         private Vector3 interpolationPosition0;
         private Vector3 interpolationPosition1;
-
-        private PlayerAvatar homingTarget;
 
         public PlayerAvatar shooter { get; private set; }
 
@@ -108,66 +103,20 @@ namespace Runtime.Weapons
 
         private void Home()
         {
-            if (!homingTarget)
+            if (!shooter) return;
+
+            lockLines.enabled = false;
+            
+            var ray = new Ray(shooter.view.position + shooter.view.forward, shooter.view.forward);
+            if (Physics.Raycast(ray, out var hit))
             {
-                var scans = 30;
-                var visibleScans = 5;
-
-                sensorLines.enabled = true;
-                lockLines.enabled = false;
-
-                sensorLines.positionCount = visibleScans * 3;
-                sensorLines.useWorldSpace = true;
-
-                for (var i = 0; i < scans; i++)
-                {
-                    if (i < visibleScans)
-                    {
-                        sensorLines.SetPosition(3 * i + 0, position);
-                        sensorLines.SetPosition(3 * i + 2, position);
-                    }
-
-                    var orientation = Quaternion.LookRotation(velocity);
-                    var direction = (Vector3)Random.insideUnitCircle;
-                    direction.z = 1f;
-                    direction.Normalize();
-                    direction = orientation * direction;
-
-                    var ray = new Ray(position, direction);
-                    if (Physics.Raycast(ray, out var hit))
-                    {
-                        homingTarget = hit.collider.GetComponentInParent<PlayerAvatar>();
-                        if (homingTarget) break;
-
-                        if (i < visibleScans) sensorLines.SetPosition(3 * i + 1, hit.point);
-                    }
-                    else
-                    {
-                        if (i < visibleScans) sensorLines.SetPosition(3 * i + 1, position + direction * 500f);
-                    }
-                }
-            }
-
-            if (homingTarget)
-            {
-                var dot = Vector3.Dot(velocity.normalized, homingTarget.movement.center - position);
-                var angle = Mathf.Acos(dot) * Mathf.Rad2Deg;
-                if (angle > 45f) homingTarget = null;
-            }
-
-            if (homingTarget)
-            {
-                sensorLines.enabled = false;
+                var target = (hit.point - position).normalized;
+                velocity += (target * args.speed - velocity) * args.homing * Time.deltaTime;
+                
                 lockLines.enabled = true;
-
-                lockLines.positionCount = 2;
                 lockLines.useWorldSpace = true;
                 lockLines.SetPosition(0, position);
-                lockLines.SetPosition(1, homingTarget.movement.center);
-
-                var target = (homingTarget.movement.center - position).normalized;
-                velocity += (target * args.speed - velocity) * HomingSpeed * args.homing * Time.deltaTime;
-                velocity -= Physics.gravity * Time.deltaTime;
+                lockLines.SetPosition(1, hit.point);
             }
         }
 

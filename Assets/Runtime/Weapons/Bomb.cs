@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using Runtime.Damage;
+using Circles3D.Runtime.Damage;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Runtime.Weapons
+namespace Circles3D.Runtime.Weapons
 {
     public class Bomb : MonoBehaviour
     {

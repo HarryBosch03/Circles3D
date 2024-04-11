@@ -1,8 +1,8 @@
+using Circles3D.Runtime.Player;
 using Fusion;
-using Runtime.Player;
 using UnityEngine;
 
-namespace Runtime.Damage
+namespace Circles3D.Runtime.Damage
 {
     public interface IDamageable
     {

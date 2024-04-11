@@ -1,11 +1,11 @@
+using Circles3D.Runtime.Networking;
+using Circles3D.Runtime.Stats;
 using FMOD.Studio;
 using FMODUnity;
 using Fusion;
-using Runtime.Networking;
-using Runtime.Stats;
 using UnityEngine;
 
-namespace Runtime.Player
+namespace Circles3D.Runtime.Player
 {
     [SelectionBase]
     public class BipedController : NetworkBehaviour

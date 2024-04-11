@@ -2,7 +2,7 @@ using System;
 using Fusion;
 using UnityEngine;
 
-namespace Runtime.Damage
+namespace Circles3D.Runtime.Damage
 {
     [Serializable]
     public struct DamageArgs : INetworkStruct

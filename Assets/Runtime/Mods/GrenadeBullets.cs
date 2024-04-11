@@ -1,8 +1,8 @@
-using Runtime.Stats;
-using Runtime.Weapons;
+using Circles3D.Runtime.Stats;
+using Circles3D.Runtime.Weapons;
 using UnityEngine;
 
-namespace Runtime.Mods
+namespace Circles3D.Runtime.Mods
 {
     public class GrenadeBullets : Mod
     {

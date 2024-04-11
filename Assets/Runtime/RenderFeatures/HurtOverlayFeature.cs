@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-namespace Runtime.RenderFeatures
+namespace Circles3D.Runtime.RenderFeatures
 {
     public class HurtOverlayFeature : ScriptableRendererFeature
     {

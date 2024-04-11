@@ -1,8 +1,8 @@
 using System;
-using Runtime.Player;
+using Circles3D.Runtime.Player;
 using UnityEngine;
 
-namespace Runtime.Animation
+namespace Circles3D.Runtime.Animation
 {
     public class ArmAnimation : MonoBehaviour
     {

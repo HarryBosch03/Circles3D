@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-namespace Runtime.Networking
+namespace Circles3D.Runtime.Networking
 {
     public class InputManager : SimulationBehaviour, IBeforeUpdate, INetworkRunnerCallbacks
     {

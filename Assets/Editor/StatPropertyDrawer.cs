@@ -1,4 +1,4 @@
-using Runtime.Stats;
+using Circles3D.Runtime.Stats;
 using UnityEditor;
 using UnityEngine;
 

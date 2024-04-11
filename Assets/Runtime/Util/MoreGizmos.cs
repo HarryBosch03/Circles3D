@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Runtime.Util
+namespace Circles3D.Runtime.Util
 {
     public static class MoreGizmos
     {

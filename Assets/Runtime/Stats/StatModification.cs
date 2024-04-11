@@ -1,6 +1,6 @@
 using System;
 
-namespace Runtime.Stats
+namespace Circles3D.Runtime.Stats
 {
     public class StatModification<T>
     {

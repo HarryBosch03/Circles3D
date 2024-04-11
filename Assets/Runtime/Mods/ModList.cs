@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Runtime.Mods
+namespace Circles3D.Runtime.Mods
 {
     [CreateAssetMenu(menuName = "Scriptable Objects/Mod List")]
     public class ModList : ScriptableObject

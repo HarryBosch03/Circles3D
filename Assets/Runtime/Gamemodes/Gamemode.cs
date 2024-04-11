@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Circles3D.Runtime.Player;
 using Fusion;
-using Runtime.Player;
 using UnityEngine;
 
-namespace Runtime.Gamemodes
+namespace Circles3D.Runtime.Gamemodes
 {
     public abstract class Gamemode : NetworkBehaviour, IPlayerJoined, IPlayerLeft
     {

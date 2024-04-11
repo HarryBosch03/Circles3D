@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Runtime.Weapons
+namespace Circles3D.Runtime.Weapons
 {
     public class SlideAnimator : MonoBehaviour
     {

@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Runtime.Player
+namespace Circles3D.Runtime.Player
 {
     public class PlayerRagdoll : MonoBehaviour
     {

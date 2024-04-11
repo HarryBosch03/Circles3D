@@ -1,10 +1,10 @@
+using Circles3D.Runtime.Player;
+using Circles3D.Runtime.RenderFeatures;
+using Circles3D.Runtime.Util;
 using Fusion;
-using Runtime.Player;
-using Runtime.RenderFeatures;
-using Runtime.Util;
 using UnityEngine;
 
-namespace Runtime.Damage
+namespace Circles3D.Runtime.Damage
 {
     public class PlayerHealthController : HealthController
     {

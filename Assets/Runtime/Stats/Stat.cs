@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Runtime.Stats
+namespace Circles3D.Runtime.Stats
 {
     [System.Serializable]
     public class Stat

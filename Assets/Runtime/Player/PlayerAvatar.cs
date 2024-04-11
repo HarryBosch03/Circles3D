@@ -1,12 +1,12 @@
+using Circles3D.Runtime.Damage;
+using Circles3D.Runtime.Networking;
+using Circles3D.Runtime.Stats;
+using Circles3D.Runtime.Weapons;
 using Fusion;
-using Runtime.Damage;
-using Runtime.Networking;
-using Runtime.Stats;
-using Runtime.Weapons;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Runtime.Player
+namespace Circles3D.Runtime.Player
 {
     [SelectionBase]
     [DefaultExecutionOrder(100)]
