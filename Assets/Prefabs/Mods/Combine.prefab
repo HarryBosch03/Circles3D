@@ -45,6 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f54deae72b1a400db1b7ff74c396a018, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  displayName: Double Barrel
+  description: 
+  changes: []
 --- !u!114 &-5355204800567568230
 MonoBehaviour:
   m_ObjectHideFlags: 0

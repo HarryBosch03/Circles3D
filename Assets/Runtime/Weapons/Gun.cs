@@ -44,15 +44,14 @@ namespace Runtime.Weapons
         public TMP_Text ammoText;
         public Image reloadProgress;
         public Image attackSpeedProgress;
-        public CanvasGroup dot;
-
+        public CanvasGroup crosshair;
+        public float crosshairBloom = 70f;
+        public float crosshairDeviance = 70f;
+        
         private PlayerAvatar owner;
         private bool hasDryFired;
-        private Rigidbody body;
         private StatBoard statboard;
 
-        private Model modelFirstPerson;
-        private Model modelThirdPerson;
         private Canvas overlay;
 
         private bool isFirstPerson;
@@ -60,24 +59,23 @@ namespace Runtime.Weapons
         private EventInstance[] shootEventBuffer = new EventInstance[10];
         private int shootEventBufferIndex;
 
-        private Transform muzzle;
-
         public float aimZoom => currentSight ? currentSight.zoomLevel : baseZoom;
         public StatBoard.Stats stats => statboard.evaluated;
+        public Transform muzzle => modelDataFirstPerson.muzzle;
         public bool aiming { get; set; }
         public Transform projectileSpawnPoint { get; set; }
         public RecoilData recoilData { get; private set; }
         public float reloadTimer { get; private set; }
         public float aimPercent { get; private set; }
-        public Transform leftHandHold { get; private set; }
-        public Transform rightHandHold { get; private set; }
         public float zoom => Mathf.Lerp(1f, aimZoom, aimPercent);
         public float lastShootTime { get; private set; } = float.MinValue;
         public float lastInputTime { get; private set; } = float.MinValue;
+        public ModelData modelDataFirstPerson { get; private set; }
+        public ModelData modelDataThirdPerson { get; private set; }
         public List<Projectile> projectiles = new();
 
         public Action spawnProjectileEvent;
-
+        
         public void Shoot()
         {
             if (Time.time - lastInputTime > 1f / stats.attackSpeed)
@@ -104,23 +102,20 @@ namespace Runtime.Weapons
         private void UpdateModelVisibility()
         {
             overlay.gameObject.SetActive(isVisible && isFirstPerson);
-            modelFirstPerson.ShouldRender(isVisible && isFirstPerson);
-            modelThirdPerson.ShouldRender(isVisible && !isFirstPerson);
+            modelDataFirstPerson.ShouldRender(isVisible && isFirstPerson);
+            modelDataThirdPerson.ShouldRender(isVisible && !isFirstPerson);
         }
 
         private void Awake()
         {
             owner = GetComponentInParent<PlayerAvatar>();
-            body = GetComponentInParent<Rigidbody>();
+            GetComponentInParent<Rigidbody>();
             statboard = GetComponentInParent<StatBoard>();
 
-            modelFirstPerson = new Model(gameObject.Find("Model.FirstPerson"));
-            modelThirdPerson = new Model(gameObject.Find("Model.ThirdPerson"));
+            modelDataFirstPerson = new ModelData(gameObject.Find("Model.FirstPerson"));
+            modelDataThirdPerson = new ModelData(gameObject.Find("Model.ThirdPerson"));
 
             overlay = transform.Find<Canvas>("Overlay");
-            leftHandHold = modelThirdPerson.transform.Search("HandHold.L");
-            rightHandHold = modelThirdPerson.transform.Search("HandHold.R");
-            muzzle = modelThirdPerson.transform.Search("Muzzle");
 
             if (!statboard) statboard = gameObject.AddComponent<StatBoard>();
 
@@ -128,8 +123,8 @@ namespace Runtime.Weapons
             isVisible = true;
             UpdateModelVisibility();
 
-            SetModelRenderLayer(modelFirstPerson, ViewportModelLayer);
-            SetModelRenderLayer(modelThirdPerson, DefaultModelLayer);
+            SetModelRenderLayer(modelDataFirstPerson, ViewportModelLayer);
+            SetModelRenderLayer(modelDataThirdPerson, DefaultModelLayer);
 
             for (var i = 0; i < shootEventBuffer.Length; i++)
             {
@@ -145,9 +140,9 @@ namespace Runtime.Weapons
             }
         }
 
-        private void SetModelRenderLayer(Model model, int layer)
+        private void SetModelRenderLayer(ModelData modelData, int layer)
         {
-            foreach (var child in model.gameObject.GetComponentsInChildren<Transform>())
+            foreach (var child in modelData.gameObject.GetComponentsInChildren<Transform>())
             {
                 child.gameObject.layer = layer;
             }
@@ -192,7 +187,13 @@ namespace Runtime.Weapons
                 attackSpeedProgress.color = new Color(1f, 1f, 1f, Mathf.Clamp01(1f - 4f * (t - attackTime)) * 0.2f);
             }
 
-            dot.alpha = 1f - aimPercent;
+            crosshair.alpha = 1f - aimPercent;
+            var size = Vector2.one * 15f;
+            size *= Vector2.one * (1f + Vector3.ProjectOnPlane(muzzle.forward, transform.forward).magnitude * crosshairBloom);
+            ((RectTransform)crosshair.transform).sizeDelta = size;
+            var position = Vector2.zero;
+            position += new Vector2(Vector3.Dot(muzzle.forward, transform.right), Vector3.Dot(muzzle.forward, transform.up)) * crosshairDeviance;
+            ((RectTransform)crosshair.transform).anchoredPosition = position;
         }
 
         private void Reload()
@@ -292,23 +293,31 @@ namespace Runtime.Weapons
             public Vector3 angularVelocity;
         }
 
-        public class Model
+        public class ModelData
         {
             public readonly GameObject gameObject;
             public readonly Transform transform;
             public readonly Renderer[] renderers;
+
+            public readonly Transform muzzle;
+            public readonly Transform leftHandTarget;
+            public readonly Transform rightHandTarget;
 
             public void ShouldRender(bool state)
             {
                 foreach (var r in renderers) r.enabled = state;
             }
 
-            public Model(GameObject gameObject)
+            public ModelData(GameObject gameObject)
             {
                 this.gameObject = gameObject;
 
                 transform = gameObject.transform;
                 renderers = gameObject.GetComponentsInChildren<Renderer>();
+                
+                leftHandTarget = transform.Search("Hand.L");
+                rightHandTarget = transform.Search("Hand.R");
+                muzzle = transform.Search("Muzzle");
             }
         }
     }

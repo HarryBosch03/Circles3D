@@ -45,6 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57570d3f6e7b4343891d1226a92c4f6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  displayName: Bouncy Bullets
+  description: 
+  changes: []
 --- !u!114 &3323841396201867742
 MonoBehaviour:
   m_ObjectHideFlags: 0

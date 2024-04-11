@@ -76,7 +76,7 @@ namespace Runtime.Damage
 
             foreach (var other in latestRagdoll.GetComponentsInChildren<Rigidbody>())
             {
-                other.AddForce(body.velocity * body.mass, ForceMode.VelocityChange);
+                other.AddForce(player.movement.velocity * 80.0f, ForceMode.Impulse);
                 other.AddForceAtPosition(force, point, ForceMode.Impulse);
             }
 

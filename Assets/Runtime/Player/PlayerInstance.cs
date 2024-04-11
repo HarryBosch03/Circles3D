@@ -52,7 +52,7 @@ namespace Runtime.Player
         {
             SetDeathReason(null);
             avatar.owningPlayerInstance = this;
-            avatar.Spawn(position, rotation);
+            avatar.SpawnRpc(position, rotation);
         }
 
         private void OnEnable()

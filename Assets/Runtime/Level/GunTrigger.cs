@@ -1,26 +1,29 @@
 using Fusion;
 using Runtime.Weapons;
 
-public class GunTrigger : NetworkBehaviour
+namespace Runtime.Level
 {
-    public float shootDelay;
-
-    [Networked]
-    private float shootTimer { get; set; }
-    private Gun gun;
-
-    private void Awake()
+    public class GunTrigger : NetworkBehaviour
     {
-        gun = GetComponentInChildren<Gun>();
-    }
+        public float shootDelay;
 
-    public override void FixedUpdateNetwork()
-    {
-        shootTimer += Runner.DeltaTime;
-        if (shootTimer > shootDelay)
+        [Networked]
+        private float shootTimer { get; set; }
+        private Gun gun;
+
+        private void Awake()
         {
-            shootTimer -= shootDelay;
-            gun.Shoot();
+            gun = GetComponentInChildren<Gun>();
+        }
+
+        public override void FixedUpdateNetwork()
+        {
+            shootTimer += Runner.DeltaTime;
+            if (shootTimer > shootDelay)
+            {
+                shootTimer -= shootDelay;
+                gun.Shoot();
+            }
         }
     }
 }

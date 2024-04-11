@@ -95,8 +95,6 @@ GameObject:
   - component: {fileID: 3666495030575313215}
   - component: {fileID: 1232590823546260688}
   - component: {fileID: 3217864588436646767}
-  - component: {fileID: -8928493515211096859}
-  - component: {fileID: 5299436792547326342}
   - component: {fileID: 3606629109733283706}
   m_Layer: 0
   m_Name: Player Avatar
@@ -230,6 +228,9 @@ MonoBehaviour:
   baseStats:
     maxHealth: 100
     maxBuffer: 0
+    moveSpeed: 8
+    acceleration: 10
+    gravity: 1
     damage: 45
     knockback: 0
     bulletSpeed: 100
@@ -238,7 +239,7 @@ MonoBehaviour:
     attackSpeed: 5
     magazineSize: 7
     reloadTime: 1.5
-    recoil: 1
+    recoil: 0.5
     bounces: 0
     homing: 0
     projectileLifetime: 5
@@ -320,7 +321,6 @@ MonoBehaviour:
   - {fileID: 116858673824452871}
   - {fileID: 5118894930514851959}
   - {fileID: 3217864588436646767}
-  - {fileID: 5299436792547326342}
   - {fileID: 3606629109733283706}
   - {fileID: 3457380028575364233}
 --- !u!114 &3217864588436646767
@@ -336,14 +336,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mouseSensitivity: 0.3
-  walkSpeed: 5
-  runSpeed: 8
-  moveAcceleration: 0.2
+  walkSpeedFactor: 0.625
   jumpHeight: 1.5
   gravityScale: 2
   airMovementPenalty: 0.75
   characterHeight: 1.8
   cameraHeight: 1.7
+  characterRadius: 0.2
+  stepHeight: 0.2
+  maxWalkableSlope: 50
   footstepRef:
     Guid:
       Data1: 1583887405
@@ -358,71 +359,11 @@ MonoBehaviour:
       Data3: -1701881413
       Data4: 51859110
     Path: event:/Land
+  _position: {x: 0, y: 0, z: 0}
   _velocity: {x: 0, y: 0, z: 0}
-  _jumpImpulse: 0
+  _onGround: 0
   _fieldOfView: 0
---- !u!54 &-8928493515211096859
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 427869120341289331}
-  serializedVersion: 4
-  m_Mass: 80
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!114 &5299436792547326342
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 427869120341289331}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1869825851, guid: 977dbcf975465374990f471e1497f563, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _settings:
-    Shape: 1
-    IsTrigger: 0
-    Radius: 0.35
-    Height: 1.8
-    Extent: 0.035
-    ColliderLayer: 8
-    CollisionLayerMask:
-      serializedVersion: 2
-      m_Bits: 1
-    ProxyInterpolationMode: 0
-    TeleportThreshold: 1
-    AntiJitterDistance: {x: 0.025, y: 0.01}
-    CompressNetworkPosition: 0
-    ForcePredictedLookRotation: 0
-    StepHeight: 0.5
-    StepDepth: 0.2
-    StepSpeed: 1
-    StepMinPushBack: 0.5
-    StepGroundCheckRadiusScale: 0.5
-    StepRequireGroundTarget: 0
-    SnapDistance: 0.25
-    SnapSpeed: 4
+  _orientation: {x: 0, y: 0}
 --- !u!114 &3606629109733283706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2355,7 +2296,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bba31c2bef746ce8e73260a3963f074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chirality: 0
+  chirality: 1
+  perspective: 1
   hintOrientation: {x: 180, y: 0, z: 15}
   correctiveRotation: {x: -90, y: 90, z: 90}
 --- !u!1 &6937772629913480851 stripped
@@ -2399,6 +2341,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chirality: 0
+  perspective: 1
   hintOrientation: {x: 180, y: 0, z: -15}
   correctiveRotation: {x: -90, y: 90, z: 90}
 --- !u!4 &8530645282653239459 stripped

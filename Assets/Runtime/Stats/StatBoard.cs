@@ -50,20 +50,18 @@ namespace Runtime.Stats
         }
 
         [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-        public void AddModRpc(string modName)
+        public void AddModRpc(string identifier)
         {
-            var mod = modList.Find(modName);
+            var mod = modList.Find(identifier);
             var instance = Runner.Spawn(mod);
-            instance.name = mod.name;
             instance.transform.SetParent(transform);
-            RegisterModRpc(instance.name, instance.Object);
+            RegisterModRpc(instance.Object);
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All, InvokeLocal = true)]
-        private void RegisterModRpc(string name, NetworkId modInstanceId)
+        private void RegisterModRpc(NetworkId modInstanceId)
         {
             var mod = Runner.FindObject(modInstanceId).GetComponent<Mod>();
-            mod.name = name;
             mod.SetParent(this);
         }
 

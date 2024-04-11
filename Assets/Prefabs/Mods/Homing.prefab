@@ -45,6 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 096b7c2e85274f38853c0b6137fb4414, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  displayName: Homing Bullets
+  description: 
+  changes: []
 --- !u!114 &-6903990235927640945
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -5,16 +5,13 @@ namespace Runtime.Networking
 {
     public struct NetInput : INetworkInput
     {
+        public const int Jump = 0;
+        public const int Run = 1;
+        public const int Shoot = 2;
+        public const int Aim = 3;
+        
         public NetworkButtons buttons;
         public Vector2 movement;
-        public Vector2 orientationDelta;
-        
-        public enum Button
-        {
-            Jump = 0,
-            Run = 1,
-            Shoot = 2,
-            Aim = 3,
-        }
+        public Vector2 mouseDelta;
     }
 }
