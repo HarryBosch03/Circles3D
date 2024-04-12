@@ -69,6 +69,13 @@ namespace Circles3D.Runtime.Damage
                 currentPartialBuffer = maxBuffer;
             }
             
+            RegenTick();
+
+            HealthChanged();
+        }
+
+        protected virtual void RegenTick()
+        {
             var healthy = currentHealth >= maxHealth && currentBuffer >= maxBuffer;
             if (!healthy && alive)
             {
@@ -92,16 +99,14 @@ namespace Circles3D.Runtime.Damage
             {
                 regenTimer = 0f;
             }
-            
-            HealthChanged();
         }
 
         private void UpdateFromStats()
         {
             if (statboard)
             {
-                maxHealth = stats.maxHealth;
-                maxBuffer = stats.maxBuffer;
+                maxHealth = (int)stats.maxHealth;
+                maxBuffer = (int)stats.maxBuffer;
             }
             else
             {

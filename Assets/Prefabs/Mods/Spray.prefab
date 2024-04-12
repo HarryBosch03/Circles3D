@@ -42,12 +42,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 1653254356884739263}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9b27a4fedbf41eeba9974092bf45b63, type: 3}
+  m_Script: {fileID: 11500000, guid: 45af7e920135496c9f17b73f5507c7a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   displayName: Machine Gun Conversion Kit
   description: 
-  changes: []
+  changes:
+  - fieldName: damage
+    changeType: 0
+    value: -0.6
+  - fieldName: spray
+    changeType: 1
+    value: 2
+  - fieldName: attackSpeed
+    changeType: 0
+    value: 4
+  - fieldName: magazineSize
+    changeType: 1
+    value: 8
+  - fieldName: reloadTime
+    changeType: 1
+    value: 0.5
+  - fieldName: recoil
+    changeType: 0
+    value: 0.2
+  weaponAddition: {fileID: 0}
 --- !u!114 &-7564249265819527465
 MonoBehaviour:
   m_ObjectHideFlags: 0

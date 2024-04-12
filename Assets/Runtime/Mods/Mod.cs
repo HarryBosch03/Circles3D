@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Circles3D.Runtime.Player;
 using Circles3D.Runtime.Stats;
 using Circles3D.Runtime.Weapons;
@@ -8,14 +10,14 @@ using UnityEngine;
 
 namespace Circles3D.Runtime.Mods
 {
-    public abstract class Mod : NetworkBehaviour
+    public class Mod : NetworkBehaviour
     {
         [Space(20)]
         public string displayName;
-        [TextArea] public string description;
+        public string description;
         public List<StatChange> changes = new();
         public GameObject weaponAddition;
-
+        
         public StatBoard statboard { get; private set; }
         public PlayerAvatar player { get; private set; }
         public Gun gun => player.gun;
@@ -24,6 +26,15 @@ namespace Circles3D.Runtime.Mods
         public string identifier => ValidateIdentity(name);
         private static string ValidateIdentity(string identifier) => identifier.ToLower().Replace(" ", "");
         public bool IdentifiesAs(string identifier) => ValidateIdentity(identifier) == this.identifier;
+
+        protected virtual void Awake()
+        {
+            foreach (var change in changes)
+            {
+                change.Validate();
+            }
+        }
+
 
         public string FormatName()
         {
@@ -45,6 +56,9 @@ namespace Circles3D.Runtime.Mods
             {
                 displayName = FormatName();
             }
+
+            var order = StatBoard.Stats.Metadata.Keys.ToList();
+            changes = changes.OrderBy(e => order.IndexOf(e.fieldName)).ToList();
         }
 
         public void SetParent(StatBoard statboard)
@@ -97,8 +111,13 @@ namespace Circles3D.Runtime.Mods
             Projectile.ProjectileHitEvent -= OnProjectileHit;
         }
 
-        public abstract void Apply(ref StatBoard.Stats stats);
-
+        public virtual void Apply(ref StatBoard.Stats stats)
+        {
+            foreach (var change in changes)
+            {
+                change.Apply(ref stats);
+            }
+        }
 
         private void OnProjectileHit(Projectile projectile, RaycastHit hit)
         {
@@ -108,18 +127,80 @@ namespace Circles3D.Runtime.Mods
         public virtual void ProjectileHit(Projectile projectile, RaycastHit hit) { }
         public virtual void ProjectileTick(Projectile projectile) { }
 
+        public string GetChangeList()
+        {
+            var str = "";
+            foreach (var change in changes)
+            {
+                str += $"{change}\n";
+            }
+
+            return str;
+        }
+        
         [Serializable]
         public struct StatChange
         {
-            private string statName;
-            private string change;
-            private Polarity polarity;
+            public string fieldName;
+            public ChangeType changeType;
+            public float value;
+            
+            public StatBoard.Stats.StatMetadata metadata;
+            public FieldInfo field;
 
-            public enum Polarity
+            public StatChange(string fieldName, ChangeType changeType, float value) : this()
             {
-                Positive,
-                Negative,
-                Neutral
+                this.fieldName = fieldName;
+                this.changeType = changeType;
+                this.value = value;
+            }
+
+            public void Validate()
+            {
+                metadata = StatBoard.Stats.GetMetadata(fieldName);
+                field = GetField(fieldName);
+            }
+
+            private static FieldInfo GetField(string fieldName) => typeof(StatBoard.Stats).GetField(fieldName);
+
+            public void Apply(ref StatBoard.Stats stats)
+            {
+                if (field == null)
+                {
+                    throw new Exception($"Could not apply stat change to \"{fieldName}\", FieldInfo is null");
+                }
+                
+                var value = (float)field.GetValue(stats);
+                switch (changeType)
+                {
+                    case ChangeType.Percentage:
+                        value += value * this.value;
+                        break;
+                    case ChangeType.Constant:
+                        value += this.value;
+                        break;
+                }
+
+                field.SetValue(stats, value);
+            }
+
+            public enum ChangeType
+            {
+                Percentage,
+                Constant,
+            }
+
+            public override string ToString()
+            {
+                var name = StatBoard.Stats.GetMetadata(fieldName);
+                if (name == null) return null;
+
+                return changeType switch
+                {
+                    ChangeType.Percentage => $"{(value > 0 ? "+" : "")}{value:P0}% {name}",
+                    ChangeType.Constant => $"{(value > 0 ? "+" : "")}{value:G0} {name}",
+                    _ => throw new ArgumentOutOfRangeException()
+                };
             }
         }
     }

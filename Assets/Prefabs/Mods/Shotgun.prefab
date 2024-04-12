@@ -42,12 +42,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 2457415845008101682}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ff307b3c0b54ccd8bc6d0b1191bb03e, type: 3}
+  m_Script: {fileID: 11500000, guid: 45af7e920135496c9f17b73f5507c7a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   displayName: Shotgun Conversion Kit
   description: 
-  changes: []
+  changes:
+  - fieldName: damage
+    changeType: 0
+    value: -0.65
+  - fieldName: bulletCount
+    changeType: 1
+    value: 8
+  - fieldName: attackSpeed
+    changeType: 0
+    value: -0.4
+  - fieldName: magazineSize
+    changeType: 1
+    value: -4
+  - fieldName: spray
+    changeType: 1
+    value: 4
+  - fieldName: reloadTime
+    changeType: 1
+    value: 0.5
+  weaponAddition: {fileID: 0}
 --- !u!114 &4113019176201547991
 MonoBehaviour:
   m_ObjectHideFlags: 0

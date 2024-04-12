@@ -10,16 +10,13 @@ namespace Circles3D.Runtime.Stats
     {
         public ModList modList;
         public Stats baseStats = Stats.Defaults;
-        
+
         [Networked] private Stats evaluatedInternal { get; set; }
         public Stats evaluated => Runner ? evaluatedInternal : baseStats;
-     
+
         public List<Mod> mods = new();
 
-        public override void Spawned()
-        {
-            UpdateStats();
-        }
+        public override void Spawned() { UpdateStats(); }
 
         public override void FixedUpdateNetwork() { UpdateStats(); }
 
@@ -85,7 +82,7 @@ namespace Circles3D.Runtime.Stats
                 moveSpeed = 8f,
                 acceleration = 10f,
                 gravity = 1f,
-                
+
                 damage = 45,
                 knockback = 0f,
                 bulletSpeed = 200f,
@@ -100,27 +97,68 @@ namespace Circles3D.Runtime.Stats
                 projectileLifetime = 5f,
             };
 
+            public static readonly Dictionary<string, StatMetadata> Metadata = new Dictionary<string, StatMetadata>()
+            {
+                { nameof(maxHealth), new StatMetadata("Max Health") },
+                { nameof(maxBuffer), new StatMetadata("Max Buffer") },
+                { nameof(moveSpeed), new StatMetadata("Move Speed") },
+                { nameof(acceleration), new StatMetadata("Move Acceleration") },
+                { nameof(gravity), new StatMetadata("Player Gravity", StatMetadata.Connotation.Neutral) },
+                { nameof(damage), new StatMetadata("Damage") },
+                { nameof(knockback), new StatMetadata("Knockback") },
+                { nameof(bulletSpeed), new StatMetadata("Bullet Speed") },
+                { nameof(bulletCount), new StatMetadata("Bullet Count") },
+                { nameof(spray), null },
+                { nameof(attackSpeed), new StatMetadata("Attack Speed") },
+                { nameof(magazineSize), new StatMetadata("Magazine Size") },
+                { nameof(reloadTime), new StatMetadata("Reload Time", StatMetadata.Connotation.Reversed) },
+                { nameof(recoil), null },
+                { nameof(bounces), new StatMetadata("Bounces") },
+                { nameof(homing), null },
+                { nameof(projectileLifetime), null },
+            };
+
+            public static StatMetadata GetMetadata(string fieldName) => Metadata.GetValueOrDefault(fieldName);
+
             [Header("Player Stats")]
-            public int maxHealth;
-            public int maxBuffer;
+            public float maxHealth;
+            public float maxBuffer;
             public float moveSpeed;
             public float acceleration;
             public float gravity;
-            
+
             [Header("Projectile Stats")]
             public float damage;
             public float knockback;
-            [FormerlySerializedAs("projectileSpeed")] 
             public float bulletSpeed;
-            public int bulletCount;
+            public float bulletCount;
             public float spray;
             public float attackSpeed;
-            public int magazineSize;
+            public float magazineSize;
             public float reloadTime;
             public float recoil;
-            public int bounces;
+            public float bounces;
             public float homing;
             public float projectileLifetime;
+
+            public class StatMetadata
+            {
+                public string displayName;
+                public Connotation connotation;
+
+                public StatMetadata(string displayName, Connotation connotation = Connotation.Normal)
+                {
+                    this.displayName = displayName;
+                    this.connotation = connotation;
+                }
+                
+                public enum Connotation
+                {
+                    Normal,
+                    Reversed,
+                    Neutral,
+                }
+            }
         }
     }
 }

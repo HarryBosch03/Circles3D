@@ -141,7 +141,7 @@ namespace Circles3D.Runtime.Weapons
         private void Start()
         {
             reloadTimer = stats.reloadTime;
-            currentMagazine = stats.magazineSize;
+            currentMagazine = (int)stats.magazineSize;
         }
 
         private void FixedUpdate()
@@ -162,7 +162,7 @@ namespace Circles3D.Runtime.Weapons
 
         private void UpdateUI()
         {
-            if (ammoText) ammoText.text = $"{currentMagazine}/{stats.magazineSize}";
+            if (ammoText) ammoText.text = $"{currentMagazine}/{stats.magazineSize:G0}";
             if (reloadProgress)
             {
                 reloadProgress.fillAmount = reloadTimer / stats.reloadTime;
@@ -191,7 +191,7 @@ namespace Circles3D.Runtime.Weapons
             reloadTimer += Time.deltaTime;
             if (reloadTimer > stats.reloadTime)
             {
-                currentMagazine = stats.magazineSize;
+                currentMagazine = (int)stats.magazineSize;
             }
         }
 
@@ -217,8 +217,8 @@ namespace Circles3D.Runtime.Weapons
             args.damage = damage;
             args.speed = stats.bulletSpeed;
             args.sprayAngle = stats.spray;
-            args.count = stats.bulletCount;
-            args.bounces = stats.bounces;
+            args.count = (int)stats.bulletCount;
+            args.bounces = (int)stats.bounces;
             args.homing = stats.homing;
             args.lifetime = stats.projectileLifetime;
 

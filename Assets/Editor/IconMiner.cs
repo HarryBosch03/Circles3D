@@ -4,7 +4,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace Editor
+namespace Circles3D.Editor
 {
     public static class IconMiner
     {

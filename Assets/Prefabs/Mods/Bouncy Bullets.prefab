@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1423692484860631383}
   - component: {fileID: 3323841396201867742}
   m_Layer: 0
-  m_Name: Mayhem
+  m_Name: Bouncy Bullets
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -42,12 +42,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 3724664227047001604}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57570d3f6e7b4343891d1226a92c4f6c, type: 3}
+  m_Script: {fileID: 11500000, guid: 45af7e920135496c9f17b73f5507c7a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   displayName: Bouncy Bullets
   description: 
-  changes: []
+  changes:
+  - fieldName: bounces
+    changeType: 1
+    value: 2
+  - fieldName: damage
+    changeType: 0
+    value: -0.2
+  - fieldName: spray
+    changeType: 1
+    value: 2
+  - fieldName: bulletSpeed
+    changeType: 0
+    value: -0.2
+  weaponAddition: {fileID: 0}
 --- !u!114 &3323841396201867742
 MonoBehaviour:
   m_ObjectHideFlags: 0

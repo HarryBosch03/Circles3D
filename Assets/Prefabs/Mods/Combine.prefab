@@ -42,12 +42,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 2277488973179977612}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f54deae72b1a400db1b7ff74c396a018, type: 3}
+  m_Script: {fileID: 11500000, guid: 45af7e920135496c9f17b73f5507c7a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  displayName: Double Barrel
+  displayName: Combine
   description: 
-  changes: []
+  changes:
+  - fieldName: damage
+    changeType: 0
+    value: 2
+  - fieldName: magazineSize
+    changeType: 1
+    value: -3
+  - fieldName: reloadTime
+    changeType: 1
+    value: 0.5
+  - fieldName: attackSpeed
+    changeType: 0
+    value: -0.2
+  weaponAddition: {fileID: 0}
 --- !u!114 &-5355204800567568230
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -40,6 +40,11 @@ namespace Circles3D.Runtime.Damage
             }
         }
 
+        protected override void RegenTick()
+        {
+            if (PlayerAvatar.allowPlayerHealthRegeneration ?? true) base.RegenTick();
+        }
+
         private void OnGUI()
         {
             var color = new Color(1f, 0f, 0f, damageOverlayOpacity.Evaluate(hurtAnimationTime));

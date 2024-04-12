@@ -3,7 +3,7 @@ using System.IO;
 using UnityEditor;
 using Debug = UnityEngine.Debug;
 
-namespace Editor
+namespace Circles3D.Editor
 {
     public static class Actions
     {

@@ -42,12 +42,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 4979124184283847094}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9df3f75cd0e4200ac2b34bd5691f00a, type: 3}
+  m_Script: {fileID: 11500000, guid: 45af7e920135496c9f17b73f5507c7a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   displayName: Guide to Gun Safety
   description: 
-  changes: []
+  changes:
+  - fieldName: reloadTime
+    changeType: 0
+    value: -0.5
   weaponAddition: {fileID: 0}
 --- !u!114 &6000418785381265824
 MonoBehaviour:
@@ -63,7 +66,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SortKey: 1974017532
   ObjectInterest: 1
-  Flags: 1
+  Flags: 262145
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 5049504963129070943}

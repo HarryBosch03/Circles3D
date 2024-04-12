@@ -45,6 +45,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31b3a9147d484489a7390da2c59ef7c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  displayName: Grenade Bullets
+  description: 
+  changes:
+  - fieldName: bulletSpeed
+    changeType: 0
+    value: -0.6
+  - fieldName: damage
+    changeType: 0
+    value: -0.2
+  - fieldName: reloadTime
+    changeType: 1
+    value: 0.5
+  weaponAddition: {fileID: 0}
   bombPrefab: {fileID: 9075877441033653858, guid: f093c5922aee67445a592aa4856b3a9a, type: 3}
 --- !u!114 &4186926998081892698
 MonoBehaviour:

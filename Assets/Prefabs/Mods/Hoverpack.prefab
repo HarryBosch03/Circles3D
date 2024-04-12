@@ -48,6 +48,7 @@ MonoBehaviour:
   displayName: Hoverpack
   description: 
   changes: []
+  weaponAddition: {fileID: 0}
   strength: 15
 --- !u!114 &3070193858532472774
 MonoBehaviour:
@@ -63,7 +64,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SortKey: 2033696315
   ObjectInterest: 1
-  Flags: 1
+  Flags: 262145
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 3033757959666688337}

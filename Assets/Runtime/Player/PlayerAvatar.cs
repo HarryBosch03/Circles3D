@@ -46,6 +46,7 @@ namespace Circles3D.Runtime.Player
         public bool activeViewer { get; set; }
         public float mass => 80f;
 
+        public static bool? allowPlayerHealthRegeneration { get; set; } = null;
         public static event Action<PlayerAvatar, GameObject, DamageArgs, Vector3, Vector3> DeathEvent;
         
         private void Awake()

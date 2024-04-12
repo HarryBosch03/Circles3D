@@ -14,16 +14,24 @@ namespace Circles3D.Runtime.Gamemodes
         public NetworkPrefabRef playerPrefab;
         public string iconName;
 
+        [Space]
+        public bool allowPlayerHealthRegeneration;
+
         [Networked, Capacity(8)]
         public NetworkDictionary<PlayerRef, PlayerInstance> players => default;
 
         public static Gamemode current { get; private set; }
 
-        protected virtual void OnEnable() { current = this; }
+        protected virtual void OnEnable()
+        {
+            current = this;
+            PlayerAvatar.allowPlayerHealthRegeneration = allowPlayerHealthRegeneration;
+        }
 
         protected virtual void OnDisable()
         {
             if (current == this) current = null;
+            PlayerAvatar.allowPlayerHealthRegeneration = null;
         }
 
         public abstract bool CanRespawn(PlayerInstance player);
