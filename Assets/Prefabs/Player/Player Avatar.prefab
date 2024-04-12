@@ -135,10 +135,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   feltRecoil: 0.5
   ragdollCamSmoothing: 0.15
+  aimMode: 0
   baseFieldOfView: 90
   aimFieldOfView: 60
   baseViewportFieldOfView: 43
-  aimViewportFieldOfView: 10
+  aimViewportFieldOfView: 20
 --- !u!114 &116858673824452871
 MonoBehaviour:
   m_ObjectHideFlags: 0

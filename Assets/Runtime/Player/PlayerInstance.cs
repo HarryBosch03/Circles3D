@@ -34,6 +34,7 @@ namespace Circles3D.Runtime.Player
         {
             mainCam = Camera.main;
             avatar = GetComponentInChildren<PlayerAvatar>();
+            avatar.owningPlayerInstance = this;
         }
 
         private void Start()

@@ -10927,9 +10927,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 1357630650994864792}
   pivot: {fileID: 608501735072486902}
-  viewPosition: {x: 16, y: -1, z: 59}
+  viewPosition: {x: 12, y: -1, z: 40}
   viewRotation: {x: 0, y: 0, z: 10}
-  aimPosition: {x: 0, y: 0, z: 70}
+  aimPosition: {x: 0, y: 0, z: 60}
   parentOriginTranslation: {x: 0, y: 0, z: 0}
 --- !u!4 &608501735072486902 stripped
 Transform:

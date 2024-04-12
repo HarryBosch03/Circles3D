@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using Circles3D.Runtime.Damage;
 using Circles3D.Runtime.Player;
 using Fusion;

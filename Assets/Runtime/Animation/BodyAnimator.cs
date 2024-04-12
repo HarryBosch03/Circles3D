@@ -27,12 +27,14 @@ namespace Circles3D.Runtime.Animation
 
         private void Update()
         {
+            if (!player.Object) return;
+
             renderer.enabled = !player.activeViewer;
-        
+            
             var twist = Quaternion.Euler(90f + torsoTwist, 90f, 90f);
             root.localRotation = twist;
-        
-            var view = player.movement.orientation;
+            
+            var view = player ? player.movement.orientation : default;
 
             torso.localRotation = Quaternion.Euler(view.x * 0.5f, 0f, 0f);
             head.rotation = Quaternion.Euler(view.x, view.y, 0f);

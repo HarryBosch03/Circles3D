@@ -142,6 +142,8 @@ namespace Circles3D.Runtime.Player
 
         private void FixedUpdate()
         {
+            if (!Object) return;
+            
             transform.position = position;
             
             interpolationPosition1 = interpolationPosition0;
@@ -150,6 +152,8 @@ namespace Circles3D.Runtime.Player
 
         private void Update()
         {
+            if (!Object) return;
+            
             if (onGround && !wasOnGround)
             {
                 landSound.set3DAttributes(gameObject.To3DAttributes());
@@ -204,6 +208,8 @@ namespace Circles3D.Runtime.Player
 
         private void LateUpdate()
         {
+            if (!Object) return;
+
             transform.rotation = Quaternion.Euler(0f, orientation.y, 0f);
 
             view.position = Vector3.Lerp(interpolationPosition1, interpolationPosition0, (Time.time - Time.fixedTime) / Time.fixedDeltaTime) + Vector3.up * cameraHeight;

@@ -32,6 +32,8 @@ namespace Circles3D.Runtime.Weapons
 
         private void LateUpdate()
         {
+            if (!player.Object) return;
+            
             groundedBlend = Mathf.MoveTowards(groundedBlend, player.movement.onGround ? 1f : 0f, Time.deltaTime * 10f);
 
             ApplySmoothing();

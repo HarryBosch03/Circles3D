@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Circles3D.Runtime.Damage;
 using Circles3D.Runtime.Networking;
 using Circles3D.Runtime.Stats;
@@ -17,6 +19,7 @@ namespace Circles3D.Runtime.Player
         [Space]
         public float feltRecoil = 1.0f;
         public float ragdollCamSmoothing = 1f;
+        public AimMode aimMode = AimMode.Hold;
 
         [Space]
         public float baseFieldOfView = 90f;
@@ -71,6 +74,11 @@ namespace Circles3D.Runtime.Player
             SetModelVisibility(false);
 
             Runner.SetIsSimulated(Object, true);
+
+            if (!owningPlayerInstance && HasStateAuthority)
+            {
+                SpawnRpc(transform.position, transform.rotation);
+            }
         }
 
         private void SetModelVisibility(bool enabled) { model.gameObject.SetActive(enabled); }
@@ -92,7 +100,15 @@ namespace Circles3D.Runtime.Player
                     gun.SetVisible(true, activeViewer);
 
                     if (input.buttons.IsSet(NetInput.Shoot)) gun.Shoot();
-                    gun.aiming = input.buttons.IsSet(NetInput.Aim);
+                    switch (aimMode)
+                    {
+                        case AimMode.Hold:
+                            gun.aiming = input.buttons.IsSet(NetInput.Aim);
+                            break;
+                        case AimMode.Toggle:
+                            if (input.buttons.WasPressed(previousButtons, NetInput.Aim)) gun.aiming = !gun.aiming;
+                            break;
+                    }
                     gun.projectileSpawnPoint = view;
 
                     var recoil = gun.recoilData.angularVelocity;
@@ -165,6 +181,21 @@ namespace Circles3D.Runtime.Player
             SetModelVisibility(false);
 
             DeathEvent?.Invoke(this, invoker, args, point, velocity);
+
+            if (HasStateAuthority && !owningPlayerInstance)
+            {
+                AutoRespawnDelayed();
+            }
+        }
+
+        private void AutoRespawnDelayed()
+        {
+            StartCoroutine(routine());
+            IEnumerator routine()
+            {
+                yield return new WaitForSeconds(2f);
+                SpawnRpc(transform.position, transform.rotation);
+            }
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All, InvokeLocal = true)]
@@ -182,5 +213,11 @@ namespace Circles3D.Runtime.Player
 
         [ContextMenu("Toggle Active Viewer")]
         private void ToggleActiveViewer() => activeViewer = !activeViewer;
+        
+        public enum AimMode
+        {
+            Hold,
+            Toggle
+        }
     }
 }
