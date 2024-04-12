@@ -26,16 +26,7 @@ namespace Circles3D.Runtime.Mods
         public string identifier => ValidateIdentity(name);
         private static string ValidateIdentity(string identifier) => identifier.ToLower().Replace(" ", "");
         public bool IdentifiesAs(string identifier) => ValidateIdentity(identifier) == this.identifier;
-
-        protected virtual void Awake()
-        {
-            foreach (var change in changes)
-            {
-                change.Validate();
-            }
-        }
-
-
+        
         public string FormatName()
         {
             var input = GetType().Name;
@@ -155,20 +146,11 @@ namespace Circles3D.Runtime.Mods
                 this.value = value;
             }
 
-            public void Validate()
-            {
-                metadata = StatBoard.Stats.GetMetadata(fieldName);
-                field = GetField(fieldName);
-            }
-
             private static FieldInfo GetField(string fieldName) => typeof(StatBoard.Stats).GetField(fieldName);
 
             public void Apply(ref StatBoard.Stats stats)
             {
-                if (field == null)
-                {
-                    throw new Exception($"Could not apply stat change to \"{fieldName}\", FieldInfo is null");
-                }
+                if (field == null) field = GetField(fieldName);
                 
                 var value = (float)field.GetValue(stats);
                 switch (changeType)
@@ -181,7 +163,9 @@ namespace Circles3D.Runtime.Mods
                         break;
                 }
 
-                field.SetValue(stats, value);
+                var reference = (object)stats;
+                field.SetValue(reference, value);
+                stats = (StatBoard.Stats)reference;
             }
 
             public enum ChangeType
