@@ -41,6 +41,7 @@ Assets/Plugins/Editor/JetBrains*
 /[Bb]uild/
 /[Bb]uilds/
 /[Ll]ogs/
+/[Ss]creenshots/
 Assets/AssetStoreTools*
 # Unity local user project setting
 [Uu]ser[Ss]ettings/
