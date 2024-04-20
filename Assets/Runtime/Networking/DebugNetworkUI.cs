@@ -62,7 +62,7 @@ namespace Circles3D.Runtime.Networking
             {
                 sceneInfo.AddSceneRef(scene, LoadSceneMode.Additive);
             }
-
+            
             await netRunnerInstance.StartGame(new StartGameArgs()
             {
                 SessionName = sessionName,

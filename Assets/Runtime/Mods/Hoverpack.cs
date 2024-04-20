@@ -10,8 +10,6 @@ namespace Circles3D.Runtime.Mods
 
         private NetInput input;
         public bool active => player && !player.movement.onGround && player.gun.aiming;
-        
-        public override void Apply(ref StatBoard.Stats stats) { }
 
         public override void FixedUpdateNetwork()
         {

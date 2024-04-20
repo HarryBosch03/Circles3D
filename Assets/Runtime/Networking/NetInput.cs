@@ -9,6 +9,7 @@ namespace Circles3D.Runtime.Networking
         public const int Run = 1;
         public const int Shoot = 2;
         public const int Aim = 3;
+        public const int Block = 4;
         
         public NetworkButtons buttons;
         public Vector2 movement;

@@ -50,7 +50,7 @@ MonoBehaviour:
   changes:
   - fieldName: maxHealth
     changeType: 1
-    value: 100
+    value: -100
   - fieldName: maxBuffer
     changeType: 1
     value: 4

@@ -17,12 +17,19 @@ namespace Circles3D.Runtime.Weapons
         public float vfxLifetime;
 
         private float age;
+        private bool dead;
 
         [HideInInspector] public GameObject owner;
 
         private void OnEnable()
         {
             if (vfx) vfx.SetActive(false);
+            if (dead) Destroy(gameObject);
+        }
+
+        private void OnDisable()
+        {
+            dead = true;
         }
 
         private void FixedUpdate()

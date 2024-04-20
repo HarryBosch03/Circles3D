@@ -10,7 +10,10 @@ namespace Circles3D.Runtime.Mods
 
         public override void ProjectileHit(Projectile projectile, RaycastHit hit)
         {
-            Instantiate(bombPrefab, hit.point, Quaternion.identity, hit.collider.transform);
+            if (hit.collider.gameObject.activeInHierarchy)
+            {
+                Instantiate(bombPrefab, hit.point, Quaternion.identity, hit.collider.transform);
+            }
         }
     }
 }
