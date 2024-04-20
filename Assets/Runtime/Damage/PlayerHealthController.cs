@@ -12,6 +12,7 @@ namespace Circles3D.Runtime.Damage
         public GameObject ragdollPrefab;
         public AnimationCurve damageFlinch;
         public AnimationCurve damageOverlayOpacity;
+        public OverlayFeatures overlayFeatures;
 
         private Transform model;
         private float hurtAnimationTime = float.MaxValue;
@@ -36,7 +37,7 @@ namespace Circles3D.Runtime.Damage
                 player.movement.cameraDutch = damageFlinch.Evaluate(hurtAnimationTime);
                 hurtAnimationTime += Time.deltaTime;
 
-                HurtOverlayFeature.Weight = 1f - GetHealthFactor();
+                overlayFeatures.hurtPass.weight = 1f - GetHealthFactor();
             }
         }
 

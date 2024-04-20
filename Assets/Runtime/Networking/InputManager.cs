@@ -54,6 +54,7 @@ namespace Circles3D.Runtime.Networking
                 buttons.Set(NetInput.Run, kb.leftShiftKey.isPressed);
                 buttons.Set(NetInput.Shoot, m.leftButton.isPressed);
                 buttons.Set(NetInput.Aim, m.rightButton.isPressed);
+                buttons.Set(NetInput.Block, m.middleButton.isPressed);
             }
 
             input.buttons = new NetworkButtons(input.buttons.Bits | buttons.Bits);

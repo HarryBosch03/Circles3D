@@ -4,6 +4,7 @@ using UnityEngine.Serialization;
 
 namespace Circles3D.Runtime.Weapons
 {
+    [DefaultExecutionOrder(200)]
     public class ViewAnimator : MonoBehaviour
     {
         public float translationSway;

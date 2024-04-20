@@ -47,7 +47,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Hoverpack
   description: 
-  changes: []
+  changes:
+  - fieldName: maxHealth
+    changeType: 1
+    value: 40
   weaponAddition: {fileID: 0}
   strength: 15
 --- !u!114 &3070193858532472774
