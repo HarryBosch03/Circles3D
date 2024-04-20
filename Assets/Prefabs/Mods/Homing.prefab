@@ -48,18 +48,18 @@ MonoBehaviour:
   displayName: Homing Bullets
   description: 
   changes:
-  - fieldName: homing
-    changeType: 1
-    value: 6
-  - fieldName: bulletSpeed
-    changeType: 0
-    value: -0.4
   - fieldName: damage
     changeType: 0
     value: -0.2
+  - fieldName: bulletSpeed
+    changeType: 0
+    value: -0.4
   - fieldName: reloadTime
     changeType: 0
     value: 0.5
+  - fieldName: homing
+    changeType: 1
+    value: 3
   weaponAddition: {fileID: 0}
 --- !u!114 &-6903990235927640945
 MonoBehaviour:

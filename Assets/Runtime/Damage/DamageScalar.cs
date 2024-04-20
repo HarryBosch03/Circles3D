@@ -16,8 +16,10 @@ namespace Circles3D.Runtime.Damage
         public int maxHealth => parent.maxHealth;
         public int maxBuffer => parent.maxBuffer;
         public float GetHealthFactor() => parent.GetHealthFactor();
+        public bool isSoft => parent.isSoft;
         
         public event Action HealthChangedEvent;
+        public event Action<GameObject, DamageArgs, Vector3, Vector3, Vector3> damageEvent;
         
         private void Awake()
         {
@@ -32,17 +34,19 @@ namespace Circles3D.Runtime.Damage
         private void OnEnable()
         {
             parent.HealthChangedEvent += HealthChangedEvent;
+            parent.damageEvent += damageEvent;
         }
 
         private void OnDisable()
         {
             parent.HealthChangedEvent -= HealthChangedEvent;
+            parent.damageEvent -= damageEvent;
         }
-
-        public void Damage(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity, out IDamageable.DamageReport report)
+        
+        public void Damage(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity, Vector3 normal, out IDamageable.DamageReport report)
         {
             args.damageScale *= damageScale;
-            parent.Damage(invoker, args, point, velocity, out report);
+            parent.Damage(invoker, args, point, velocity, normal, out report);
         }
     }
 }

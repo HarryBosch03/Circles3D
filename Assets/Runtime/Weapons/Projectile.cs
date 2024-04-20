@@ -194,7 +194,7 @@ namespace Circles3D.Runtime.Weapons
 
             ProjectileHitEvent?.Invoke(this, hit);
             
-            if (hitFX) Instantiate(hitFX, hit.point, Quaternion.LookRotation(hit.normal));
+            if (hitFX) Instantiate(hitFX, hit.point, Quaternion.LookRotation(Vector3.Reflect(velocity.normalized, hit.normal)));
             if (!dead) return;
 
             transform.position = hit.point;

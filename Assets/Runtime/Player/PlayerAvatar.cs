@@ -13,7 +13,7 @@ namespace Circles3D.Runtime.Player
 {
     [SelectionBase]
     [DefaultExecutionOrder(100)]
-    [RequireComponent(typeof(BipedController))]
+    [RequireComponent(typeof(PlayerMovement))]
     public class PlayerAvatar : NetworkBehaviour
     {
         [Space]
@@ -37,7 +37,7 @@ namespace Circles3D.Runtime.Player
 
         [Networked] public NetInput input { get; set; }
         [Networked] public NetworkButtons previousButtons { get; set; }
-        public BipedController movement { get; private set; }
+        public PlayerMovement movement { get; private set; }
         public PlayerHealthController health { get; private set; }
         public StatBoard statboard { get; set; }
         public Transform view { get; private set; }
@@ -55,7 +55,7 @@ namespace Circles3D.Runtime.Player
             viewportCam = mainCam.transform.GetChild(0).GetComponent<Camera>();
 
             gun = GetComponentInChildren<Gun>();
-            movement = GetComponent<BipedController>();
+            movement = GetComponent<PlayerMovement>();
             health = GetComponent<PlayerHealthController>();
             statboard = GetComponent<StatBoard>();
 

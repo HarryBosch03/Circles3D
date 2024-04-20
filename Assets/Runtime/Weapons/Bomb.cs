@@ -72,7 +72,7 @@ namespace Circles3D.Runtime.Weapons
                             var damageable = hit.collider.GetComponentInParent<IDamageable>();
                             if (damageable != null && !ignoreList.Contains(damageable))
                             {
-                                damageable.Damage(owner, new DamageArgs((int)damage.Evaluate(hit.distance), knockback), hit.point, ray.direction, out _);
+                                IDamageable.Damage(owner, hit, new DamageArgs((int)damage.Evaluate(hit.distance), knockback), Vector3.zero, out _);
                                 ignoreList.Add(damageable);
                             }
                         }

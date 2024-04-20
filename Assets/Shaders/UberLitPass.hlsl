@@ -65,7 +65,7 @@ half4 UberLitPassFragment(Varyings input) : SV_Target
 
     half4 sample = SAMPLE_TEX(_Albedo, input.uv) * _BaseColor;
     half3 albedo = sample.rgb;
-    half alpha = sample.a * _Alpha;
+    half alpha = sample.a * _Alpha * input.color.a;
     
     clipDither(alpha, input.positionCS);
     

@@ -23,6 +23,7 @@ namespace Circles3D.Runtime.Damage
 
         [Networked]
         private float regenTimer { get; set; }
+        public bool soft => true;
 
         public StatBoard.Stats stats => statboard.evaluated;
         public int currentHealth => Mathf.FloorToInt(currentPartialHealth);
@@ -32,8 +33,10 @@ namespace Circles3D.Runtime.Damage
         [Networked] public int maxHealth { get; private set; } 
         [Networked] public int maxBuffer { get; private set; }
         [Networked] public NetworkBool alive { get; private set; }
+        public bool isSoft => true;
 
         public event Action HealthChangedEvent;
+        public event Action<GameObject, DamageArgs, Vector3, Vector3, Vector3> damageEvent;
         
         public event Action<GameObject, DamageArgs, Vector3, Vector3> DiedEvent;
 
@@ -114,11 +117,13 @@ namespace Circles3D.Runtime.Damage
                 maxBuffer = maxBuffer_Internal;
             }
         }
-
-        public virtual void Damage(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity, out IDamageable.DamageReport report)
+        
+        public virtual void Damage(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity, Vector3 normal, out IDamageable.DamageReport report)
         {
             report = IDamageable.DamageReport.Failed;
             if (!alive) return;
+
+            damageEvent?.Invoke(invoker, args, point, velocity, normal);
             
             regenTimer = 0f;
 
@@ -126,7 +131,7 @@ namespace Circles3D.Runtime.Damage
             report.finalDamage = args;
             report.lethal = false;
             report.failed = false;
-
+            
             if (currentBuffer > 0) ChangeBuffer(-1);
             else ChangeHealth(-args.damage);
 
@@ -136,7 +141,7 @@ namespace Circles3D.Runtime.Damage
                 Kill(invoker, args, point, velocity);
             }
         }
-
+        
         public void ChangeHealth(float offset) => SetHealth(currentPartialHealth + offset);
 
         public void SetHealth(float health)
@@ -164,6 +169,7 @@ namespace Circles3D.Runtime.Damage
         public virtual void Kill(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
         {
             if (invulnerable) return;
+
             DiedEvent?.Invoke(invoker, args, point, velocity);
             alive = false;
         }

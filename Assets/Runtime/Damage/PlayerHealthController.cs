@@ -51,9 +51,9 @@ namespace Circles3D.Runtime.Damage
             GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), Texture2D.whiteTexture, ScaleMode.StretchToFill, true, 0f, color, Vector4.zero, Vector4.zero);
         }
 
-        public override void Damage(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity, out IDamageable.DamageReport report)
+        public override void Damage(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity, Vector3 normal, out IDamageable.DamageReport report)
         {
-            base.Damage(invoker, args, point, velocity, out report);
+            base.Damage(invoker, args, point, velocity, normal, out report);
             if (HasStateAuthority) RpcNotifyDamage(report);
         }
 
@@ -62,11 +62,14 @@ namespace Circles3D.Runtime.Damage
 
         public override void Kill(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
         {
-            var killerAvatar = invoker ? invoker.GetComponent<PlayerAvatar>() : null;
-            var killer = killerAvatar ? killerAvatar.owningPlayerInstance : null;
-            reasonForDeath = killer ? $"Killed by {killer.displayName}" : null;
+            if (!invulnerable)
+            {
+                var killerAvatar = invoker ? invoker.GetComponent<PlayerAvatar>() : null;
+                var killer = killerAvatar ? killerAvatar.owningPlayerInstance : null;
+                reasonForDeath = killer ? $"Killed by {killer.displayName}" : null;
 
-            if (HasStateAuthority) SpawnRagdollRpc(velocity * args.damage * 0.0006f, point);
+                if (HasStateAuthority) SpawnRagdollRpc(velocity * args.damage * 0.0006f, point);
+            }
 
             base.Kill(invoker, args, point, velocity);
         }

@@ -33,6 +33,8 @@ namespace Circles3D.Runtime.Player
 
         private void OnGUI()
         {
+            if (!HasInputAuthority) return;
+            
             var str = "";
             for (var i = 0; i < player.statboard.mods.Count; i++)
             {
