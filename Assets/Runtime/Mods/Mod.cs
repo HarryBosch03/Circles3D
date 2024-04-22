@@ -13,11 +13,13 @@ namespace Circles3D.Runtime.Mods
     public class Mod : NetworkBehaviour
     {
         [Space(20)]
-        public string displayName;
+        public string displayNameOverride;
+        [TextArea]
         public string description;
         public List<StatChange> changes = new();
         public GameObject weaponAddition;
-        
+
+        public string displayName => string.IsNullOrWhiteSpace(displayNameOverride) ? name : displayNameOverride;
         public StatBoard statboard { get; private set; }
         public PlayerAvatar player { get; private set; }
         public Gun gun => player.gun;
@@ -43,11 +45,6 @@ namespace Circles3D.Runtime.Mods
 
         protected virtual void OnValidate()
         {
-            if (string.IsNullOrEmpty(displayName))
-            {
-                displayName = FormatName();
-            }
-
             var order = StatBoard.Stats.Metadata.Keys.ToList();
             changes = changes.OrderBy(e => order.IndexOf(e.fieldName)).ToList();
         }

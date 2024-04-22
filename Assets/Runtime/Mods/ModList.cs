@@ -3,16 +3,25 @@ using UnityEngine;
 
 namespace Circles3D.Runtime.Mods
 {
-    [CreateAssetMenu(menuName = "Scriptable Objects/Mod List")]
-    public class ModList : ScriptableObject
+    public static class ModList
     {
-        public List<Mod> mods = new();
+        private static List<Mod> mods_Internal;
+        
+        public static List<Mod> mods
+        {
+            get
+            {
+                if (mods_Internal != null) return mods_Internal;
+                mods_Internal = new List<Mod>(Resources.LoadAll<Mod>("Mods"));
+                return mods_Internal;
+            }
+        }
 
-        public Mod Find(string identifier)
+        public static Mod Find(string name)
         {
             foreach (var mod in mods)
             {
-                if (mod.IdentifiesAs(identifier)) return mod;
+                if (mod.IdentifiesAs(name)) return mod;
             }
             return null;
         }

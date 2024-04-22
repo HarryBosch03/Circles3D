@@ -10,14 +10,16 @@ namespace Circles3D.Runtime.Damage
         public int baseDamage;
         public float damageScale;
         public float baseKnockback;
+        public bool ignoreLocationalDamage;
 
         public float knockback => damageScale * (1f + baseKnockback);
         public int damage => Mathf.Max(1, Mathf.FloorToInt(baseDamage * damageScale));
 
-        public DamageArgs(int baseDamage, float baseKnockback)
+        public DamageArgs(float baseDamage, float baseKnockback, bool ignoreLocationalDamage = false)
         {
-            this.baseDamage = baseDamage;
+            this.baseDamage = (int)baseDamage;
             this.baseKnockback = baseKnockback;
+            this.ignoreLocationalDamage = ignoreLocationalDamage;
             damageScale = 1f;
         }
     }

@@ -19,14 +19,14 @@ namespace Circles3D.Runtime.Player
         public float gravityScale = 2f;
         [Range(0f, 1f)]
         public float airMovementPenalty = 0.75f;
-        
+
         [Space]
         public float characterHeight = 1.8f;
         public float cameraHeight = 1.7f;
         public float characterRadius = 0.2f;
         public float stepHeight = 0.2f;
         public float maxWalkableSlope = 50f;
-        
+
         [Space]
         public float terminalVelocity = 100.0f;
 
@@ -38,14 +38,15 @@ namespace Circles3D.Runtime.Player
         private EventInstance landSound;
         private bool wasOnGround;
         private Vector3 force;
-        
+
         private StatBoard statboard;
         private RaycastHit groundHit;
-        
+
         private Vector3 interpolationPosition0;
         private Vector3 interpolationPosition1;
-        
+
         [Networked] public Vector3 position { get; set; }
+        [Networked] public int airJumpsLeft { get; set; }
         [Networked] public Vector3 velocity { get; set; }
         [Networked] public bool onGround { get; private set; }
         [Networked] public NetInput input { get; set; }
@@ -63,7 +64,7 @@ namespace Circles3D.Runtime.Player
             view = transform.Find("View");
 
             statboard = GetBehaviour<StatBoard>();
-            
+
             footstepSound = RuntimeManager.CreateInstance(footstepRef);
             landSound = RuntimeManager.CreateInstance(landRef);
         }
@@ -73,13 +74,14 @@ namespace Circles3D.Runtime.Player
             footstepSound.release();
             landSound.release();
         }
-        
+
         private void OnEnable()
         {
             if (HasInputAuthority)
             {
                 Cursor.lockState = CursorLockMode.Locked;
             }
+
             footstepSound.start();
         }
 
@@ -89,6 +91,7 @@ namespace Circles3D.Runtime.Player
             {
                 Cursor.lockState = CursorLockMode.None;
             }
+
             footstepSound.stop(STOP_MODE.IMMEDIATE);
         }
 
@@ -96,7 +99,7 @@ namespace Circles3D.Runtime.Player
         {
             force = gravity;
             if (GetInput(out NetInput newInput)) input = newInput;
-            
+
             orientation += ComputeOrientationDelta(input.mouseDelta);
             orientation = new Vector2
             {
@@ -111,9 +114,9 @@ namespace Circles3D.Runtime.Player
             velocity = Vector3.ClampMagnitude(velocity, terminalVelocity);
             position += velocity * Runner.DeltaTime;
             velocity += force * Runner.DeltaTime;
-            
+
             Collide();
-            
+
             prevButtons = input.buttons;
         }
 
@@ -123,7 +126,7 @@ namespace Circles3D.Runtime.Player
             collider.transform.SetParent(transform);
             collider.transform.position = position;
             collider.transform.rotation = Quaternion.identity;
-            
+
             collider.center = Vector3.up * (characterHeight + stepHeight) * 0.5f;
             collider.height = characterHeight - stepHeight;
             collider.radius = characterRadius;
@@ -133,23 +136,23 @@ namespace Circles3D.Runtime.Player
             foreach (var other in broad)
             {
                 if (other.transform.IsChildOf(transform)) continue;
-                
+
                 if (Physics.ComputePenetration(collider, collider.transform.position, collider.transform.rotation, other, other.transform.position, other.transform.rotation, out var normal, out var depth))
                 {
                     position += normal * depth;
                     velocity += normal * Mathf.Max(0f, Vector3.Dot(normal, -velocity));
                 }
             }
-            
+
             DestroyImmediate(collider.gameObject);
         }
 
         private void FixedUpdate()
         {
             if (!Object) return;
-            
+
             transform.position = position;
-            
+
             interpolationPosition1 = interpolationPosition0;
             interpolationPosition0 = position;
         }
@@ -157,7 +160,7 @@ namespace Circles3D.Runtime.Player
         private void Update()
         {
             if (!Object) return;
-            
+
             if (onGround && !wasOnGround)
             {
                 landSound.set3DAttributes(gameObject.To3DAttributes());
@@ -165,7 +168,7 @@ namespace Circles3D.Runtime.Player
             }
 
             wasOnGround = onGround;
-            
+
             footstepSound.set3DAttributes(gameObject.To3DAttributes());
             footstepSound.setParameterByName("MoveSpeed", onGround ? new Vector2(velocity.x, velocity.z).magnitude / 8f : 0f);
         }
@@ -175,16 +178,21 @@ namespace Circles3D.Runtime.Player
             var tangent = Mathf.Tan(fieldOfView * Mathf.Deg2Rad * 0.5f);
             return mouseDelta * tangent * mouseSensitivity;
         }
-        
+
         private void Jump()
         {
             var jump = input.buttons.WasPressed(prevButtons, NetInput.Jump);
-            if (jump && onGround)
+
+            if (!jump) return;
+            if (!onGround)
             {
-                velocity += Vector3.up * (Mathf.Sqrt(2f * jumpHeight * -gravity.y) - velocity.y);
+                if (airJumpsLeft > 0) airJumpsLeft--;
+                else return;
             }
+            
+            velocity += Vector3.up * (Mathf.Sqrt(2f * jumpHeight * -gravity.y) - velocity.y);
         }
-        
+
         private void CheckForGround()
         {
             var skinWidth = onGround ? 0.35f : 0f;
@@ -208,6 +216,8 @@ namespace Circles3D.Runtime.Player
                     velocity += groundHit.normal * Mathf.Max(0f, Vector3.Dot(groundHit.normal, -velocity));
                 }
             }
+
+            if (onGround) airJumpsLeft = Mathf.RoundToInt(stats.airJumps);
         }
 
         private void LateUpdate()
@@ -226,12 +236,12 @@ namespace Circles3D.Runtime.Player
 
             var acceleration = stats.acceleration;
             if (!onGround) acceleration *= 1f - airMovementPenalty;
-            
+
             var orientation = Quaternion.Euler(0f, this.orientation.y, 0f);
 
             var moveSpeed = stats.moveSpeed;
             if (!input.buttons.IsSet(NetInput.Run)) moveSpeed *= walkSpeedFactor;
-            
+
             var target = orientation * new Vector3(moveInput.x, 0f, moveInput.y) * moveSpeed;
             var force = (target - velocity) * acceleration;
             force.y = 0f;
@@ -254,7 +264,7 @@ namespace Circles3D.Runtime.Player
         {
             enabled = true;
             this.position = position;
-            
+
             velocity = Vector3.zero;
             orientation = rotation.eulerAngles;
         }

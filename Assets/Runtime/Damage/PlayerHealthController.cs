@@ -30,6 +30,16 @@ namespace Circles3D.Runtime.Damage
             player = GetComponent<PlayerAvatar>();
         }
 
+        private void OnEnable()
+        {
+            DiedEvent += OnDied;
+        }
+
+        private void OnDisable()
+        {
+            DiedEvent -= OnDied;
+        }
+        
         private void Update()
         {
             if (HasInputAuthority)
@@ -61,7 +71,7 @@ namespace Circles3D.Runtime.Damage
         [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
         public void RpcNotifyDamage(IDamageable.DamageReport report) => hurtAnimationTime = 0f;
 
-        public override void Kill(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
+        private void OnDied(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity)
         {
             if (!invulnerable)
             {
@@ -71,8 +81,6 @@ namespace Circles3D.Runtime.Damage
 
                 if (HasStateAuthority) SpawnRagdollRpc(velocity * args.damage * 0.0006f, point);
             }
-
-            base.Kill(invoker, args, point, velocity);
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]

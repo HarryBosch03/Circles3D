@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Circles3D.Runtime.Mods;
 using Circles3D.Runtime.Networking;
 using Fusion;
 using UnityEngine;
@@ -64,7 +65,7 @@ namespace Circles3D.Runtime.Player
                 {
                     using (new GUILayout.VerticalScope(box, GUILayout.ExpandWidth(true)))
                     {
-                        foreach (var mod in player.statboard.modList.mods)
+                        foreach (var mod in ModList.mods)
                         {
                             if (doesMatchSearch(mod.displayName) && GUILayout.Button($"Give {mod.displayName}")) player.statboard.AddModRpc(mod.identifier);
                         }

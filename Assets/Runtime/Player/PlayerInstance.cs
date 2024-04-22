@@ -95,6 +95,8 @@ namespace Circles3D.Runtime.Player
             PlayerDealtDamageEvent?.Invoke(this, report);
         }
 
+        public void OnPlayerDealtDamage(IDamageable.DamageReport report) => PlayerDealtDamageEvent?.Invoke(this, report);
+
         public override void FixedUpdateNetwork()
         {
             avatar.owningPlayerInstance = this;

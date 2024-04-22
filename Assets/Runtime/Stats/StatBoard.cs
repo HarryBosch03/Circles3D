@@ -8,7 +8,6 @@ namespace Circles3D.Runtime.Stats
 {
     public class StatBoard : NetworkBehaviour
     {
-        public ModList modList;
         public Stats baseStats = Stats.Defaults;
 
         [Networked] private Stats evaluatedInternal { get; set; }
@@ -25,6 +24,7 @@ namespace Circles3D.Runtime.Stats
             var stats = baseStats;
             foreach (var mod in mods) mod.Apply(ref stats);
 
+            Max(ref stats.airJumps, 0);
             Max(ref stats.maxHealth, 0);
             Max(ref stats.maxBuffer, 0);
             Max(ref stats.bulletSpeed, 20);
@@ -49,7 +49,7 @@ namespace Circles3D.Runtime.Stats
         [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
         public void AddModRpc(string identifier)
         {
-            var mod = modList.Find(identifier);
+            var mod = ModList.Find(identifier);
             var instance = Runner.Spawn(mod);
             instance.transform.SetParent(transform);
             RegisterModRpc(instance.Object);
@@ -82,7 +82,8 @@ namespace Circles3D.Runtime.Stats
                 moveSpeed = 8f,
                 acceleration = 10f,
                 gravity = 1f,
-
+                airJumps = 0,
+                
                 damage = 45,
                 knockback = 0f,
                 bulletSpeed = 200f,
@@ -95,6 +96,10 @@ namespace Circles3D.Runtime.Stats
                 bounces = 0,
                 homing = 0f,
                 projectileLifetime = 5f,
+                
+                punchDamage = 70f,
+                punchKnockback = 1f,
+                punchRange = 1f,
             };
 
             public static readonly Dictionary<string, StatMetadata> Metadata = new Dictionary<string, StatMetadata>()
@@ -104,6 +109,7 @@ namespace Circles3D.Runtime.Stats
                 { nameof(moveSpeed), new StatMetadata("Move Speed") },
                 { nameof(acceleration), new StatMetadata("Move Acceleration") },
                 { nameof(gravity), new StatMetadata("Player Gravity", StatMetadata.Connotation.Neutral) },
+                { nameof(airJumps), new StatMetadata("Air Jumps") },
                 { nameof(damage), new StatMetadata("Damage") },
                 { nameof(knockback), new StatMetadata("Knockback") },
                 { nameof(bulletSpeed), new StatMetadata("Bullet Speed") },
@@ -116,6 +122,9 @@ namespace Circles3D.Runtime.Stats
                 { nameof(bounces), new StatMetadata("Bounces") },
                 { nameof(homing), null },
                 { nameof(projectileLifetime), null },
+                { nameof(punchDamage), new StatMetadata("Punch Damage") },
+                { nameof(punchKnockback), new StatMetadata("Punch Knockback") },
+                { nameof(punchRange), new StatMetadata("Punch Range") },
             };
 
             public static StatMetadata GetMetadata(string fieldName) => Metadata.GetValueOrDefault(fieldName);
@@ -126,6 +135,7 @@ namespace Circles3D.Runtime.Stats
             public float moveSpeed;
             public float acceleration;
             public float gravity;
+            public float airJumps;
 
             [Header("Projectile Stats")]
             public float damage;
@@ -140,6 +150,11 @@ namespace Circles3D.Runtime.Stats
             public float bounces;
             public float homing;
             public float projectileLifetime;
+            
+            [Header("Melee Stats")]
+            public float punchDamage;
+            public float punchKnockback;
+            public float punchRange;
 
             public class StatMetadata
             {

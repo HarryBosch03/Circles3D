@@ -1,5 +1,6 @@
 using Circles3D.Runtime.Player;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Circles3D.Runtime.Animation
 {
@@ -11,13 +12,14 @@ namespace Circles3D.Runtime.Animation
         public Transform head;
         public Transform torso;
         public Transform root;
-        public Renderer renderer;
+        public Renderer bodyRenderer;
+        public Renderer armsRenderer;
 
         private PlayerAvatar player;
 
         private void OnValidate()
         {
-            if (!renderer) renderer = GetComponentInChildren<Renderer>();
+            if (!bodyRenderer) bodyRenderer = GetComponentInChildren<Renderer>();
         }
 
         private void Awake()
@@ -29,7 +31,8 @@ namespace Circles3D.Runtime.Animation
         {
             if (!player.Object) return;
 
-            renderer.enabled = !player.activeViewer;
+            bodyRenderer.enabled = !player.activeViewer;
+            armsRenderer.enabled = player.activeViewer && player.health.alive;
             
             var twist = Quaternion.Euler(90f + torsoTwist, 90f, 90f);
             root.localRotation = twist;

@@ -39,6 +39,8 @@ namespace Circles3D.Runtime.Damage
             vec.y = 0f;
             vec = vec.normalized;
 
+            if (vec == Vector3.zero) return;
+            
             transform.rotation = Quaternion.LookRotation(vec);
         }
 

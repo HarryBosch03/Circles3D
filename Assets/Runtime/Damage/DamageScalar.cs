@@ -45,7 +45,7 @@ namespace Circles3D.Runtime.Damage
         
         public void Damage(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity, Vector3 normal, out IDamageable.DamageReport report)
         {
-            args.damageScale *= damageScale;
+            if (!args.ignoreLocationalDamage) args.damageScale *= damageScale;
             parent.Damage(invoker, args, point, velocity, normal, out report);
         }
     }

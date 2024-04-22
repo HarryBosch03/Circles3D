@@ -33,7 +33,7 @@ namespace Circles3D.Runtime.Player
         private Vector3 bodyInterpolatePosition0;
         private Vector3 bodyInterpolatePosition1;
 
-        private Transform model;
+        private Transform characterModel;
 
         [Networked] public NetInput input { get; set; }
         [Networked] public NetworkButtons previousButtons { get; set; }
@@ -59,9 +59,8 @@ namespace Circles3D.Runtime.Player
             health = GetComponent<PlayerHealthController>();
             statboard = GetComponent<StatBoard>();
 
-            model = transform.Find("Model");
-
             view = transform.Find("View");
+            characterModel = transform.Find("Model");
         }
 
         private void OnEnable() { health.DiedEvent += OnDied; }
@@ -82,7 +81,10 @@ namespace Circles3D.Runtime.Player
             }
         }
 
-        private void SetModelVisibility(bool enabled) { model.gameObject.SetActive(enabled); }
+        private void SetModelVisibility(bool enabled)
+        {
+            characterModel.gameObject.SetActive(enabled);
+        }
 
         public override void FixedUpdateNetwork()
         {

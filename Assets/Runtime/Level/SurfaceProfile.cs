@@ -1,3 +1,4 @@
+using System;
 using Circles3D.Runtime.Damage;
 using UnityEngine;
 
@@ -24,13 +25,23 @@ namespace Circles3D.Runtime.Level
             if (parent != null) parent.damageEvent -= OnDamage;
         }
 
+        private void Start()
+        {
+            if (hitEffect)
+            {
+                var main = hitEffect.main;
+                main.loop = false;
+                main.playOnAwake = false;
+            }
+        }
+
         private void OnDamage(GameObject invoker, DamageArgs args, Vector3 point, Vector3 velocity, Vector3 normal)
         {
             if (hitEffect)
             {
                 var count = hitEffect.emission.GetBurst(0).count;
                 hitEffect.transform.position = point;
-                hitEffect.transform.rotation = Quaternion.LookRotation(normal);
+                hitEffect.transform.rotation = Quaternion.LookRotation(Vector3.Reflect(velocity, normal));
                 hitEffect.Play();
             }
         }
